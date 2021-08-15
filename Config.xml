@@ -1,0 +1,1002 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="Config.lua"/>
+
+
+	<Button name="BtWTodoAutoCompleteButtonTemplate" mixin="BtWTodoAutoCompleteButtonMixin" virtual="true">
+		<Size>
+			<AbsDimension x="120" y="14"/>
+		</Size>
+		<Scripts>
+			<OnLoad>
+				self:GetFontString():SetPoint("LEFT", self, "LEFT", 15, 0)
+			</OnLoad>
+			<OnClick method="OnClick"/>
+		</Scripts>
+		<ButtonText parentKey="Text"/>
+		<NormalFont style="GameFontNormal"/>
+		<HighlightFont style="GameFontHighlight"/>
+		<DisabledFont style="GameFontDisable"/>
+		<HighlightTexture inherits="UIPanelButtonHighlightTexture"/>
+	</Button>
+	<Frame name="BtWTodoAddItemOverlayTemplate" mixin="BtWTodoAddItemOverlayMixin" frameLevel="10" enableMouse="true" hidden="true" virtual="true">
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture setAllPoints="true">
+					<Color r="0" g="0" b="0" a="0.75"/>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<FontString parentKey="Title" text="" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP">
+					<Size x="400" y="0"/>
+					<Anchors>
+						<Anchor point="CENTER" x="0" y="48"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="SubTitle" text="" inherits="GameFontHighlightSmall" justifyH="LEFT" justifyV="TOP">
+					<Size x="400" y="16"/>
+					<Anchors>
+						<Anchor point="CENTER" x="0" y="24"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame parentKey="AutoCompleteList" mixin="BtWTodoAddFrameAutoCompleteListMixin" inherits="TooltipBackdropTemplate">
+				<Size x="300" y="32"/>
+				<Scripts>
+					<OnLoad method="OnLoad"/>
+				</Scripts>
+			</Frame>
+			<EditBox parentKey="EditBox" mixin="BtWTodoAddFrameEditBoxMixin" autoFocus="false" inherits="InputBoxTemplate">
+				<Size x="400" y="22"/>
+				<Anchors>
+					<Anchor point="CENTER" x="0" y="0"/>
+				</Anchors>
+				<Scripts>
+					<OnLoad method="OnLoad"/>
+					<OnTabPressed method="OnTabPressed"/>
+					<OnEnterPressed method="OnEnterPressed"/>
+					<OnTextChanged method="OnTextChanged"/>
+					<OnChar method="OnChar"/>
+					<OnEditFocusLost method="OnEditFocusLost"/>
+					<OnEscapePressed method="OnEscapePressed"/>
+					<OnArrowPressed method="OnArrowPressed"/>
+					<OnKeyDown method="OnKeyDown"/>
+					<OnKeyUp method="OnKeyUp"/>
+				</Scripts>
+			</EditBox>
+			<Button parentKey="CancelButton" inherits="UIPanelButtonTemplate" text="CANCEL">
+				<Size x="64" y="22"/>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeKey="$parent.EditBox" relativePoint="BOTTOMRIGHT" x="0" y="-10"/>
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="button" value="2" type="number"/>
+				</KeyValues>
+				<NormalFont style="GameFontNormalSmall"/>
+				<HighlightFont style="GameFontHighlightSmall"/>
+				<Scripts>
+					<OnClick>
+						PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK);
+						self:GetParent():OnButtonClicked(self)
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button parentKey="OkButton" inherits="UIPanelButtonTemplate" text="OKAY">
+				<Size x="64" y="22"/>
+				<Anchors>
+					<Anchor point="RIGHT" relativeKey="$parent.CancelButton" relativePoint="LEFT" x="-10" y="0"/>
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="button" value="1" type="number"/>
+				</KeyValues>
+				<NormalFont style="GameFontNormalSmall"/>
+				<HighlightFont style="GameFontHighlightSmall"/>
+				<Scripts>
+					<OnClick>
+						PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK);
+						self:GetParent():OnButtonClicked(self)
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnShow method="OnShow"/>
+		</Scripts>
+	</Frame>
+
+
+	<Button name="BtWTodoDragScrollBoxItemTemplate" mixin="BtWTodoDragScrollBoxItemMixin" virtual="true">
+		<Size y="30"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Drag" setAllPoints="true" hidden="true">
+					<Color r="1" g="1" b="1" a="0.3"/>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnMouseDown method="OnDragStart"/>
+			<OnEnter method="OnEnter"/>
+		</Scripts>
+	</Button>
+	<Frame name="BtWTodoDragScrollBoxTemplate" mixin="BtWTodoDragScrollBoxMixin" inherits="WowScrollBoxList" virtual="true">
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnEvent method="OnEvent"/>
+		</Scripts>
+	</Frame>
+
+
+	<Frame name="BtWTodoConfigPanel" mixin="BtWTodoConfigPanelMixin">
+		<KeyValues>
+			<KeyValue key="name" value="BTWTODO" type="global"/>
+		</KeyValues>
+		<Layers>
+		  	<Layer level="ARTWORK">
+				<FontString name="$parentTitle" text="BTWTODO" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="16" y="-16"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="SubText" text="BTWTODO_SUBTEXT" inherits="GameFontHighlightSmall" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
+					<Size x="0" y="32"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8"/>
+						<Anchor point="RIGHT" x="-16" y="0"/>
+					</Anchors>
+				</FontString>
+		  	</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+		</Scripts>
+	</Frame>
+
+
+	<Frame name="BtWTodoConfigStatesInputItemTemplate" mixin="BtWTodoConfigStatesInputItemMixin" parentArray="items" virtual="true">
+		<Size x="0" y="30"/>
+		<KeyValues>
+			<KeyValue key="layoutType" value="ChatBubble" type="string"/>
+		</KeyValues>
+		<Layers>
+		  	<Layer level="ARTWORK">
+				<FontString parentKey="Text" inherits="GameFontHighlight" justifyH="LEFT">
+					<Anchors>
+						<Anchor point="LEFT" x="10" y="0"/>
+					</Anchors>
+				</FontString>
+		  	</Layer>
+		</Layers>
+		<Frames>
+			<Frame parentKey="NineSlice" useParentLevel="true" inherits="NineSlicePanelTemplate" />
+			<Button parentKey="RemoveButton">
+				<Size>
+					<AbsDimension x="16" y="16"/>
+				</Size>
+				<Anchors>
+					<Anchor point="RIGHT" x="-9" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture file="Interface\Buttons\UI-GroupLoot-Pass-Up" alpha="0.75" desaturated="true" parentKey="texture"/>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						self.texture:SetAlpha(1)
+					</OnEnter>
+					<OnLeave>
+						self.texture:SetAlpha(0.75)
+					</OnLeave>
+					<OnClick>
+						self:GetParent():OnRemoveClick(button, down)
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnDragStart method="OnDragStart"/>
+			<OnDragStop method="OnDragStop"/>
+		</Scripts>
+	</Frame>
+	<ScrollFrame name="BtWTodoConfigStatesInputTemplate" mixin="BtWTodoConfigStatesInputMixin" enableMouse="true" virtual="true">
+		<Size x="0" y="34"/>
+		<ScrollChild>
+			<Frame>
+				<Size x="10" y="34"/>
+			</Frame>
+		</ScrollChild>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnDragStart method="OnDragStart"/>
+			<OnDragStop method="OnDragStop"/>
+			<OnHide method="OnDragStop"/>
+			<OnMouseWheel method="OnMouseWheel"/>
+		</Scripts>
+	</ScrollFrame>
+	
+	<ScrollFrame name="BtWTodoConfigEditorTemplate" mixin="BtWTodoConfigEditorMixin" inherits="UIPanelScrollFrameTemplate" enableMouse="true" virtual="true">
+		<ScrollChild>
+			<EditBox parentKey="EditBox" multiLine="true" countInvisibleLetters="true" autoFocus="false">
+				<Size x="1" y="1"/>
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+				</Anchors>
+				<FontString font="Interface\Addons\BtWTodo\RobotoMono-Medium.ttf">
+					<Color r="1.0" g="1.0" b="1.0"/>
+					<FontHeight val="12"/>
+				</FontString>
+				<Scripts>
+					<OnTextChanged>
+						self:GetParent():OnTextChanged(userInput)
+					</OnTextChanged>
+					<OnSpacePressed>
+						self:GetParent():OnSpacePressed()
+					</OnSpacePressed>
+					<OnEnterPressed>
+						self:GetParent():OnEnterPressed()
+					</OnEnterPressed>
+					<OnTabPressed>
+						self:GetParent():OnTabPressed()
+					</OnTabPressed>
+					<OnChar>
+						self:GetParent():OnChar(text)
+					</OnChar>
+					<OnKeyUp>
+						self:GetParent():OnKeyUp(key)
+					</OnKeyUp>
+					<OnEscapePressed function="EditBox_ClearFocus"/>
+				</Scripts>
+			</EditBox>
+		</ScrollChild>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnMouseDown>
+				self.EditBox:SetFocus();
+				self.EditBox:SetCursorPosition(#(self.EditBox:GetText()))
+			</OnMouseDown>
+		</Scripts>
+	</ScrollFrame>
+
+	<Frame name="BtWTodoConfigTodoPanel" mixin="BtWTodoConfigTodoPanelMixin">
+		<KeyValues>
+			<KeyValue key="name" value="BTWTODO_TODOS" type="global"/>
+			<KeyValue key="parent" value="BTWTODO" type="global"/>
+		</KeyValues>
+		<Layers>
+		  	<Layer level="ARTWORK">
+				<FontString name="$parentTitle" parentKey="Title" text="BTWTODO_TODOS" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="16" y="-16"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="SubText" text="BTWTODO_TODOS_SUBTEXT" inherits="GameFontHighlightSmall" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
+					<Size x="0" y="16"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8"/>
+						<Anchor point="RIGHT" x="-16" y="0"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="AddStateText" text="BTWTODO_ADD_STATE" inherits="GameFontHighlightSmall" justifyH="RIGHT">
+					<Size x="0" y="34"/>
+					<Anchors>
+						<Anchor point="TOPRIGHT" relativeKey="$parent.SubText" relativePoint="BOTTOMRIGHT" x="-32" y="-80"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="ErrorText" text="Error Text Goes Here" inherits="GameFontRedSmall" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" x="16" y="16"/>
+						<Anchor point="RIGHT" x="-16" y="0"/>
+					</Anchors>
+				</FontString>
+		  	</Layer>
+		</Layers>
+		<Frames>
+			<Frame parentKey="TodoDropDown" inherits="UIDropDownMenuTemplate">
+				<Size x="40" y="28"/>
+				<Anchors>
+                    <Anchor point="TOP" relativeKey="$parent.SubText" relativePoint="BOTTOM" x="-97" y="-10"/>
+				</Anchors>
+			</Frame>
+			<Button parentKey="AddButton" inherits="UIPanelButtonTemplate" text="BTWTODO_NEW_TODO">
+				<Size x="100" y="22"/>
+				<Anchors>
+				  	<Anchor point="LEFT" relativeKey="$parent.TodoDropDown" relativePoint="RIGHT" x="0" y="2"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK);
+						self:GetParent():AddTodo()
+					</OnClick>
+				</Scripts>
+				<NormalFont style="GameFontNormalSmall"/>
+				<HighlightFont style="GameFontHighlightSmall"/>
+			</Button>
+			<Button parentKey="CloneButton" inherits="UIPanelButtonTemplate" text="BTWTODO_CLONE">
+				<Size x="64" y="22"/>
+				<Anchors>
+				  	<Anchor point="LEFT" relativeKey="$parent.AddButton" relativePoint="RIGHT" x="10" y="2"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK);
+						self:GetParent():CloneTodo()
+					</OnClick>
+				</Scripts>
+				<NormalFont style="GameFontNormalSmall"/>
+				<HighlightFont style="GameFontHighlightSmall"/>
+			</Button>
+            <EditBox letters="50" parentKey="Name" autoFocus="false" inherits="InputBoxTemplate">
+                <Size x="0" y="22"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.SubText" relativePoint="BOTTOMLEFT" x="0" y="-48"/>
+                    <Anchor point="RIGHT" x="-16" y="0"/>
+                </Anchors>
+                <Scripts>
+                    <OnEnterPressed function="EditBox_ClearFocus"/>
+                </Scripts>
+            </EditBox>
+            <ScrollFrame parentKey="States" inherits="BtWTodoConfigStatesInputTemplate">
+                <Size x="0" y="34"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.Name" relativePoint="BOTTOMLEFT" x="0" y="-10"/>
+                    <Anchor point="RIGHT" x="-56" y="0"/>
+                </Anchors>
+            </ScrollFrame>
+			<Frame parentKey="AddDropDown" mixin="BtWTodoStateProviderDropDownMixin" inherits="UIDropDownMenuTemplate">
+				<Scripts>
+					<OnShow method="OnShow"/>
+				</Scripts>
+			</Frame>
+			<DropDownToggleButton parentKey="AddButton">
+				<Size x="30" y="30"/>
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.States" relativePoint="RIGHT" x="10" y="0"/>
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="layoutType" value="ChatBubble" type="string"/>
+				</KeyValues>
+				<Frames>
+					<!-- <Frame parentKey="NineSlice" useParentLevel="true" inherits="NineSlicePanelTemplate"/> -->
+				</Frames>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture file="Interface\PaperDollInfoFrame\Character-Plus" parentKey="texture">
+							<Size x="16" y="16"/>
+							<Anchors>
+								<Anchor point="CENTER" x="0" y="0"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnMouseDown>
+						ToggleDropDownMenu(1, nil, self:GetParent().AddDropDown, self, 0, 0);
+					</OnMouseDown>
+				</Scripts>
+			</DropDownToggleButton>
+			<Frame name="$parentFunctionTabHeader" parentKey="FunctionTabHeader">
+                <Size x="384" y="32"/>
+                <Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.States" relativePoint="BOTTOMLEFT" x="0" y="0" />
+                </Anchors>
+				<KeyValues>
+					<KeyValue key="numTabs" value="4" type="number"/>
+					<KeyValue key="selectedTab" value="1" type="number"/>
+				</KeyValues>
+				<Frames>
+					<Button name="$parentTab1" parentKey="Tab1" inherits="TabButtonTemplate" text="BTWTODO_COMPLETED" id="1" parentArray="Tabs">
+						<Anchors>
+							<Anchor point="TOPLEFT" x="0" y="0"/>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								self:GetParent():GetParent():SetEditor(self:GetID())
+								PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="$parentTab2" parentKey="Tab2" inherits="TabButtonTemplate" text="BTWTODO_TEXT" id="2" parentArray="Tabs">
+						<Anchors>
+							<Anchor point="LEFT" relativeKey="$parent.Tab1" relativePoint="RIGHT"/>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								self:GetParent():GetParent():SetEditor(self:GetID())
+								PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="$parentTab3" parentKey="Tab3" inherits="TabButtonTemplate" text="BTWTODO_CLICK" id="3" parentArray="Tabs">
+						<Anchors>
+							<Anchor point="LEFT" relativeKey="$parent.Tab2" relativePoint="RIGHT"/>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								self:GetParent():GetParent():SetEditor(self:GetID())
+								PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="$parentTab4" parentKey="Tab4" inherits="TabButtonTemplate" text="BTWTODO_TOOLTIP" id="4" parentArray="Tabs">
+						<Anchors>
+							<Anchor point="LEFT" relativeKey="$parent.Tab3" relativePoint="RIGHT"/>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								self:GetParent():GetParent():SetEditor(self:GetID())
+								PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+							</OnClick>
+						</Scripts>
+					</Button>
+				</Frames>
+				<Scripts>
+					<OnLoad function="PanelTemplates_UpdateTabs"/>
+				</Scripts>
+			</Frame>
+			<Frame name="$parentModeTabHeader" parentKey="ModeTabHeader">
+                <Size x="192" y="32"/>
+                <Anchors>
+					<Anchor point="TOP" relativeKey="$parent.States" relativePoint="BOTTOM" x="0" y="0" />
+					<Anchor point="RIGHT" x="-16" y="0"/>
+                </Anchors>
+				<KeyValues>
+					<KeyValue key="numTabs" value="2" type="number"/>
+					<KeyValue key="selectedTab" value="2" type="number"/>
+				</KeyValues>
+				<Frames>
+					<Button name="$parentTab1" parentKey="Tab1" inherits="TabButtonTemplate" text="BTWTODO_ADVANCED" id="1" parentArray="Tabs">
+						<Anchors>
+							<Anchor point="TOPRIGHT" x="0" y="0"/>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								self:GetParent():GetParent():SetMode(self:GetID())
+								PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="$parentTab2" parentKey="Tab2" inherits="TabButtonTemplate" text="BTWTODO_BASIC" id="2" parentArray="Tabs">
+						<Anchors>
+							<Anchor point="RIGHT" relativeKey="$parent.Tab1" relativePoint="LEFT"/>
+						</Anchors>
+						<KeyValues>
+							<KeyValue key="isDisabled" value="true" type="boolean"/>
+						</KeyValues>
+						<Scripts>
+							<OnClick>
+								self:GetParent():GetParent():SetMode(self:GetID())
+								PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+							</OnClick>
+						</Scripts>
+					</Button>
+				</Frames>
+				<Scripts>
+					<OnLoad function="PanelTemplates_UpdateTabs"/>
+				</Scripts>
+			</Frame>
+			<Frame parentKey="Inset" useParentLevel="true" inherits="InsetFrameTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.States" relativePoint="BOTTOMLEFT" x="-10" y="-32" />
+					<!-- <Anchor point="TOPLEFT" relativeKey="$parent.FunctionTabHeader" relativePoint="BOTTOMLEFT" x="-10" y="0" /> -->
+					<Anchor point="BOTTOMRIGHT" x="-6" y="38" />
+				</Anchors>
+			</Frame>
+            <ScrollFrame parentKey="Editor" inherits="BtWTodoConfigEditorTemplate">
+                <Size x="500" y="377"/>
+                <Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.Inset" relativePoint="TOPLEFT" x="10" y="-10" />
+					<Anchor point="BOTTOMRIGHT" relativeKey="$parent.Inset" relativePoint="BOTTOMRIGHT" x="-10" y="10"/>
+                </Anchors>
+            </ScrollFrame>
+
+			<Frame parentKey="AddItem" inherits="BtWTodoAddItemOverlayTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="5" y="-5"/>
+					<Anchor point="BOTTOMRIGHT" x="-5" y="5"/>
+				</Anchors>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+		</Scripts>
+	</Frame>
+
+	
+	<Button name="BtWTodoConfigTodoItemTemplate" mixin="BtWTodoConfigTodoItemMixin" inherits="BtWTodoDragScrollBoxItemTemplate" virtual="true">
+		<Size y="30"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Drag" setAllPoints="true" hidden="true">
+					<Color r="1" g="1" b="1" a="0.3"/>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button parentKey="DeleteButton">
+				<Size x="14" y="14"/>
+				<Anchors>
+					<Anchor point="RIGHT" x="-2" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture file="Interface\Buttons\UI-GroupLoot-Pass-Up" alpha="0.5" parentKey="texture"/>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						self.texture:SetAlpha(1.0);
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(DELETE);
+					</OnEnter>
+					<OnLeave>
+						self.texture:SetAlpha(0.5);
+						GameTooltip_Hide();
+					</OnLeave>
+					<OnMouseDown>
+						self.texture:SetPoint("TOPLEFT", 1, -1);
+					</OnMouseDown>
+					<OnMouseUp>
+						self.texture:SetPoint("TOPLEFT", 0, 0);
+					</OnMouseUp>
+					<OnClick>
+						self:GetParent():Delete()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button parentKey="EditButton">
+				<Size x="14" y="14"/>
+				<Anchors>
+					<Anchor point="RIGHT" relativeKey="$parent.DeleteButton" relativePoint="LEFT" x="-1"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture file="Interface\WorldMap\GEAR_64GREY" alpha="0.5" parentKey="texture"/>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						self.texture:SetAlpha(1.0);
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						if self:GetParent().data.type == "category" then
+							GameTooltip:SetText(BTWTODO_CHANGE_COLOR);
+						else
+							GameTooltip:SetText(EDIT);
+						end
+					</OnEnter>
+					<OnLeave>
+						self.texture:SetAlpha(0.5);
+						GameTooltip_Hide();
+					</OnLeave>
+					<OnMouseDown>
+						self.texture:SetPoint("TOPLEFT", 1, -1);
+					</OnMouseDown>
+					<OnMouseUp>
+						self.texture:SetPoint("TOPLEFT", 0, 0);
+					</OnMouseUp>
+					<OnClick>
+						self:GetParent():Edit()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button parentKey="AddButton">
+				<Size x="14" y="14"/>
+				<Anchors>
+					<Anchor point="RIGHT" relativeKey="$parent.EditButton" relativePoint="LEFT" x="-1"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture file="Interface\PaperDollInfoFrame\Character-Plus" alpha="0.5" parentKey="texture">
+							<Size x="12" y="12"/>
+							<Anchors>
+								<Anchor point="CENTER" x="0" y="0"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						self.texture:SetAlpha(1.0);
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(BTWTODO_ADD_TODO);
+					</OnEnter>
+					<OnLeave>
+						self.texture:SetAlpha(0.5);
+						GameTooltip_Hide();
+					</OnLeave>
+					<OnMouseDown>
+						self.texture:SetPoint("CENTER", 1, -1);
+					</OnMouseDown>
+					<OnMouseUp>
+						self.texture:SetPoint("CENTER", 0, 0);
+					</OnMouseUp>
+					<OnClick>
+						self:GetParent():Add()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button parentKey="VisibilityButton">
+				<Size x="14" y="14"/>
+				<Anchors>
+					<Anchor point="RIGHT" relativeKey="$parent.EditButton" relativePoint="LEFT" x="-1"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture file="interface/lfgframe/battlenetworking0" alpha="0.5" parentKey="texture">
+							<Size x="12" y="12"/>
+							<Anchors>
+								<Anchor point="CENTER" x="0" y="0"/>
+							</Anchors>
+							<TexCoords left="0.2" right="0.8" top="0.2" bottom="0.8"/>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						self.texture:SetAlpha(1.0);
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(BTWTODO_TOGGLE_VISIBILITY);
+					</OnEnter>
+					<OnLeave>
+						self.texture:SetAlpha(0.5);
+						GameTooltip_Hide();
+					</OnLeave>
+					<OnMouseDown>
+						self.texture:SetPoint("CENTER", 1, -1);
+					</OnMouseDown>
+					<OnMouseUp>
+						self.texture:SetPoint("CENTER", 0, 0);
+					</OnMouseUp>
+					<OnClick>
+						self:GetParent():ToggleVisibility()
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<ButtonText parentKey="Text" justifyH="LEFT" setAllPoints="true"/>
+		<NormalFont style="GameFontHighlight"/>
+		<HighlightTexture parentKey="HighlightTexture" atlas="voicechat-channellist-row-highlight" alphaMode="ADD"/>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnMouseDown>
+				if IsShiftKeyDown() then
+					self:ToggleVisibility()
+				else
+					self:OnDragStart()
+				end
+			</OnMouseDown>
+			<OnEnter method="OnEnter"/>
+		</Scripts>
+	</Button>
+
+	<Frame name="BtWTodoConfigListsPanel" mixin="BtWTodoConfigListsPanelMixin">
+		<KeyValues>
+			<KeyValue key="name" value="BTWTODO_LISTS" type="global"/>
+			<KeyValue key="parent" value="BTWTODO" type="global"/>
+		</KeyValues>
+		<Layers>
+		  	<Layer level="ARTWORK">
+				<FontString name="$parentTitle" text="BTWTODO_LISTS" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="16" y="-16"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="SubText" text="BTWTODO_LISTS_SUBTEXT" inherits="GameFontHighlightSmall" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
+					<Size x="0" y="16"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8"/>
+						<Anchor point="RIGHT" x="-16" y="0"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="TodoTitle" text="BTWTODO_TODOS" inherits="GameFontNormal" justifyH="LEFT" justifyV="MIDDLE">
+					<Size x="0" y="22"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.SubText" relativePoint="BOTTOMLEFT" x="20" y="-80"/>
+					</Anchors>
+				</FontString>
+		  	</Layer>
+		</Layers>
+		<Frames>
+			<Frame parentKey="ListDropDown" inherits="UIDropDownMenuTemplate">
+				<Size x="40" y="28"/>
+				<Anchors>
+                    <Anchor point="TOP" relativeKey="$parent.SubText" relativePoint="BOTTOM" x="-97" y="-10"/>
+				</Anchors>
+			</Frame>
+			<Button parentKey="AddButton" inherits="UIPanelButtonTemplate" text="BTWTODO_NEW_LIST">
+				<Size x="100" y="22"/>
+				<Anchors>
+				  	<Anchor point="LEFT" relativeKey="$parent.ListDropDown" relativePoint="RIGHT" x="0" y="2"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK);
+						self:GetParent():AddList()
+					</OnClick>
+				</Scripts>
+				<NormalFont style="GameFontNormalSmall"/>
+				<HighlightFont style="GameFontHighlightSmall"/>
+			</Button>
+			<Button parentKey="CloneButton" inherits="UIPanelButtonTemplate" text="BTWTODO_CLONE">
+				<Size x="64" y="22"/>
+				<Anchors>
+				  	<Anchor point="LEFT" relativeKey="$parent.AddButton" relativePoint="RIGHT" x="10" y="2"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK);
+						self:GetParent():CloneList()
+					</OnClick>
+				</Scripts>
+				<NormalFont style="GameFontNormalSmall"/>
+				<HighlightFont style="GameFontHighlightSmall"/>
+			</Button>
+            <EditBox letters="50" parentKey="Name" autoFocus="false" inherits="InputBoxTemplate">
+                <Size x="0" y="22"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.SubText" relativePoint="BOTTOMLEFT" x="0" y="-48"/>
+                    <Anchor point="RIGHT" x="-16" y="0"/>
+                </Anchors>
+                <Scripts>
+                    <OnEnterPressed function="EditBox_ClearFocus"/>
+                </Scripts>
+            </EditBox>
+			<Button parentKey="AddCategoryButton" inherits="UIPanelButtonTemplate" text="BTWTODO_ADD_CATEGORY">
+				<Size x="128" y="22"/>
+				<Anchors>
+                    <Anchor point="TOPRIGHT" relativeKey="$parent.SubText" relativePoint="BOTTOMRIGHT" x="0" y="-80"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK);
+						self:GetParent():OnAddCategoryClicked()
+					</OnClick>
+				</Scripts>
+				<NormalFont style="GameFontNormalSmall"/>
+				<HighlightFont style="GameFontHighlightSmall"/>
+			</Button>
+			
+			<EventFrame parentKey="TodoScrollBar" inherits="OribosScrollBar" frameStrata="HIGH">
+				<Size x="10" y="804"/>
+				<Anchors>
+					<Anchor point="TOP" relativeKey="$parent.AddCategoryButton" relativePoint="BOTTOM" y="-5"/>
+					<Anchor point="RIGHT" relativeKey="$parent.SubText" relativePoint="RIGHT"/>
+					<Anchor point="BOTTOMRIGHT" y="16"/>
+				</Anchors>
+			</EventFrame>
+			<Frame parentKey="TodoScrollBox" inherits="BtWTodoDragScrollBoxTemplate" frameStrata="MEDIUM">
+				<KeyValues>
+					<KeyValue key="lowerShadowAtlas" value="Soulbinds_Collection_Shadow" type="string"/>
+					<KeyValue key="requireCategory" value="true" type="boolean"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="TOP" relativeKey="$parent.AddCategoryButton" relativePoint="BOTTOM" y="-5"/>
+					<Anchor point="LEFT" relativeKey="$parent.SubText" relativePoint="LEFT"/>
+					<Anchor point="BOTTOM" y="16"/>
+					<Anchor point="RIGHT" relativeKey="$parent.TodoScrollBar" relativePoint="LEFT" x="-10"/>
+				</Anchors>
+			</Frame>
+
+			<Frame parentKey="AddItem" inherits="BtWTodoAddItemOverlayTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="5" y="-5"/>
+					<Anchor point="BOTTOMRIGHT" x="-5" y="5"/>
+				</Anchors>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+		</Scripts>
+	</Frame>
+	
+
+	<Button name="BtWTodoConfigCharacterItemTemplate" mixin="BtWTodoConfigCharacterItemMixin" inherits="BtWTodoDragScrollBoxItemTemplate" virtual="true">
+		<Size y="30"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Drag" setAllPoints="true" hidden="true">
+					<Color r="1" g="1" b="1" a="0.3"/>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button parentKey="DeleteButton">
+				<Size x="14" y="14"/>
+				<Anchors>
+					<Anchor point="RIGHT" x="-2" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture file="Interface\Buttons\UI-GroupLoot-Pass-Up" alpha="0.5" parentKey="texture"/>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						self.texture:SetAlpha(1.0);
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+						GameTooltip:SetText(DELETE);
+					</OnEnter>
+					<OnLeave>
+						self.texture:SetAlpha(0.5);
+						GameTooltip_Hide();
+					</OnLeave>
+					<OnMouseDown>
+						self.texture:SetPoint("TOPLEFT", 1, -1);
+					</OnMouseDown>
+					<OnMouseUp>
+						self.texture:SetPoint("TOPLEFT", 0, 0);
+					</OnMouseUp>
+					<OnClick>
+						self:GetParent():Delete()
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<ButtonText parentKey="Text" justifyH="LEFT" setAllPoints="true"/>
+		<NormalFont style="GameFontHighlight"/>
+		<HighlightTexture parentKey="HighlightTexture" atlas="voicechat-channellist-row-highlight" alphaMode="ADD"/>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnMouseDown method="OnDragStart"/>
+			<OnEnter method="OnEnter"/>
+		</Scripts>
+	</Button>
+
+	<Frame name="BtWTodoConfigWindowsPanel" mixin="BtWTodoConfigWindowsPanelMixin">
+		<KeyValues>
+			<KeyValue key="name" value="BTWTODO_WINDOWS" type="global"/>
+			<KeyValue key="parent" value="BTWTODO" type="global"/>
+		</KeyValues>
+		<Layers>
+		  	<Layer level="ARTWORK">
+				<FontString name="$parentTitle" text="BTWTODO_WINDOWS" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="16" y="-16"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="SubText" text="BTWTODO_WINDOWS_SUBTEXT" inherits="GameFontHighlightSmall" nonspacewrap="true" maxLines="3" justifyH="LEFT" justifyV="TOP">
+					<Size x="0" y="16"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT" x="0" y="-8"/>
+						<Anchor point="RIGHT" x="-16" y="0"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="ListTitle" text="BTWTODO_LIST" inherits="GameFontNormal" justifyH="LEFT" justifyV="MIDDLE">
+					<Size x="0" y="22"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.SubText" relativePoint="BOTTOMLEFT" x="20" y="-48"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="ButtonSizeTitle" text="BTWTODO_BUTTON_SIZE" inherits="GameFontNormal" justifyH="LEFT" justifyV="MIDDLE">
+					<Size x="0" y="22"/>
+					<Anchors>
+						<Anchor point="TOPRIGHT" relativeKey="$parent.SubText" relativePoint="BOTTOMRIGHT" x="-20" y="-48"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="CharactersTitle" text="BTWTODO_CHARACTERS" inherits="GameFontNormal" justifyH="LEFT" justifyV="MIDDLE">
+					<Size x="0" y="22"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeKey="$parent.SubText" relativePoint="BOTTOMLEFT" x="20" y="-116"/>
+					</Anchors>
+				</FontString>
+		  	</Layer>
+		</Layers>
+		<Frames>
+			<Frame parentKey="FrameDropDown" inherits="UIDropDownMenuTemplate">
+				<Size x="40" y="28"/>
+				<Anchors>
+                    <Anchor point="TOP" relativeKey="$parent.SubText" relativePoint="BOTTOM" x="0" y="-10"/>
+				</Anchors>
+			</Frame>
+			<Frame parentKey="ListDropDown" inherits="UIDropDownMenuTemplate">
+				<Size x="40" y="28"/>
+				<Anchors>
+                    <Anchor point="TOP" relativeKey="$parent.ListTitle" relativePoint="BOTTOM" x="0" y="0"/>
+					<Anchor point="LEFT" relativeKey="$parent.SubText" relativePoint="LEFT"/>
+				</Anchors>
+			</Frame>
+			<EditBox parentKey="ItemWidthEditBox" inherits="InputBoxTemplate" numeric="true" autoFocus="false">
+				<Size x="60" y="16"/>
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.ListDropDown" relativePoint="RIGHT" x="250"/>
+				</Anchors>
+				<Scripts>
+					<OnTextChanged>
+						self:GetParent():SetItemWidth(self:GetNumber())
+					</OnTextChanged>
+				</Scripts>
+			</EditBox>
+			<EditBox parentKey="ItemHeightEditBox" inherits="InputBoxTemplate" numeric="true" autoFocus="false">
+				<Size x="60" y="16"/>
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.ItemWidthEditBox" relativePoint="RIGHT" x="10"/>
+				</Anchors>
+				<Scripts>
+					<OnTextChanged>
+						self:GetParent():SetItemHeight(self:GetNumber())
+					</OnTextChanged>
+				</Scripts>
+			</EditBox>
+			<Button parentKey="AddCharacterButton" inherits="UIPanelButtonTemplate" text="BTWTODO_ADD_CHARACTER">
+				<Size x="128" y="22"/>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeKey="$parent.SubText" relativePoint="BOTTOMRIGHT" x="0" y="-116"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK);
+						self:GetParent():OnAddCharacterClicked()
+					</OnClick>
+				</Scripts>
+				<NormalFont style="GameFontNormalSmall"/>
+				<HighlightFont style="GameFontHighlightSmall"/>
+			</Button>
+			<CheckButton parentKey="AutoAddPlayerCheckbox" inherits="OptionsBaseCheckButtonTemplate" text="BTWTODO_AUTO_ADD_PLAYER">
+				<Anchors>
+					<Anchor point="RIGHT" relativeKey="$parent.AddCharacterButton" relativePoint="LEFT" x="-125" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Text" inherits="GameFontHighlight" text="BTWTODO_AUTO_ADD_PLAYER">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="0" y="1"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnClick>
+						if ( self:GetChecked() ) then
+							PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+						else
+							PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF);
+						end
+						self:GetParent():ToggleAutoAddPlayer()
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			
+			<EventFrame parentKey="CharacterScrollBar" inherits="OribosScrollBar" frameStrata="HIGH">
+				<Size x="10" y="804"/>
+				<Anchors>
+					<Anchor point="TOP" relativeKey="$parent.AddCharacterButton" relativePoint="BOTTOM" y="-5"/>
+					<Anchor point="RIGHT" relativeKey="$parent.SubText" relativePoint="RIGHT"/>
+					<Anchor point="BOTTOMRIGHT" y="16"/>
+				</Anchors>
+			</EventFrame>
+			<Frame parentKey="CharacterScrollBox" inherits="BtWTodoDragScrollBoxTemplate" frameStrata="MEDIUM">
+				<KeyValues>
+					<KeyValue key="lowerShadowAtlas" value="Soulbinds_Collection_Shadow" type="string"/>
+				</KeyValues>
+				<Anchors>
+					<Anchor point="TOP" relativeKey="$parent.AddCharacterButton" relativePoint="BOTTOM" y="-5"/>
+					<Anchor point="LEFT" relativeKey="$parent.SubText" relativePoint="LEFT"/>
+					<Anchor point="BOTTOM" y="16"/>
+					<Anchor point="RIGHT" relativeKey="$parent.CharacterScrollBar" relativePoint="LEFT" x="-10"/>
+				</Anchors>
+			</Frame>
+
+			<Frame parentKey="AddItem" inherits="BtWTodoAddItemOverlayTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="5" y="-5"/>
+					<Anchor point="BOTTOMRIGHT" x="-5" y="5"/>
+				</Anchors>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+		</Scripts>
+	</Frame>
+</Ui>

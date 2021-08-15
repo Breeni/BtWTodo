@@ -1,0 +1,32 @@
+## Interface: 90100
+## Title: BtWTodo
+## Version: 1.0.0
+## Notes: 
+## Author: Breen
+## SavedVariables: BtWTodoData, BtWTodoCategories, BtWTodoCharacters, BtWTodoCache, BtWTodoDataBroker, BtWTodoWindows, BtWTodoLists, BtWTodoAuthorization
+## OptionalDeps: WeakAuras
+
+Defines.lua
+Events.lua
+Characters.lua
+State.lua
+
+Lists.lua
+Core.lua
+
+Callings.lua
+Campaign.lua
+Character.lua
+Currency.lua
+Keystone.lua
+Lockout.lua
+MythicPlusRuns.lua
+Quest.lua
+Faction.lua
+Torghast.lua
+Vault.lua
+
+Sync.lua
+Config.xml
+Windows.xml
+DataBroker.lua

@@ -1,0 +1,154 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="Windows.lua"/>
+
+	<Button name="BtWTodoItemTemplate" mixin="BtWTodoItemMixin" virtual="true" enableMouse="true">
+		<Size x="100" y="30"/>
+		<NormalFont style="GameFontHighlightSmall"/>
+		<ButtonText setAllPoints="true" justifyH="CENTER" justifyV="MIDDLE" text=" "/>
+		<!-- <Layers>
+			<Layer level="ARTWORK">
+				<FontString parentKey="Text" inherits="GameFontHighlightSmall" wordwrap="false" justifyH="LEFT" setAllPoints="true"/>
+			</Layer>
+		</Layers> -->
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnClick method="OnClick"/>
+			<OnDragStart method="OnDragStart"/>
+			<OnDragStop method="OnDragStop"/>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+		</Scripts>
+    </Button>
+
+	<Frame name="BtWTodoRowTemplate" mixin="BtWTodoRowMixin" virtual="true" enableMouse="true">
+		<Size x="100" y="30"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString parentKey="Text" inherits="GameFontHighlightSmall" wordwrap="false" justifyH="CENTER" outline="NORMAL">
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</FontString>
+				<Texture parentKey="Left" texelSnappingBias="0.0" snapToPixelGrid="false">
+					<Size x="0" y="1"/>
+					<Anchors>
+						<Anchor point="LEFT" y="-1"/>
+						<Anchor point="RIGHT" relativeKey="$parent.Text" relativePoint="LEFT" x="-10" y="-1"/>
+					</Anchors>
+					<Color r="1" g="0" b="0" a="1"/>
+				</Texture>
+				<Texture parentKey="Right" texelSnappingBias="0.0" snapToPixelGrid="false">
+					<Size x="0" y="1"/>
+					<Anchors>
+						<Anchor point="RIGHT" y="-1"/>
+						<Anchor point="LEFT" relativeKey="$parent.Text" relativePoint="RIGHT" x="10" y="-1"/>
+					</Anchors>
+					<Color r="1" g="0" b="0" a="1"/>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnDragStart method="OnDragStart"/>
+			<OnDragStop method="OnDragStop"/>
+		</Scripts>
+    </Frame>
+	
+	<Frame name="BtWTodoScrollRowTemplate" mixin="BtWTodoScrollRowMixin" inherits="BtWTodoRowTemplate" virtual="true" enableMouse="true"/>
+
+	<Frame name="BtWTodoViewTemplate" mixin="BtWTodoViewMixin" virtual="true">
+		<Frames>
+			<EventFrame parentKey="ScrollBar" inherits="OribosScrollBar" frameStrata="HIGH">
+				<Size x="10" y="804"/>
+				<Anchors>
+					<Anchor point="TOPRIGHT" x="-6" y="-1"/>
+					<Anchor point="BOTTOMRIGHT" y="1"/>
+				</Anchors>
+			</EventFrame>
+			<Frame parentKey="ScrollBox" inherits="WowScrollBoxList" frameStrata="MEDIUM">
+				<Anchors>
+					<Anchor point="TOPLEFT" x="1" y="-1"/>
+					<Anchor point="BOTTOMRIGHT" x="-1" y="1" />
+					<Anchor point="RIGHT" relativeKey="$parent.ScrollBar" relativePoint="LEFT" x="-10"/>
+				</Anchors>
+			</Frame>
+		</Frames>
+		<Scripts>
+            <OnLoad method="OnLoad"/>
+		</Scripts>
+    </Frame>
+
+	<Frame name="BtWTodoDraggableViewTemplate" mixin="BtWTodoDraggableViewMixin" inherits="BtWTodoViewTemplate" virtual="true" enableMouse="true" movable="true">
+		<Scripts>
+            <OnLoad method="OnLoad"/>
+			<OnDragStart method="OnDragStart"/>
+			<OnDragStop method="OnDragStop"/>
+		</Scripts>
+	</Frame>
+
+	<Frame name="BtWTodoMainFrame" mixin="BtWTodoFrameMixin,BtWTodoMainFrameMixin" inherits="DefaultPanelTemplate,BtWTodoDraggableViewTemplate" parent="UIParent" toplevel="true" clampedToScreen="true" hidden="true">
+		<Size x="500" y="496"/>
+		<Anchors>
+			<Anchor point="CENTER" x="0" y="0"/>
+		</Anchors>
+		<KeyValues>
+			<KeyValue key="id" value="main" type="string"/>
+			<KeyValue key="paddingTop" value="38" type="number"/>
+		</KeyValues>
+		<Frames>
+			<Button name="$parentCloseButton" parentKey="CloseButton" inherits="UIPanelCloseButton">
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="5.6" y="5"/>
+				</Anchors>
+			</Button>
+		</Frames>
+		<Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnShow method="OnShow"/>
+            <OnHide method="OnHide"/>
+		</Scripts>
+	</Frame>
+	<Frame name="BtWTodoSmallFrame" mixin="BtWTodoFrameMixin" inherits="BtWTodoDraggableViewTemplate" parent="UIParent" toplevel="true" clampedToScreen="true" hidden="true">
+		<Size x="500" y="496"/>
+		<Anchors>
+			<Anchor point="CENTER" x="0" y="0"/>
+		</Anchors>
+		<KeyValues>
+			<KeyValue key="id" value="small" type="string"/>
+		</KeyValues>
+		<Layers>
+			<Layer level="BACKGROUND" textureSubLevel="-5">
+				<Texture parentKey="Bg" file="Interface\DialogFrame\UI-DialogBox-Background" horizTile="true" vertTile="true">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="7" y="-7"/>
+						<Anchor point="BOTTOMRIGHT" x="-7" y="7"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button name="$parentCloseButton" parentKey="CloseButton" inherits="UIPanelCloseButton">
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="5.6" y="5"/>
+				</Anchors>
+			</Button>
+		</Frames>
+		<Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnShow method="OnShow"/>
+            <OnHide method="OnHide"/>
+		</Scripts>
+	</Frame>
+	<Frame name="BtWTodoTooltipFrame" mixin="BtWTodoFrameMixin,BtWTodoTooltipFrameMixin" inherits="TooltipBackdropTemplate,BtWTodoViewTemplate" frameStrata="TOOLTIP" parent="UIParent" clampedToScreen="true" hidden="true">
+		<Size x="500" y="496"/>
+		<KeyValues>
+			<KeyValue key="id" value="tooltip" type="string"/>
+		</KeyValues>
+		<Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnShow method="OnShow"/>
+            <OnHide method="OnHide"/>
+		</Scripts>
+	</Frame>
+</Ui>
