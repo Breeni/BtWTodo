@@ -1,10 +1,10 @@
 ## Interface: 90100
 ## Title: BtWTodo
 ## Version: 1.0.0
-## Notes: 
-## Author: Breen
+## Notes: Highly customizable to-do list
+## Author: Breeni
 ## SavedVariables: BtWTodoData, BtWTodoCategories, BtWTodoCharacters, BtWTodoCache, BtWTodoDataBroker, BtWTodoWindows, BtWTodoLists, BtWTodoAuthorization
-## OptionalDeps: WeakAuras
+## OptionalDeps: LibDBIcon-1.0, LibSerialize, LibDeflate
 
 Defines.lua
 Events.lua
@@ -26,7 +26,8 @@ Faction.lua
 Torghast.lua
 Vault.lua
 
-Sync.lua
+Libs.xml
+# Sync.lua
 Config.xml
 Windows.xml
 DataBroker.lua
