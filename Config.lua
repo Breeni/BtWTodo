@@ -62,6 +62,13 @@ BTWTODO_CHARACTERS_SUBTEXT = L["These options allow you to customize your charac
 
 BTWTODO_CLONE = L["Clone"]
 
+--@debug@
+local debug = print
+--@end-debug@
+--[===[@non-debug@
+local debug = function () end
+--@end-non-debug@]===]
+
 local function IterateLists()
     local tbl = {}
     for id,todo in pairs(BtWTodoConfigListsPanel.lists) do
@@ -1050,7 +1057,7 @@ local function UpdateContext(context, token)
             if context[#context] == "IF" or context[#context] == "WHILE" or context[#context] == "FOR" then
                 context[#context] = nil
             else
-                print(context[#context])
+                debug(context[#context])
             end
         else
             -- ERROR
@@ -1079,7 +1086,7 @@ local function UpdateLine(self, index, lineStart)
     local text = self:GetText() -- Text with formatting
     local cursor, cursorDiff = self:GetCursorPosition(), 0
 
-    print("GetCursorPosition", cursor)
+    debug("GetCursorPosition", cursor)
 
     local context = {strsplit(".", self.lineContexts[index-1])} -- Context from before the line
 
@@ -1099,13 +1106,13 @@ local function UpdateLine(self, index, lineStart)
     else
         line = strsub(text, lineStart, lineEnd + 1)
     end
-    print(line:gsub("|", "||"))
+    debug(line:gsub("|", "||"))
     line = line:gsub("|r", ""):gsub("|c[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]","") -- Line without formatting
 
     local relativeCursorOffset = 0
     if adjustCursor then
         relativeCursorOffset = cursor - (lineStart - 1)
-        print("relativeCursorOffset", relativeCursorOffset, cursor, lineStart)
+        debug("relativeCursorOffset", relativeCursorOffset, cursor, lineStart)
 
         local cursorLine = strsub(text, lineStart, cursor)
         for content in gmatch(cursorLine, "|c[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]") do
@@ -1115,7 +1122,7 @@ local function UpdateLine(self, index, lineStart)
             relativeCursorOffset = relativeCursorOffset - #content
         end
 
-        print("relativeCursorOffset", relativeCursorOffset)
+        debug("relativeCursorOffset", relativeCursorOffset)
     end
 
     local offset = 1
@@ -1148,7 +1155,7 @@ local function UpdateLine(self, index, lineStart)
 
                 if adjustCursor then
                     if relativeCursorOffset + 1 >= offset + length then -- Cursor is after indent
-                        print(cursor, cursor - length + #content)
+                        debug(cursor, cursor - length + #content)
                         cursorDiff = cursorDiff - length + #content
                     elseif relativeCursorOffset + 1 >= offset then -- Cursor is within indent so set it to max end
                         cursorDiff = math.min(cursorDiff - length + #content, cursorDiff + (relativeCursorOffset - offset) + #content)
@@ -1158,7 +1165,7 @@ local function UpdateLine(self, index, lineStart)
             indentFixed = true
         end
 
-        -- print(token, "[" .. content .. "]")
+        -- debug(token, "[" .. content .. "]")
 
         local color = tokenColors[token]
         if token == TOKEN.MULTILINE_COMMENT_END then
@@ -1171,11 +1178,11 @@ local function UpdateLine(self, index, lineStart)
             if adjustCursor then
                 if relativeCursorOffset > offset - 1 then -- Adjust for the |c, place before if its cursor was at the start
                     cursorDiff = cursorDiff + #markup
-                    print("Adjust cursor for added ||c", cursorDiff)
+                    debug("Adjust cursor for added ||c", cursorDiff)
                 end
                 if relativeCursorOffset >= offset - 1 + length then -- Adjust for the |r
                     cursorDiff = cursorDiff + 2
-                    print("Adjust cursor for added ||r", cursorDiff)
+                    debug("Adjust cursor for added ||r", cursorDiff)
                 end
             end
         else
@@ -1191,23 +1198,23 @@ local function UpdateLine(self, index, lineStart)
 
     self.EditBox:HighlightText(lineStart - 1, lineEnd) -- -1 to highlight from BEFORE the first character
     -- if index == 3 then
-    --     print("[" .. formatted .. "]", lineStart, lineEnd)
+    --     debug("[" .. formatted .. "]", lineStart, lineEnd)
     --     error("TEST")
     -- end
     self.EditBox:Insert(formatted)
     -- if index == 3 then
-    --     print("[" .. formatted .. "]", lineStart, lineEnd)
+    --     debug("[" .. formatted .. "]", lineStart, lineEnd)
     --     error("TEST")
     -- end
 
     if cursor > lineEnd then
-        print("SetCursorPosition 3", cursor - (lineEnd - lineStart) + #formatted - 1)
+        debug("SetCursorPosition 3", cursor - (lineEnd - lineStart) + #formatted - 1)
         self:SetCursorPosition(cursor - (lineEnd - lineStart) + #formatted - 1)
     elseif cursor >= lineStart - 1 then
-        print("SetCursorPosition 2", lineStart - 1, relativeCursorOffset, cursorDiff)
+        debug("SetCursorPosition 2", lineStart - 1, relativeCursorOffset, cursorDiff)
         self:SetCursorPosition(lineStart - 1 + relativeCursorOffset + cursorDiff)
     else
-        print("SetCursorPosition 1", cursor)
+        debug("SetCursorPosition 1", cursor)
         self:SetCursorPosition(cursor)
     end
 
@@ -1215,7 +1222,7 @@ local function UpdateLine(self, index, lineStart)
 
     self.lineBytes[index] = lineEnd - lineStart + 1
 
-    print("lengths", lineEnd - lineStart)
+    debug("lengths", lineEnd - lineStart)
 
     local context = table.concat(context, ".")
     local contextChanged = self.lineContexts[index] ~= context
@@ -1226,6 +1233,7 @@ end
 function BtWTodoConfigEditorMixin:UpdateFromLine(index, endIndex)
     self.updating = true
 
+    --@alpha@
     xpcall(function()
         index = index or 1
         local offset = 1
@@ -1235,9 +1243,9 @@ function BtWTodoConfigEditorMixin:UpdateFromLine(index, endIndex)
 
         local _, lastLine, contextChanged
         repeat
-            print("UpdateFromLine", index, offset, self.EditBox:GetCursorPosition())
+            debug("UpdateFromLine", index, offset, self.EditBox:GetCursorPosition())
             _, offset, lastLine, contextChanged = UpdateLine(self, index, offset)
-            print("UpdateFromLine", index, offset, self.EditBox:GetCursorPosition(), lastLine, contextChanged)
+            debug("UpdateFromLine", index, offset, self.EditBox:GetCursorPosition(), lastLine, contextChanged)
 
             index = index + 1
         until lastLine or (not contextChanged and index > endIndex)
@@ -1250,7 +1258,8 @@ function BtWTodoConfigEditorMixin:UpdateFromLine(index, endIndex)
         end
     end, geterrorhandler())
 
-    print("----------")
+    debug("----------")
+    --@end-alpha@
 
     self.updating = nil
 end
@@ -1267,7 +1276,7 @@ function BtWTodoConfigEditorMixin:GetLineForOffset(offset)
     return line
 end
 function BtWTodoConfigEditorMixin:OnTextChanged(...)
-    print("OnTextChanged", ...)
+    debug("OnTextChanged", ...)
     self:RunScript("OnTextChanged", ...)
 end
 function BtWTodoConfigEditorMixin:OnChar(text)
