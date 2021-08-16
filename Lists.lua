@@ -233,26 +233,32 @@ External.RegisterLists({
             {
                 id = "btwtodo:mawsworncache",
                 category = "btwtodo:daily",
+                hidden = true,
             },
             {
                 id = "btwtodo:invasivemawshroom",
                 category = "btwtodo:daily",
+                hidden = true,
             },
             {
                 id = "btwtodo:nestofunusualmaterials",
                 category = "btwtodo:daily",
+                hidden = true,
             },
             {
                 id = "btwtodo:reliccache",
                 category = "btwtodo:daily",
+                hidden = true,
             },
             {
                 id = "btwtodo:spectralboundchest",
                 category = "btwtodo:daily",
+                hidden = true,
             },
             {
                 id = "btwtodo:riftboundcache",
                 category = "btwtodo:daily",
+                hidden = true,
             },
             {
                 id = "btwtodo:renownquests",
