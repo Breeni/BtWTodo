@@ -185,6 +185,11 @@ External.RegisterLists({
                 category = "btwtodo:weekly",
             },
             {
+                id = "btwtodo:deathboundshard",
+                category = "btwtodo:weekly",
+                hidden = true,
+            },
+            {
                 id = "btwtodo:soulcinders",
                 category = "btwtodo:currency",
             },
@@ -295,6 +300,11 @@ External.RegisterLists({
             {
                 id = "btwtodo:mawsoulsquest",
                 category = "btwtodo:weekly",
+            },
+            {
+                id = "btwtodo:deathboundshard",
+                category = "btwtodo:weekly",
+                hidden = true,
             },
             {
                 id = "btwtodo:soulcinders",

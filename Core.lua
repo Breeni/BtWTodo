@@ -884,6 +884,17 @@ External.RegisterTodos({
             end
         ]],
     },
+    {
+        id = "btwtodo:deathboundshard",
+        name = L["Death-Bound Shard"],
+        states = {
+            { type = "quest", id = 64347, },
+        },
+        completed = [[
+            return states[1]:IsCompleted()
+        ]],
+        text = DEFAULT_TEXT_FUNCTION,
+    },
 })
 
 local registeredCategories = {}
