@@ -18,8 +18,6 @@ local function GetNextDailyResetTimestamp()
     return math.floor((GetServerTime() + C_DateAndTime.GetSecondsUntilDailyReset()) / SECONDS_PER_HOUR + 0.5) * SECONDS_PER_HOUR
 end
 
-local todos = {}
-_G['BtWTodos'] = todos
 local function ADDON_LOADED(event, addon)
     if addon == ADDON_NAME then
         BtWTodoData = BtWTodoData or {}
