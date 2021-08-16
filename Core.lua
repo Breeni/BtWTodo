@@ -394,6 +394,7 @@ External.RegisterTodos({
             { type = "quest", id = 63778, },
             { type = "quest", id = 64043, },
             -- { type = "quest", id = 64562, }, -- One of the "fake" daily quests when unlocking Korthia
+            { type = "quest", id = 63965, },
         },
         completed = [[
             local active, _, index = Custom.GetKorthiaDailies(character)

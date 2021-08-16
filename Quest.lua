@@ -328,6 +328,7 @@ local questData = {
 	[64194] = {frequency = Enum.QuestFrequency.Daily},
 	[63778] = {frequency = Enum.QuestFrequency.Daily},
 	[64043] = {frequency = Enum.QuestFrequency.Daily},
+	[63965] = {frequency = Enum.QuestFrequency.Daily},
 }
 function Internal.IterateQuestData()
 	return pairs(questData)
@@ -507,6 +508,7 @@ do
 		[64194] = true,
 		[63778] = true,
 		[64043] = true,
+		[63965] = true,
 	}
 	local function GetKorthiaDailies(character)
 		if type(BtWTodoCache.korthiaDailies) ~= "table" then
