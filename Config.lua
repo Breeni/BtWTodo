@@ -1613,9 +1613,9 @@ function BtWTodoConfigTodoPanelMixin:AddTodo()
     local todo = {
         id = count,
         name = L["New Todo"],
-        completed = "",
-        text = "",
-        click = "",
+        completed = "return self:IsFlaggedCompleted()",
+        text = "return self:IsCompleted() and Images.COMPLETE or \"\"",
+        click = [[self:SetFlaggedCompleted(not self:IsFlaggedCompleted())]],
         tooltip = "",
     }
     todo.driver, todo.states = Internal.CreateStateDriver(todo.id, "Editor", {}, "", "", "", "")
