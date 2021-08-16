@@ -5,6 +5,9 @@
 ## Author: Breeni
 ## SavedVariables: BtWTodoData, BtWTodoCategories, BtWTodoCharacters, BtWTodoCache, BtWTodoDataBroker, BtWTodoWindows, BtWTodoLists, BtWTodoAuthorization
 ## OptionalDeps: LibDBIcon-1.0, LibSerialize, LibDeflate
+## X-Curse-Project-ID: 515611
+## X-WoWI-ID: 26131
+## X-Wago-ID: RBKpRqNE
 
 Defines.lua
 Events.lua
