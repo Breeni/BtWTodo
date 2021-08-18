@@ -6,7 +6,6 @@ local ADDON_NAME, Internal = ...
 local External = _G[ADDON_NAME]
 
 local EventHandler = CreateFrame("Frame")
-_G[ADDON_NAME .. 'EventHandler'] = EventHandler
 EventHandler.targets = {}
 local _RegisterEvent = EventHandler.RegisterEvent
 local _UnregisterEvent = EventHandler.UnregisterEvent
