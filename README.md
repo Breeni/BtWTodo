@@ -1,4 +1,4 @@
-BtWTodo is a highly customizable to-do list, containing many default to-dos related to Sanctum of Dominations.
+BtWTodo is a highly customizable to-do list, containing many default to-dos related to Chains of Dominations.
 
 # Features
 
