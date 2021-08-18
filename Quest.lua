@@ -352,7 +352,7 @@ local mawAssaults = {
 	63543, 63822, 63823, 63824
 }
 -- Save Quest Data for Player
-function SavedQuests()
+local function SavedQuests()
     local player = Internal.GetPlayer()
 	local questLog = player:GetDataTable("questLog")
 	local questCompleted = player:GetDataTable("questCompleted")

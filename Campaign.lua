@@ -173,7 +173,7 @@ local campaigns = {
     138, -- Chains of Domination
 }
 -- Save Campaign Data for Player
-function SaveCampaignData (event, questID)
+local function SaveCampaignData (event, questID)
     if event == "PLAYER_ENTERING_WORLD" or C_CampaignInfo.IsCampaignQuest(questID) then
         local player = Internal.GetPlayer()
         local campaignState = player:GetDataTable("campaignState")

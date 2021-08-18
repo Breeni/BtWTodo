@@ -19,6 +19,7 @@ function FactionMixin:Init(factionID)
 		Mixin(self, BtWTodoCache.factions[factionID]);
     end
 
+    local _
     self.name, self.description, _, _, _, _, self.canToggleAtWar = GetFactionInfoByID(self:GetID())
     self.max = (select(3, GetFriendshipReputation(self:GetID()))) or 42000
     self.paragonMax = select(2, C_Reputation.GetFactionParagonInfo(self:GetID())) or 0
