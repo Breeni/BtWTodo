@@ -42,20 +42,16 @@ end
 function CallingMixin:GetUniqueKey()
 	return "calling:" .. self:GetID()
 end
-function CallingMixin:GetCalling()
+function CallingMixin:GetQuestID()
     local covenantID = self:GetCharacter():GetCovenant()
     if covenantID and covenantID ~= 0 then
-        local calling = BtWTodoCache.callings[covenantID][self:GetID()]
-        if calling and calling.questID ~= self.questID then
-            self.questID = calling.questID
+        local questID = BtWTodoCache.callings[covenantID][self:GetID()]
+        if questID ~= self.questID then
+            self.questID = questID
             self:RefreshCache()
         end
-        return calling
+        return questID
     end
-end
-function CallingMixin:GetQuestID()
-    local calling = self:GetCalling()
-    return calling and calling.questID
 end
 function CallingMixin:GetTitle()
     local questID = self:GetQuestID()
@@ -197,20 +193,60 @@ local function DAILY_RESET()
 end
 Internal.RegisterEvent("DAILY_RESET", DAILY_RESET)
 
-local SECONDS_PER_DAY = 24*60*60
-local function COVENANT_CALLINGS_UPDATED(event, calling)
-    local covenantID = C_Covenants.GetActiveCovenantID()
-    local cache = BtWTodoCache.callings[covenantID]
+-- A list of all groups of calling quests, each group is ordered by covenant id - Kyrian, Venthyr, Night Fae, Necrolord
+local CallingQuests = {
+    { 60391, 60389, 60381, 60390, }, -- Aiding Ardenweald
+    { 60392, 60394, 60384, 60393, }, -- Aiding Bastion
+    { 60395, 60397, 60383, 60396, }, -- Aiding Maldraxxus
+    { 60400, 60399, 60382, 60398, }, -- Aiding Revendreth
 
+    { 60415, 60417, 60414, 60416, }, -- Rare Resources
+    { 60458, 60460, 60457, 60459, }, -- Anima Salvage
+    { 60380, 60378, 60373, 60379, }, -- A Source of Sorrowvine
+    { 60372, 60370, 60369, 60371, }, -- A Wealth of Wealdwood
+    { 60465, 60463, 60462, 60464, }, -- Anima Appeal
+    { 60358, 60365, 60364, 60363, }, -- Gildenite Grab
+    { 60377, 60375, 60374, 60376, }, -- Bonemetal Bonanza
+
+    { 60403, 60401, 60388, 60402, }, -- Training in Ardenweald
+    { 60404, 60406, 60387, 60405, }, -- Training in Bastion
+    { 60407, 60409, 60386, 60408, }, -- Training in Maldraxxus
+    { 60412, 60410, 60385, 60411, }, -- Training in Revendreth
+
+    { 60424, 60422, 60419, 60423, }, -- A Call to Ardenweald
+    { 60425, 60427, 60418, 60426, }, -- A Call to Bastion
+    { 60430, 60431, 60420, 60429, }, -- A Call to Maldraxxus
+    { 60434, 60432, 60421, 60433, }, -- A Call to Revendreth
+
+    { 60439, 60441, 60438, 60440, }, -- Challenges in Ardenweald
+    { 60442, 60444, 60437, 60443, }, -- Challenges in Bastion
+    { 60447, 60446, 60436, 60445, }, -- Challenges in Maldraxxus
+    { 60450, 60448, 60435, 60449, }, -- Challenges in Revendreth
+
+    { 60454, 60456, 60452, 60455, }, -- Storm the Maw
+}
+-- Convert the previous table into a map of questID => { questID... } to get the other covenants quest ids
+local CallingQuestMap = {}
+for _,ids in ipairs(CallingQuests) do
+    for _,questID in ipairs(ids) do
+        CallingQuestMap[questID] = ids
+    end
+end
+
+local SECONDS_PER_DAY = 24 * 60 * 60
+local function COVENANT_CALLINGS_UPDATED(event, calling)
     for _,calling in ipairs(calling) do
         local timeLeft = C_TaskQuest.GetQuestTimeLeftSeconds(calling.questID)
-        if timeLeft ~= nil then -- Too soon?
-            if timeLeft <= SECONDS_PER_DAY then
-                cache[1] = calling
-            elseif timeLeft <= SECONDS_PER_DAY * 2 then
-                cache[2] = calling
-            elseif timeLeft <= SECONDS_PER_DAY * 3 then
-                cache[3] = calling
+        local questIDs = CallingQuestMap[calling.questID]
+        if questIDs ~= nil and timeLeft ~= nil then -- Too soon?
+            for covenantID,questID in ipairs(questIDs) do
+                if timeLeft <= SECONDS_PER_DAY then
+                    BtWTodoCache.callings[covenantID][1] = questID
+                elseif timeLeft <= SECONDS_PER_DAY * 2 then
+                    BtWTodoCache.callings[covenantID][2] = questID
+                elseif timeLeft <= SECONDS_PER_DAY * 3 then
+                    BtWTodoCache.callings[covenantID][3] = questID
+                end
             end
         end
     end
