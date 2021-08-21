@@ -1,5 +1,6 @@
 local ADDON_NAME, Internal = ...
 local External = _G[ADDON_NAME]
+local L = Internal.L
 
 local PREFIX = ADDON_NAME
 
@@ -20,6 +21,9 @@ local ControlCharacters = {
 
     Ping = '\8', -- Check if a player is still online
     Pong = '\9', -- Respond to ping
+
+    RequestSharedData = '\10',
+    SendSharedData = '\11',
 }
 
 local LibSerialize = LibStub("LibSerialize")
@@ -180,5 +184,82 @@ Internal.RegisterEvent("CHAT_MSG_ADDON", function (event, prefix, text, channel,
         end
 
         External.TriggerEvent("PING", sender)
+    elseif control == ControlCharacters.RequestSharedData then
+        local id = strsub(text, 2)
+        Internal.SendSharedData(id)
+    elseif control == ControlCharacters.SendSharedData then
+        local encoded = strsub(text, 2)
+        local compressed = LibDeflate:DecodeForWoWAddonChannel(encoded)
+        local full = LibDeflate:DecompressDeflate(compressed)
+        local id, serialized = strsplit(" ", full, 2)
+        local data = LibSerialize:Deserialize(serialized)
+
+        BtWTodoCache[id] = data
+
+        Internal.TriggerEvent("SHARED_DATA:" .. id, data)
     end
+end)
+
+-- Shared data is anything that can be shared to other players, like which are the available korthia dailies, which quests for the current assault
+local lastRequested = {}
+function Internal.GetSharedData(id)
+    if type(id) ~= "string" or id:match("[^%w-_]") then
+        error(L["Shared data id must be a string containing only word characters, dashes, and underscores"])
+    end
+
+    local data = BtWTodoCache[id]
+
+    if not data and (lastRequested[id] == nil or lastRequested[id] < GetTime() - 60) then
+        if IsInGuild() then
+            ChatThrottleLib:SendAddonMessage("NORMAL", PREFIX, ControlCharacters.RequestSharedData .. id, "GUILD")
+        end
+        if IsInGroup(LE_PARTY_CATEGORY_HOME) then
+            ChatThrottleLib:SendAddonMessage("NORMAL", PREFIX, ControlCharacters.RequestSharedData .. id, "RAID")
+        end
+        if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+            ChatThrottleLib:SendAddonMessage("NORMAL", PREFIX, ControlCharacters.RequestSharedData .. id, "INSTANCE_CHAT")
+        end
+    end
+
+    return data
+end
+function Internal.SaveSharedData(id, data)
+    local send = BtWTodoCache[id] == nil or not tCompare(data, BtWTodoCache[id], 10)
+
+    BtWTodoCache[id] = data
+
+    if send then
+        Internal.SendSharedData(id)
+    end
+end
+function Internal.WipeSharedData(id)
+    Internal.SaveSharedData(id, nil)
+end
+function Internal.SendSharedData(id)
+    local data = BtWTodoCache[id]
+
+    if data == nil then -- Dont send wiping data, everyone else will probably be wiping too
+        return
+    end
+
+    local serialized = LibSerialize:Serialize(data)
+    local compressed = LibDeflate:CompressDeflate(id .. " " .. serialized)
+    local encoded = ControlCharacters.SendSharedData .. LibDeflate:EncodeForWoWAddonChannel(compressed)
+
+    if #encoded > 254 then -- We dont chunk shared data, just keep it smaller
+        return
+    end
+
+    if IsInGuild() then
+        ChatThrottleLib:SendAddonMessage("NORMAL", PREFIX, encoded, "GUILD")
+    end
+    if IsInGroup(LE_PARTY_CATEGORY_HOME) then
+        ChatThrottleLib:SendAddonMessage("NORMAL", PREFIX, encoded, "RAID")
+    end
+    if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
+        ChatThrottleLib:SendAddonMessage("NORMAL", PREFIX, encoded, "INSTANCE_CHAT")
+    end
+end
+Internal.RegisterEvent("GROUP_JOINED", function (event)
+    
 end)
