@@ -722,7 +722,7 @@ External.RegisterTodos({
             { type = "quest", id = 63834, },
             { type = "quest", id = 63835, }, -- [35]
 
-            -- Neight Fae Assault
+            -- Night Fae Assault
             { type = "quest", id = 63951, }, -- [36]
             { type = "quest", id = 63968, },
             { type = "quest", id = 63973, },
