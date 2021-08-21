@@ -135,7 +135,7 @@ function QuestMixin:IsActive()
 end
 function QuestMixin:IsComplete()
 	if self:GetCharacter():IsPlayer() then
-		return C_QuestLog.GetCharacter(self:GetID());
+		return C_QuestLog.IsComplete(self:GetID());
 	else
 		return self:GetCharacter():GetData("questLog", self:GetID()) == true
 	end
