@@ -38,7 +38,7 @@ function BtWTodoItemMixin:Update()
 		self:SetText(self.category)
 	end
 
-	if self:IsMouseOver() then
+	if self:IsMouseOver() and self:IsVisible() then
 		self:OnEnter()
 	end
 end
