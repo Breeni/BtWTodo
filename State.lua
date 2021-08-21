@@ -174,6 +174,13 @@ local EnvironmentMixin = {
     Custom = CustomStateFunctions,
     Colors = Colors,
     Images = Images,
+
+    IsAltKeyDown = IsAltKeyDown,
+    IsShiftKeyDown = IsShiftKeyDown,
+    IsControlKeyDown = IsControlKeyDown,
+    IsModifierKeyDown = IsModifierKeyDown,
+    IsLeftShiftKeyDown = IsLeftShiftKeyDown,
+    IsRightShiftKeyDown = IsRightShiftKeyDown,
 }
 local function CreateStateDriverFunction(driver, type, source, required, args)
     if not required and not source then

@@ -16,6 +16,7 @@ function BtWTodoItemMixin:Init(data)
 	if self.type == "todo" then
 		self.todo:SetCharacter(self.character)
 		self.todo:RegisterEventsFor(self, self.character:IsPlayer())
+        Internal.RegisterEvent(self, "MODIFIER_STATE_CHANGED", "Update")
 	end
 
 	self:Update()
