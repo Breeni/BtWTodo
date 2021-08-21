@@ -186,10 +186,7 @@ end
 Internal.RegisterStateProvider(CreateFromMixins(CallingProviderMixin))
 
 local function DAILY_RESET()
-    -- Remove the calling from the now previous day
-    for _,calling in ipairs(BtWTodoCache.callings) do
-        tremove(calling, 1)
-    end
+    C_CovenantCallings.RequestCallings() -- Triggers COVENANT_CALLINGS_UPDATED below
 end
 Internal.RegisterEvent("DAILY_RESET", DAILY_RESET)
 
@@ -235,6 +232,41 @@ end
 
 local SECONDS_PER_DAY = 24 * 60 * 60
 local function COVENANT_CALLINGS_UPDATED(event, calling)
+    -- We are doing the daily reset checking here instead of in DAILY_RESET event because the chat message is timed incorrectly
+
+    local covenantID = C_Covenants.GetActiveCovenantID()
+    local cache = BtWTodoCache.callings[covenantID]
+    local callingResets = 0
+    for _,calling in ipairs(calling) do
+        if calling and calling.questID then
+            local timeLeft = C_TaskQuest.GetQuestTimeLeftSeconds(calling.questID)
+            if timeLeft then -- Sometimes nil
+                if timeLeft <= SECONDS_PER_DAY * 1 then
+                    if cache[3] ~= nil and cache[3] == calling.questID then -- Its been 2 daily resets
+                        callingResets = 2
+                        break
+                    elseif cache[2] ~= nil and cache[2] == calling.questID then
+                        callingResets = 1
+                        break
+                    end
+                elseif timeLeft <= SECONDS_PER_DAY * 2 then
+                    if cache[3] ~= nil and cache[3] == calling.questID then
+                        callingResets = 1
+                        break
+                    end
+                end
+            end
+        end
+    end
+
+    for i=1,callingResets do -- Its past the daily reset, shift callings along 1 day
+        for _,calling in ipairs(BtWTodoCache.callings) do
+            tremove(calling, 1)
+        end
+    end
+
+    -- If its been 3 daily resets it doesnt matter, everything will be replaced
+
     for _,calling in ipairs(calling) do
         local timeLeft = C_TaskQuest.GetQuestTimeLeftSeconds(calling.questID)
         local questIDs = CallingQuestMap[calling.questID]
