@@ -36,6 +36,10 @@ function BtWTodoItemMixin:Update()
 	elseif self.type == "category" then
 		self:SetText(self.category)
 	end
+
+	if self:IsMouseOver() then
+		self:OnEnter()
+	end
 end
 function BtWTodoItemMixin:RegisterEvents(...)
     for i=1,select('#', ...) do
