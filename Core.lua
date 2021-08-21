@@ -316,19 +316,6 @@ External.RegisterTodos({
             end
         ]],
     },
-    --[[
-        Saturday:  5?
-        Sunday:    5
-        Monday:    4 [63784,63954,64101,!63775]
-        Tuesday:   4 [63790,63782,63934,!64016]
-        Wednesday: 4 [63789,63784,63958,!63775]
-        Thursday:  5 [63783,63782,63794,!63989,!64065]
-        Friday:    4 [63963,63950,63936,!64016]
-        Saturday:  4 [63791,63780,64101,?64103]
-        Sunday:    4 [63788,-6399,63935,?64017]
-        Monday:    4 [63934,63793,63787,#64103]
-        Tuesday:   5 [63777,63782,63936,!63989,!64065]
-    ]]
     { 
         id = "btwtodo:korthiadailies",
         name = L["Korthia"],
@@ -398,18 +385,26 @@ External.RegisterTodos({
             { type = "quest", id = 63965, },
         },
         completed = [[
-            local active, _, index = Custom.GetKorthiaDailies(character)
-            local count = index == 0 and 3 or 5
-            if active and index ~= 0 then
-                count = #active
+            local unlocked = character:IsQuestFlaggedCompleted(63727) -- The Last Sigil
+            local active = Custom.GetKorthiaDailies()
+            local count = 3
+            if unlocked then
+                count = active and active.n or 5
             end
             return tCount(states, "IsCompleted", 2) == count
         ]],
         text = [[
-            local active, default, index = Custom.GetKorthiaDailies(character)
-            local count = index == 0 and 3 or 5
-            if active and index ~= 0 then
-                count = #active
+            local unlocked = character:IsQuestFlaggedCompleted(63727) -- The Last Sigil
+            local active = Custom.GetKorthiaDailies()
+            local count = 3
+            local default = active == nil
+            if unlocked then
+                if active and active.n <= 3 then
+                    count = 5
+                    default = true
+                else
+                    count = active and active.n or 5
+                end
             end
             if default then
                 return format("%s / %s*", tCount(states, "IsCompleted", 2), count)
@@ -418,13 +413,14 @@ External.RegisterTodos({
             end
         ]],
         tooltip = [[
-            local active = Custom.GetKorthiaDailies(character)
+            local unlocked = character:IsQuestFlaggedCompleted(63727) -- The Last Sigil
+            local active = Custom.GetKorthiaDailies()
 
             tooltip:AddLine(self:GetName())
             if active then
-                for _,questID in ipairs(active) do
-                    local state = states["quest:" .. questID]
-                    if state then
+                for _,state in ipairs(states) do
+                    local questID = state:GetID()
+                    if active[questID] and (unlocked or Custom.IsBaseKorthiaDaily(questID)) then
                         local name = state:GetTitle()
                         if name == "" then
                             name = state:GetUniqueKey()
@@ -433,9 +429,13 @@ External.RegisterTodos({
                             name = format("%s [%d]", name, questID)
                         end
                         if state:IsCompleted() then
-                            tooltip:AddLine(name, 0, 1, 0)
+                            tooltip:AddLine(Images.COMPLETE .. name, 0, 1, 0)
+                        elseif state:IsComplete() then
+                            tooltip:AddLine(Images.QUEST_TURN_IN .. name, 1, 1, 0)
+                        elseif state:IsActive() then
+                            tooltip:AddLine(Images.PADDING .. name, 1, 1, 0)
                         else
-                            tooltip:AddLine(name, 1, 1, 1)
+                            tooltip:AddLine(Images.QUEST_PICKUP .. name, 1, 1, 1)
                         end
                     end
                 end

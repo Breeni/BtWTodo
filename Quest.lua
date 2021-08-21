@@ -513,19 +513,11 @@ do
 		[64043] = true,
 		[63965] = true,
 	}
-	local function GetKorthiaDailies(character)
-		if type(BtWTodoCache.korthiaDailies) ~= "table" then
-			BtWTodoCache.korthiaDailies = {}
-		end
-
-		-- If your in Korthia we can just check the api for the count
+	local SharedDataID = "KORTHIA_DAILIES"
+	local function GetKorthiaDailies()
+		local dailies = Internal.GetSharedData(SharedDataID)
 		if C_Map.GetBestMapForUnit("player") == 1961 then
-			local index = 0
-			if C_QuestLog.IsQuestFlaggedCompleted(63622) then -- An Army of Bone and Steel
-				index = 2
-			elseif C_QuestLog.IsQuestFlaggedCompleted(63727) then -- The Last Sigil
-				index = 1
-			end
+			local unlocked = C_QuestLog.IsQuestFlaggedCompleted(63727)
 
 			local quests = tMap(tFilter(C_TaskQuest.GetQuestsForPlayerByMapID(1961), function (item)
 				return korthiaDailies[item.questId]
@@ -540,34 +532,143 @@ do
 			-- Complete quests arent returned by C_TaskQuest.GetQuestsForPlayerByMapID so we will add those ourselves
 			for questID in pairs(korthiaDailies) do
 				if not questIDs[questID] and C_QuestLog.IsQuestFlaggedCompleted(questID) then
+					questIDs[questID] = true
 					quests[#quests+1] = questID
 				end
 			end
 			if not questIDs[64103] and C_QuestLog.GetLogIndexForQuestID(64103) then -- This one doesnt show on the map for some reason so we add it if we are on it
+				questIDs[64103] = true
 				quests[#quests+1] = 64103
 			end
+			questIDs.n = #quests
 
-			BtWTodoCache.korthiaDailies[index] = quests
-			-- Change the default, there is a pretty good chance all the variations will be the same
-			if BtWTodoCache.korthiaDailies[-1] == nil then
-				BtWTodoCache.korthiaDailies[-1] = quests
+			if unlocked and #quests > 3 then
+				Internal.SaveSharedData(SharedDataID, questIDs)
 			end
+
+			dailies = questIDs
 		end
 
-		local index = 0
-		if character:IsQuestFlaggedCompleted(63622) then -- An Army of Bone and Steel
-			index = 2
-		elseif character:IsQuestFlaggedCompleted(63727) then -- The Last Sigil
-			index = 1
-		end
-		if BtWTodoCache.korthiaDailies[index] == nil then
-			return BtWTodoCache.korthiaDailies[-1], true, index
-		end
-		return BtWTodoCache.korthiaDailies[index], false, index
+		return dailies
+
+		-- if type(BtWTodoCache.korthiaDailies) ~= "table" then
+		-- 	BtWTodoCache.korthiaDailies = {}
+		-- end
+
+		-- -- If your in Korthia we can just check the api for the count
+		-- if C_Map.GetBestMapForUnit("player") == 1961 then
+		-- 	local index = 0
+		-- 	if C_QuestLog.IsQuestFlaggedCompleted(63622) then -- An Army of Bone and Steel
+		-- 		index = 2
+		-- 	elseif C_QuestLog.IsQuestFlaggedCompleted(63727) then -- The Last Sigil
+		-- 		index = 1
+		-- 	end
+
+		-- 	local quests = tMap(tFilter(C_TaskQuest.GetQuestsForPlayerByMapID(1961), function (item)
+		-- 		return korthiaDailies[item.questId]
+		-- 	end, true), function (k, v)
+		-- 		return v.questId
+		-- 	end)
+
+		-- 	local questIDs = {}
+		-- 	for _,questID in ipairs(quests) do
+		-- 		questIDs[questID] = true
+		-- 	end
+		-- 	-- Complete quests arent returned by C_TaskQuest.GetQuestsForPlayerByMapID so we will add those ourselves
+		-- 	for questID in pairs(korthiaDailies) do
+		-- 		if not questIDs[questID] and C_QuestLog.IsQuestFlaggedCompleted(questID) then
+		-- 			quests[#quests+1] = questID
+		-- 		end
+		-- 	end
+		-- 	if not questIDs[64103] and C_QuestLog.GetLogIndexForQuestID(64103) then -- This one doesnt show on the map for some reason so we add it if we are on it
+		-- 		quests[#quests+1] = 64103
+		-- 	end
+
+		-- 	BtWTodoCache.korthiaDailies[index] = quests
+		-- 	-- Change the default, there is a pretty good chance all the variations will be the same
+		-- 	if BtWTodoCache.korthiaDailies[-1] == nil then
+		-- 		BtWTodoCache.korthiaDailies[-1] = quests
+		-- 	end
+		-- end
+
+		-- local index = 0
+		-- if character:IsQuestFlaggedCompleted(63622) then -- An Army of Bone and Steel
+		-- 	index = 2
+		-- elseif character:IsQuestFlaggedCompleted(63727) then -- The Last Sigil
+		-- 	index = 1
+		-- end
+		-- if BtWTodoCache.korthiaDailies[index] == nil then
+		-- 	return BtWTodoCache.korthiaDailies[-1], true, index
+		-- end
+		-- return BtWTodoCache.korthiaDailies[index], false, index
 	end
 	Internal.RegisterCustomStateFunction("GetKorthiaDailies", GetKorthiaDailies)
+	local baseDailies = {
+		[64271] = nil,
+		[63783] = true,
+		[63779] = nil,
+		[63934] = true,
+		[63793] = true,
+		[63964] = nil,
+		[63794] = true,
+		[63790] = true,
+		[63792] = nil,
+		[63963] = true,
+		[63791] = true,
+		[64129] = false,
+		[63787] = true,
+		[63788] = true,
+		[63789] = true,
+		[63785] = nil,
+		[63775] = false,
+		[63936] = true,
+		[64080] = nil,
+		[64240] = nil,
+		[63784] = true,
+		[64015] = nil,
+		[64065] = false,
+		[63781] = nil,
+		[63782] = true,
+		[63937] = nil,
+		[63962] = true,
+		[63959] = nil,
+		[63776] = nil,
+		[63957] = nil,
+		[63958] = true,
+		[63960] = nil,
+		[64103] = false,
+		[64040] = nil,
+		[64017] = false,
+		[64016] = false,
+		[63989] = false,
+		[63935] = true,
+		[64166] = nil,
+		[63950] = true,
+		[63961] = nil,
+		[63777] = true,
+		[63954] = true,
+		[63955] = nil,
+		[63956] = nil,
+		[63780] = true,
+		[64430] = nil,
+		[64070] = nil,
+		[64432] = nil,
+		[63786] = false,
+		[64089] = nil,
+		[64101] = true,
+		[64018] = false,
+		[64104] = nil,
+		[64194] = nil,
+		[63778] = false,
+		[64043] = nil,
+		[63965] = nil,
+	}
+	Internal.RegisterCustomStateFunction("IsBaseKorthiaDaily", function (questID)
+		return baseDailies[questID]
+	end)
 	Internal.RegisterEvent("DAILY_RESET", function ()
 		BtWTodoCache.korthiaDailies = nil
+		Internal.WipeSharedData(SharedDataID)
 	end)
 end
 
