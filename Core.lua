@@ -460,7 +460,18 @@ External.RegisterTodos({
             { type = "lockout", id = 2450, values = { 16 }, }, -- Mythic
         },
         completed = "return states[1]:IsThreshold(3)",
-        text = "return format(\"%s / %s / %s\", states[1]:GetLevelInitial(1), states[1]:GetLevelInitial(2), states[1]:GetLevelInitial(3))",
+        text = [[
+            local text = format("%s / %s / %s", states[1]:GetLevelInitial(1), states[1]:GetLevelInitial(2), states[1]:GetLevelInitial(3))
+            if self:IsCompleted() then
+                return text -- Already color coded
+            elseif states[1]:IsThreshold(2) then
+                return Colors.STALLED:WrapTextInColorCode(text)
+            elseif states[1]:IsThreshold(1) then
+                return Colors.STARTED:WrapTextInColorCode(text)
+            else
+                return text
+            end
+        ]],
         tooltip = [[
             tooltip:AddLine(self:GetName())
             local state = states[5]
@@ -493,7 +504,16 @@ External.RegisterTodos({
         completed = "return states[1]:GetLevel(3) >= 15",
         text = [[
             local a, b, c = states[1]:GetLevel(1), states[1]:GetLevel(2), states[1]:GetLevel(3)
-            return format("%s / %s / %s", a == 0 and "_" or a, b == 0 and "_" or b, c == 0 and "_" or c)
+            local text = format("%s / %s / %s", a == 0 and "_" or a, b == 0 and "_" or b, c == 0 and "_" or c)
+            if self:IsCompleted() then
+                return text -- Already color coded
+            elseif states[1]:IsThreshold(2) then
+                return Colors.STALLED:WrapTextInColorCode(text)
+            elseif states[1]:IsThreshold(1) then
+                return Colors.STARTED:WrapTextInColorCode(text)
+            else
+                return text
+            end
         ]],
         tooltip = [[
             tooltip:AddLine(self:GetName())
