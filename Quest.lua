@@ -128,7 +128,7 @@ function QuestMixin:GetTitle()
 end
 function QuestMixin:IsActive()
 	if self:GetCharacter():IsPlayer() then
-		return C_QuestLog.GetLogIndexForQuestID(self:GetID()) ~= 0;
+		return C_QuestLog.GetLogIndexForQuestID(self:GetID()) ~= nil;
 	else
 		return self:GetCharacter():GetData("questLog", self:GetID()) ~= nil
 	end
