@@ -424,7 +424,13 @@ External.RegisterTodos({
                 for _,questID in ipairs(active) do
                     local state = states["quest:" .. questID]
                     if state then
-                        local name = format("%s [%d]", state:GetTitle() or "", questID)
+                        local name = state:GetTitle()
+                        if name == "" then
+                            name = state:GetUniqueKey()
+                        end
+                        if IsShiftKeyDown() then
+                            name = format("%s [%d]", name, questID)
+                        end
                         if state:IsCompleted() then
                             tooltip:AddLine(name, 0, 1, 0)
                         else
@@ -760,6 +766,9 @@ External.RegisterTodos({
                 if name == "" then
                     name = state:GetUniqueKey()
                 end
+                if IsShiftKeyDown() then
+                    name = format("%s [%d]", name, questID)
+                end
 
                 if state:IsCompleted() or state:GetID() == character.data.firstMawAssaultCompleted then
                     tooltip:AddLine(name, 0, 1, 0)
@@ -785,6 +794,9 @@ External.RegisterTodos({
                         local name = state:GetTitle()
                         if name == "" then
                             name = state:GetUniqueKey()
+                        end
+                        if IsShiftKeyDown() then
+                            name = format("%s [%d]", name, state:GetID())
                         end
 
                         name = format(" - " .. name)
