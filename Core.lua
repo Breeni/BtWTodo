@@ -674,15 +674,59 @@ External.RegisterTodos({
         id = "btwtodo:mawassault",
         name = L["Maw Assault"],
         states = {
-            { type = "quest", id = 63543, },
-            { type = "quest", id = 63822, },
-            { type = "quest", id = 63823, },
-            { type = "quest", id = 63824, },
+            { type = "quest", id = 63543, }, -- Necrolord Assault
+            { type = "quest", id = 63824, }, -- Kyrian Assault
+            { type = "quest", id = 63822, }, -- Venthyr Assault
+            { type = "quest", id = 63823, }, -- Night Fae Assault
 
-            -- { type = "quest", id = 63819, }, -- Cant remember what this was, but never got unflagged, maybe for achievement?
-            -- { type = "quest", id = 64253, }, -- Got flagged as completed when going through front right mirror
-            -- { type = "quest", id = 62686, }, -- Was flagged completed on Chade, maybe a treasture or someting
-            -- { type = "quest", id = 64067, }, -- Was flagged completed on all that had done the assault pre saturday but no idea when it was flagged
+            -- Necrolord Assault
+            { type = "quest", id = 63774, }, -- [5]
+            { type = "quest", id = 63455, },
+            { type = "quest", id = 63664, },
+            { type = "quest", id = 63625, },
+            { type = "quest", id = 63669, },
+            { type = "quest", id = 59004, },
+            { type = "quest", id = 63773, },
+            { type = "quest", id = 63772, },
+            { type = "quest", id = 63753, },
+            { type = "quest", id = 63621, },
+            { type = "quest", id = 63545, }, -- [15]
+
+            -- Kyrian Assault
+            { type = "quest", id = 63858, }, -- [16]
+            { type = "quest", id = 63827, },
+            { type = "quest", id = 63843, },
+            { type = "quest", id = 63853, },
+            { type = "quest", id = 63828, },
+            { type = "quest", id = 63829, },
+            { type = "quest", id = 63859, },
+            { type = "quest", id = 63864, },
+            { type = "quest", id = 63846, },
+            { type = "quest", id = 63863, }, -- [25]
+
+            -- Venthyr Assault
+            { type = "quest", id = 63837, }, -- [26]
+            { type = "quest", id = 63838, },
+            { type = "quest", id = 63836, },
+            { type = "quest", id = 63839, },
+            { type = "quest", id = 63841, },
+            { type = "quest", id = 63833, },
+            { type = "quest", id = 63842, },
+            { type = "quest", id = 63840, },
+            { type = "quest", id = 63834, },
+            { type = "quest", id = 63835, }, -- [35]
+
+            -- Neight Fae Assault
+            { type = "quest", id = 63951, }, -- [36]
+            { type = "quest", id = 63968, },
+            { type = "quest", id = 63973, },
+            { type = "quest", id = 63952, },
+            { type = "quest", id = 63972, },
+            { type = "quest", id = 63969, },
+            { type = "quest", id = 63970, },
+            { type = "quest", id = 63971, },
+            { type = "quest", id = 63974, },
+            { type = "quest", id = 63945, }, -- [45]
         },
         completed = [[
             return not Custom.IsBeforeHalfWeeklyReset() and (states[1]:IsCompleted() or states[2]:IsCompleted() or states[3]:IsCompleted() or states[4]:IsCompleted())
@@ -708,7 +752,10 @@ External.RegisterTodos({
         ]],
         tooltip = [[
             tooltip:AddLine(self:GetName())
-            for _,state in ipairs(states) do
+            local quests = {Custom.GetMawAssaults()}
+
+            for index,questID in ipairs(quests) do
+                local state = states['quest:' .. questID]
                 local name = state:GetTitle()
                 if name == "" then
                     name = state:GetUniqueKey()
@@ -718,6 +765,39 @@ External.RegisterTodos({
                     tooltip:AddLine(name, 0, 1, 0)
                 else
                     tooltip:AddLine(name, 1, 1, 1)
+                end
+
+                local first, last
+                if state == states[1] then -- Necrolord
+                    first, last = 5, 15
+                elseif state == states[2] then -- Kyrian
+                    first, last = 16, 25
+                elseif state == states[3] then -- Venthyr
+                    first, last = 26, 35
+                elseif state == states[4] then -- Night Fae
+                    first, last = 36, 45
+                end
+
+                for i=first,last do
+                    local state = states[i]
+
+                    if state:IsActive() or state:IsCompleted() then
+                        local name = state:GetTitle()
+                        if name == "" then
+                            name = state:GetUniqueKey()
+                        end
+
+                        name = format(" - " .. name)
+                        if state:IsCompleted() then
+                            tooltip:AddLine(name, 0, 1, 0)
+                        else
+                            tooltip:AddLine(name, 1, 1, 1)
+                        end
+                    end
+                end
+
+                if index == 1 then
+                    tooltip:AddLine(" ")
                 end
             end
         ]],

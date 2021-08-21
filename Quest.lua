@@ -583,3 +583,16 @@ do
 		end
 	end)
 end
+
+-- Maw Assault
+do
+	-- Returns which assaults for the current week
+	Internal.RegisterCustomStateFunction("GetMawAssaults", function ()
+		local week = Internal.GetSeasonWeek() % 2
+		if week == 0 then
+			return 63822, 63823 -- Venthyr? and Night Fae?
+		else
+			return 63543, 63824 -- Necrolord and Kyrian?
+		end
+	end)
+end
