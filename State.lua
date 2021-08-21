@@ -133,6 +133,7 @@ end
 local Colors = {
     COMPLETE = CreateColor(0,1,0,1),
     STALLED = CreateColor(1,1,0,1),
+    STARTED = ARTIFACT_GOLD_COLOR,
 
 	COMMON = COMMON_GRAY_COLOR,
 	UNCOMMON = UNCOMMON_GREEN_COLOR,
