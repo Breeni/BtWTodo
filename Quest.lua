@@ -50,6 +50,9 @@ local specialEventQuests = {
     [64471] = "LOOT_READY",
     [64472] = "LOOT_READY",
     [64456] = "LOOT_READY",
+
+	-- Death-Bound Shard
+	[64347] = "CHAT_MSG_LOOT",
 }
 
 local QuestMixin = CreateFromMixins(External.StateMixin)
