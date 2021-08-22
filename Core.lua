@@ -769,6 +769,9 @@ External.RegisterTodos({
                 if IsShiftKeyDown() then
                     name = format("%s [%d]", name, questID)
                 end
+                if index == 1 and not Custom.IsBeforeHalfWeeklyReset() and not character.data.firstMawAssaultCompleted then
+                    name = Colors.COMMON:WrapTextInColorCode(name)
+                end
 
                 if state:IsCompleted() or state:GetID() == character.data.firstMawAssaultCompleted then
                     tooltip:AddLine(name, 0, 1, 0)
