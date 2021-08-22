@@ -75,7 +75,7 @@ function MythicPlusRunsMixin:IsRunInTime(index)
 end
 -- TO: None of these should be used really
 function MythicPlusRunsMixin:RegisterEventsFor(target)
-    target:RegisterEvents("PLAYER_ENTERING_WORLD", "CHALLENGE_MODE_COMPLETED")
+    target:RegisterEvents("PLAYER_ENTERING_WORLD", "CHALLENGE_MODE_COMPLETED", "CHALLENGE_MODE_MAPS_UPDATE")
 end
 
 local MythicPlusRunsProviderMixin = CreateFromMixins(External.StateProviderMixin)
