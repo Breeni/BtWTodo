@@ -210,9 +210,10 @@ External.RegisterTodos({
         },
         completed = "return states[1]:IsCompleted() -- Test Comment for editor",
         text = [=[
-            local text = format("%s / %s", states[1]:GetChaptersCompleted(), states[1]:GetChaptersTotal()) --[[
-                Test Comment for editor
-            ]]
+            if self:IsCompleted() then -- Last chapter doesnt show as completed correctly, it has an extra quest
+                return format("%s / %s", states[1]:GetChaptersTotal(), states[1]:GetChaptersTotal())
+            end
+            local text = format("%s / %s", states[1]:GetChaptersCompleted(), states[1]:GetChaptersTotal())
             if states[1]:IsStalled() then
                 return Colors.STALLED:WrapTextInColorCode(text)
             else
@@ -223,7 +224,7 @@ External.RegisterTodos({
             tooltip:AddLine(self:GetName())
             for i=1,states[1]:GetChaptersTotal() do
                 local name = states[1]:GetChapterName(i)
-                if states[1]:IsChapterCompleted(i) then
+                if self:IsCompleted() or states[1]:IsChapterCompleted(i) then
                     tooltip:AddLine(name, 0, 1, 0)
                 elseif states[1]:IsChapterInProgress(i) then
                     tooltip:AddLine(name, 1, 1, 1)
