@@ -123,8 +123,5 @@ end
 Internal.RegisterEvent("PLAYER_LOGOUT", PLAYER_LOGOUT)
 
 Internal.RegisterEvent("CHALLENGE_MODE_COMPLETED", function ()
-    C_MythicPlus.RequestMapInfo();
-end)
-Internal.RegisterEvent("WEEKLY_REWARDS_UPDATE", function ()
-    C_MythicPlus.RequestMapInfo();
+    C_Timer.After(5, C_MythicPlus.RequestMapInfo)
 end)
