@@ -205,7 +205,7 @@ Internal.RegisterEvent("PLAYER_LOGIN", function()
 end)
 
 -- Save Faction Data for Player
-Internal.RegisterEvent("PLAYER_LOGOUT", function ()
+Internal.RegisterEvent("PLAYER_ENTERING_WORLD", function ()
     local player = Internal.GetPlayer()
 	local standing = player:GetDataTable("factionStanding")
 	local quantity = player:GetDataTable("factionQuantity")
