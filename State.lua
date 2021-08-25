@@ -145,7 +145,7 @@ local Colors = {
 	WOWTOKEN = HEIRLOOM_BLUE_COLOR,
 }
 local Images = {
-    PADDING = "|Tinterface\\common\\ui-tooltipdivider-transparent.blp:0|t",
+    PADDING = [[|T982414:0|t]],
     COMPLETE = "|A:achievementcompare-GreenCheckmark:0:0|a",
     STALLED = "|A:achievementcompare-YellowCheckmark:0:0|a",
     QUEST_PICKUP = "|A:QuestNormal:0:0|a",
