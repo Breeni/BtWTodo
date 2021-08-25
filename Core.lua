@@ -683,8 +683,8 @@ External.RegisterTodos({
         states = {
             { type = "quest", id = 63543, }, -- Necrolord Assault
             { type = "quest", id = 63824, }, -- Kyrian Assault
-            { type = "quest", id = 63822, }, -- Venthyr Assault
             { type = "quest", id = 63823, }, -- Night Fae Assault
+            { type = "quest", id = 63822, }, -- Venthyr Assault
 
             -- Necrolord Assault
             { type = "quest", id = 63774, }, -- [5]
@@ -711,20 +711,8 @@ External.RegisterTodos({
             { type = "quest", id = 63846, },
             { type = "quest", id = 63863, }, -- [25]
 
-            -- Venthyr Assault
-            { type = "quest", id = 63837, }, -- [26]
-            { type = "quest", id = 63838, },
-            { type = "quest", id = 63836, },
-            { type = "quest", id = 63839, },
-            { type = "quest", id = 63841, },
-            { type = "quest", id = 63833, },
-            { type = "quest", id = 63842, },
-            { type = "quest", id = 63840, },
-            { type = "quest", id = 63834, },
-            { type = "quest", id = 63835, }, -- [35]
-
             -- Night Fae Assault
-            { type = "quest", id = 63951, }, -- [36]
+            { type = "quest", id = 63951, }, -- [26]
             { type = "quest", id = 63968, },
             { type = "quest", id = 63973, },
             { type = "quest", id = 63952, },
@@ -733,7 +721,19 @@ External.RegisterTodos({
             { type = "quest", id = 63970, },
             { type = "quest", id = 63971, },
             { type = "quest", id = 63974, },
-            { type = "quest", id = 63945, }, -- [45]
+            { type = "quest", id = 63945, }, -- [35]
+
+            -- Venthyr Assault
+            { type = "quest", id = 63837, }, -- [36]
+            { type = "quest", id = 63838, },
+            { type = "quest", id = 63836, },
+            { type = "quest", id = 63839, },
+            { type = "quest", id = 63841, },
+            { type = "quest", id = 63833, },
+            { type = "quest", id = 63842, },
+            { type = "quest", id = 63840, },
+            { type = "quest", id = 63834, },
+            { type = "quest", id = 63835, }, -- [45]
         },
         completed = [[
             return not Custom.IsBeforeHalfWeeklyReset() and (states[1]:IsCompleted() or states[2]:IsCompleted() or states[3]:IsCompleted() or states[4]:IsCompleted())
@@ -785,9 +785,9 @@ External.RegisterTodos({
                     first, last = 5, 15
                 elseif state == states[2] then -- Kyrian
                     first, last = 16, 25
-                elseif state == states[3] then -- Venthyr
+                elseif state == states[3] then -- Night Fae
                     first, last = 26, 35
-                elseif state == states[4] then -- Night Fae
+                elseif state == states[4] then -- Venthyr
                     first, last = 36, 45
                 end
 

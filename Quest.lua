@@ -593,9 +593,9 @@ do
 	Internal.RegisterCustomStateFunction("GetMawAssaults", function ()
 		local week = Internal.GetSeasonWeek() % 2
 		if week == 0 then
-			return 63822, 63823 -- Venthyr? and Night Fae?
+			return 63823, 63822 -- Night Fae and Venthyr
 		else
-			return 63543, 63824 -- Necrolord and Kyrian?
+			return 63543, 63824 -- Necrolord and Kyrian
 		end
 	end)
 end
