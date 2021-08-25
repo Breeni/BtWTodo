@@ -638,7 +638,11 @@ External.RegisterTodos({
             local layers = {}
             for _,state in ipairs(states) do
                 if state:IsAvailable() then
-                    layers[#layers+1] = state:GetCompletedLayer()
+                    local value = state:GetCompletedLayer()
+                    if value == 0 then
+                        value = "-"
+                    end
+                    layers[#layers+1] = value
                 end
             end
             return concat(layers, " / ")
