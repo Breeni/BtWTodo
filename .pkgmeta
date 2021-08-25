@@ -9,5 +9,6 @@ externals:
 
 ignore:
     - README.md
+    - Locales/enUS.lua
 
 enable-nolib-creation: no
