@@ -1,5 +1,6 @@
+local _, Internal = ...
 if GetLocale() ~= "esMX" then
     return
 end
 
-local L = BtWTodo.L
+local L = Internal.L

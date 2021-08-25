@@ -1,5 +1,6 @@
+local _, Internal = ...
 if GetLocale() ~= "deDE" then
     return
 end
 
-local L = BtWTodo.L
+local L = Internal.L
