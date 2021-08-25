@@ -37,7 +37,7 @@ function CallingMixin:RefreshCache()
     end
 end
 function CallingMixin:GetDisplayName()
-    return L["Calling "] .. self:GetID()
+    return L["Calling"] .. " " .. self:GetID()
 end
 function CallingMixin:GetUniqueKey()
 	return "calling:" .. self:GetID()
