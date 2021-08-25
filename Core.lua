@@ -815,10 +815,6 @@ External.RegisterTodos({
                         end
                     end
                 end
-
-                if index == 1 then
-                    tooltip:AddLine(" ")
-                end
             end
         ]],
     },
