@@ -180,7 +180,7 @@ External.RegisterTodos({
         id = "btwtodo:itemlevel",
         name = L["Item Level"],
         states = {
-            { type = "character", id = 6, },
+            { type = "character", id = 7, },
         },
         completed = [[
             return true
