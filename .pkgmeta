@@ -9,6 +9,7 @@ externals:
 
 ignore:
     - README.md
+    - download-translations.sh
     - Locales/enUS.lua
 
 enable-nolib-creation: no
