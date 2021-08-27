@@ -827,17 +827,13 @@ External.RegisterTodos({
         completed = "return states[1]:IsCompleted()",
         text = DEFAULT_TEXT_FUNCTION,
         tooltip = [[
-            tooltip:AddLine(format(L["%s (local time)"], self:GetName()))
-            local next, previous, isNextActive, isPreviousActive = Custom.GetTormentorTimers()
-            if isPreviousActive then
-                tooltip:AddLine(format(L["Current: %s"], previous), 0, 1, 0)
-            elseif previous then
-                tooltip:AddLine(format(L["Most Recent: %s"], previous), 1, 1, 1)
-            end
-            if isNextActive then
-                tooltip:AddLine(format(L["Current: %s"], next), 1, 1, 1)
+            tooltip:AddLine(self:GetName())
+
+            local next, isActive = Custom.GetTormentorCountdown()
+            if isActive then
+                tooltip:AddLine(format(L["Active!"]), 1, 1, 1)
             else
-                tooltip:AddLine(format(L["Next: %s"], next), 1, 1, 1)
+                tooltip:AddLine(format(L["Active in %s"], SecondsToTime(next)), 1, 1, 1)
             end
         ]],
     },

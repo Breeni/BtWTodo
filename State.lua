@@ -175,6 +175,8 @@ local EnvironmentMixin = {
     Colors = Colors,
     Images = Images,
 
+    SecondsToTime = SecondsToTime,
+
     IsAltKeyDown = IsAltKeyDown,
     IsShiftKeyDown = IsShiftKeyDown,
     IsControlKeyDown = IsControlKeyDown,

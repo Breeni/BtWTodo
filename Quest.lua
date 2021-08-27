@@ -585,6 +585,14 @@ do
 			return date("%H:%M:%S", previous + (2 * 60 * 60)), date("%H:%M:%S", previous), false, false
 		end
 	end)
+
+	Internal.RegisterCustomStateFunction("GetTormentorCountdown", function ()
+		local seasonStartTimestamp = Internal.GetSeasonStartTimestamp()
+		local previous = seasonStartTimestamp + math.floor((GetServerTime() - seasonStartTimestamp) / (2 * 60 * 60)) * (2 * 60 * 60)
+
+		local result = previous + (2 * 60 * 60) - GetServerTime()
+		return result, GetServerTime() - previous <= 420
+	end)
 end
 
 -- Maw Assault
