@@ -70,8 +70,37 @@ function BtWTodoItemMixin:OnEnter()
 	if self.type == "todo" and self.todo:SupportsTooltip() then
 		self.todo:SetCharacter(self.character)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-		self.todo:UpdateTooltip(GameTooltip)
+		local refreshRate = self.todo:UpdateTooltip(GameTooltip)
 		GameTooltip:Show()
+
+		if refreshRate then
+			self.tooltipTimer = 0
+			self.tooltipRefreshRate = refreshRate
+			self:SetScript("OnUpdate", self.OnUpdate)
+		else
+			self:SetScript("OnUpdate", nil)
+		end
+	end
+end
+function BtWTodoItemMixin:OnUpdate(elapsed)
+	if not self:IsMouseOver() or not self:IsVisible() then
+		self:SetScript("OnUpdate", nil)
+	end
+
+	self.tooltipTimer = self.tooltipTimer + elapsed
+	if self.tooltipTimer >= self.tooltipRefreshRate then
+		self.tooltipTimer = 0
+
+		self.todo:SetCharacter(self.character)
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+		local refreshRate = self.todo:UpdateTooltip(GameTooltip)
+		GameTooltip:Show()
+
+		if refreshRate then
+			self.tooltipRefreshRate = refreshRate
+		else
+			self:SetScript("OnUpdate", nil)
+		end
 	end
 end
 function BtWTodoItemMixin:OnLeave()

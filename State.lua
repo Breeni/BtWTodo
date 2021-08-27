@@ -407,8 +407,8 @@ function StateDriverMixin:SupportsTooltip()
     return self.tooltip ~= nil
 end
 function StateDriverMixin:UpdateTooltip(tooltip)
-    xpcall(function ()
-        self.tooltip({
+    local success, result = xpcall(function ()
+        return self.tooltip({
             GetName = function ()
                 return self:GetName()
             end,
@@ -420,6 +420,11 @@ function StateDriverMixin:UpdateTooltip(tooltip)
             end,
         }, self:GetCharacter(), self.states, Internal.L, tooltip)
     end, geterrorhandler())
+    if success then
+        return result
+    else
+        return false
+    end
 end
 function StateDriverMixin:SupportsClick()
     return self.click ~= nil
