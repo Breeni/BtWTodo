@@ -834,6 +834,7 @@ External.RegisterTodos({
                 tooltip:AddLine(format(L["Active!"]), 1, 1, 1)
             else
                 tooltip:AddLine(format(L["Active in %s"], SecondsToTime(next)), 1, 1, 1)
+                return 1
             end
         ]],
     },
