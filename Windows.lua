@@ -85,6 +85,7 @@ end
 function BtWTodoItemMixin:OnUpdate(elapsed)
 	if not self:IsMouseOver() or not self:IsVisible() then
 		self:SetScript("OnUpdate", nil)
+		GameTooltip:Hide()
 	end
 
 	self.tooltipTimer = self.tooltipTimer + elapsed
@@ -120,9 +121,12 @@ function BtWTodoRowMixin:OnLoad()
 	PixelUtil.SetPoint(self.Right, "RIGHT", self, "RIGHT", 0, -1);
 	PixelUtil.SetPoint(self.Right, "LEFT", self.Text, "RIGHT", 10, -1);
 end
-function BtWTodoRowMixin:Init(data, itemWidth)
+function BtWTodoRowMixin:Init(data, itemWidth, itemHeight)
 	Mixin(self, data)
 	self.itemWidth = itemWidth
+	self.itemHeight = itemHeight
+
+	self:SetHeight(itemHeight)
 
 	self:Update()
 end
@@ -150,7 +154,7 @@ function BtWTodoRowMixin:Update()
 	elseif self.type == "characters" then
 		local frame = self.pool:Acquire()
 		frame:Init({ type = "corner" })
-		frame:SetWidth(self.itemWidth)
+		frame:SetSize(self.itemWidth, self.itemHeight)
 		frame:SetPoint("LEFT")
 		frame:Show()
 
@@ -158,7 +162,7 @@ function BtWTodoRowMixin:Update()
 		for _,character in ipairs(self:GetCharacters()) do
 			local frame = self.pool:Acquire()
 			frame:Init({ type = "character", character = character })
-			frame:SetWidth(self.itemWidth)
+			frame:SetSize(self.itemWidth, self.itemHeight)
 			frame:SetPoint("LEFT", previousFrame, "RIGHT")
 			frame:Show()
 			previousFrame = frame
@@ -169,7 +173,7 @@ function BtWTodoRowMixin:Update()
 	elseif self.type == "todos" then
 		local frame = self.pool:Acquire()
 		frame:Init({ type = "title", todo = self.todo })
-		frame:SetWidth(self.itemWidth)
+		frame:SetSize(self.itemWidth, self.itemHeight)
 		frame:SetPoint("LEFT")
 		frame:Show()
 
@@ -177,7 +181,7 @@ function BtWTodoRowMixin:Update()
 		for _,character in ipairs(self:GetCharacters()) do
 			local frame = self.pool:Acquire()
 			frame:Init({ type = "todo", todo = self.todo, character = character })
-			frame:SetWidth(self.itemWidth)
+			frame:SetSize(self.itemWidth, self.itemHeight)
 			frame:SetPoint("LEFT", previousFrame, "RIGHT")
 			frame:Show()
 			previousFrame = frame
@@ -211,8 +215,7 @@ function BtWTodoViewMixin:OnLoad()
 	local view = CreateScrollBoxListLinearView();
 	view:SetElementExtent(self:GetItemHeight())
 	view:SetElementInitializer("Button", "BtWTodoScrollRowTemplate", function(list, elementData)
-		list:Init(elementData, self:GetItemWidth());
-		list:SetHeight(self:GetItemHeight())
+		list:Init(elementData, self:GetItemWidth(), self:GetItemHeight());
 	end);
 
 	ScrollUtil.InitScrollBoxListWithScrollBar(self.ScrollBox, self.ScrollBar, view);
