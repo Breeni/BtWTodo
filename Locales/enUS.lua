@@ -1,5 +1,14 @@
 -- Definitions for localizations, this file isnt shipped, is just used to define other locales
 
+L["%s (Layer %d)"] = "%s (Layer %d)"
+L["Quantity: %d"] = "Quantity: %d"
+L["Earned this week: %d*"] = "Earned this week: %d*"
+L["Max this week: %d*"] = "Max this week: %d*"
+L["%s (Level %d)"] = "%s (Level %d)"
+L["Rewards item level %d"] = "Rewards item level %d"
+L["Unknown"] = "Unknown" -- UNKNOWN
+L["Active!"] = "Active!"
+L["Active in %s"] = "Active in %s"
 L["Current Player"] = "Current Player"
 L["Tower Knowledge"] = "Tower Knowledge" -- db2.currencytypes[1904].Name
 L["Item Level (PvP)"] = "Item Level (PvP)"
