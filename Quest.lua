@@ -550,57 +550,6 @@ do
 		end
 
 		return dailies
-
-		-- if type(BtWTodoCache.korthiaDailies) ~= "table" then
-		-- 	BtWTodoCache.korthiaDailies = {}
-		-- end
-
-		-- -- If your in Korthia we can just check the api for the count
-		-- if C_Map.GetBestMapForUnit("player") == 1961 then
-		-- 	local index = 0
-		-- 	if C_QuestLog.IsQuestFlaggedCompleted(63622) then -- An Army of Bone and Steel
-		-- 		index = 2
-		-- 	elseif C_QuestLog.IsQuestFlaggedCompleted(63727) then -- The Last Sigil
-		-- 		index = 1
-		-- 	end
-
-		-- 	local quests = tMap(tFilter(C_TaskQuest.GetQuestsForPlayerByMapID(1961), function (item)
-		-- 		return korthiaDailies[item.questId]
-		-- 	end, true), function (k, v)
-		-- 		return v.questId
-		-- 	end)
-
-		-- 	local questIDs = {}
-		-- 	for _,questID in ipairs(quests) do
-		-- 		questIDs[questID] = true
-		-- 	end
-		-- 	-- Complete quests arent returned by C_TaskQuest.GetQuestsForPlayerByMapID so we will add those ourselves
-		-- 	for questID in pairs(korthiaDailies) do
-		-- 		if not questIDs[questID] and C_QuestLog.IsQuestFlaggedCompleted(questID) then
-		-- 			quests[#quests+1] = questID
-		-- 		end
-		-- 	end
-		-- 	if not questIDs[64103] and C_QuestLog.GetLogIndexForQuestID(64103) then -- This one doesnt show on the map for some reason so we add it if we are on it
-		-- 		quests[#quests+1] = 64103
-		-- 	end
-
-		-- 	BtWTodoCache.korthiaDailies[index] = quests
-		-- 	-- Change the default, there is a pretty good chance all the variations will be the same
-		-- 	if BtWTodoCache.korthiaDailies[-1] == nil then
-		-- 		BtWTodoCache.korthiaDailies[-1] = quests
-		-- 	end
-		-- end
-
-		-- local index = 0
-		-- if character:IsQuestFlaggedCompleted(63622) then -- An Army of Bone and Steel
-		-- 	index = 2
-		-- elseif character:IsQuestFlaggedCompleted(63727) then -- The Last Sigil
-		-- 	index = 1
-		-- end
-		-- if BtWTodoCache.korthiaDailies[index] == nil then
-		-- 	return BtWTodoCache.korthiaDailies[-1], true, index
-		-- end
-		-- return BtWTodoCache.korthiaDailies[index], false, index
 	end
 	Internal.RegisterCustomStateFunction("GetKorthiaDailies", GetKorthiaDailies)
 	local baseDailies = {
@@ -644,7 +593,7 @@ do
 		[63935] = true,
 		[64166] = nil,
 		[63950] = true,
-		[63961] = nil,
+		[63961] = true,
 		[63777] = true,
 		[63954] = true,
 		[63955] = nil,
