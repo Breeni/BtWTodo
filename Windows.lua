@@ -85,7 +85,7 @@ end
 function BtWTodoItemMixin:OnUpdate(elapsed)
 	if not self:IsMouseOver() or not self:IsVisible() then
 		self:SetScript("OnUpdate", nil)
-		GameTooltip:Hide()
+		return
 	end
 
 	self.tooltipTimer = self.tooltipTimer + elapsed
