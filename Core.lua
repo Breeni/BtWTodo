@@ -447,14 +447,29 @@ External.RegisterTodos({
         id = "btwtodo:renownquests",
         name = L["Renown Quests"],
         states = {
-            { type = "quest", id = 63949, },
-            { type = "quest", id = 61981, },
-            { type = "quest", id = 61982, },
-            { type = "quest", id = 61983, },
-            { type = "quest", id = 61984, },
+            { type = "quest", id = 61982, }, -- Replenish the Reservoir - Kyrian
+            { type = "quest", id = 61981, }, -- Replenish the Reservoir - Venthyr
+            { type = "quest", id = 61984, }, -- Replenish the Reservoir - Night Fae
+            { type = "quest", id = 61983, }, -- Replenish the Reservoir - Necrolord
+            { type = "quest", id = 63949, }, -- Shaping Fates
         },
-        completed = "return states[1]:IsCompleted() and (states[2]:IsCompleted() or states[3]:IsCompleted() or states[4]:IsCompleted() or states[5]:IsCompleted())",
-        text = "return format(\"%d / %d\", (states[1]:IsCompleted() and 1 or 0) + ((states[2]:IsCompleted() or states[3]:IsCompleted() or states[4]:IsCompleted() or states[5]:IsCompleted()) and 1 or 0), 2)"
+        completed = [[
+            local covenantID = character:GetCovenant()
+            local state = states["quest:" .. Custom.GetReservoirQuestForCovenant(covenantID)]
+            return state:IsCompleted() and states["quest:63949"]:IsCompleted()
+        ]],
+        text = [[
+            local covenantID = character:GetCovenant()
+            local state = states["quest:" .. Custom.GetReservoirQuestForCovenant(covenantID)]
+            return format("%d / %d", (state:IsCompleted() and 1 or 0) + (states["quest:63949"]:IsCompleted() and 1 or 0), 2)
+        ]],
+        tooltip = [[
+            tooltip:AddLine(self:GetName())
+            local covenantID = character:GetCovenant()
+            local state = states["quest:" .. Custom.GetReservoirQuestForCovenant(covenantID)]
+            Custom.AddQuestToTooltip(state, tooltip)
+            Custom.AddQuestToTooltip(states["quest:63949"], tooltip)
+        ]]
     },
     {
         id = "btwtodo:raidvault",

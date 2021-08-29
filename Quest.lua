@@ -780,3 +780,13 @@ do
 		Internal.WipeSharedData(SharedDataID)
 	end, -1)
 end
+
+local reservoirQuests = {
+	61982, -- Replenish the Reservoir - Kyrian
+	61981, -- Replenish the Reservoir - Venthyr
+	61984, -- Replenish the Reservoir - Night Fae
+	61983, -- Replenish the Reservoir - Necrolord
+}
+Internal.RegisterCustomStateFunction("GetReservoirQuestForCovenant", function (covenantID)
+	return reservoirQuests[covenantID]
+end)
