@@ -151,6 +151,7 @@ local Images = {
     QUEST_PICKUP = "|A:QuestNormal:0:0|a",
     QUEST_TURN_IN = "|A:QuestTurnin:0:0|a",
 }
+Internal.Images = Images
 local EnvironmentMixin = {
     print = print,
     format = format,

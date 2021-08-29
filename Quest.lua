@@ -443,6 +443,26 @@ Internal.RegisterEvent("QUEST_DATA_LOAD_RESULT", function (event, questID, succe
 	end
 end)
 
+Internal.RegisterCustomStateFunction("AddQuestToTooltip", function (state, tooltip)
+	local name = state:GetTitle()
+	if name == "" then
+		name = state:GetUniqueKey()
+	end
+	if IsShiftKeyDown() then
+		name = format("%s [%d]", name, state:GetID())
+	end
+
+	if state:IsCompleted() then
+		tooltip:AddLine(Internal.Images.COMPLETE .. name, 0, 1, 0)
+	elseif state:IsComplete() then
+		tooltip:AddLine(Internal.Images.QUEST_TURN_IN .. name, 1, 1, 0)
+	elseif state:IsActive() then
+		tooltip:AddLine(Internal.Images.PADDING .. name, 1, 1, 0)
+	else
+		tooltip:AddLine(Internal.Images.QUEST_PICKUP .. name, 1, 1, 1)
+	end
+end)
+
 local function tMap(tbl, func)
 	local result = {}
 	for k,v in pairs(tbl) do
