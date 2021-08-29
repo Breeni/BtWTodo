@@ -224,7 +224,7 @@ function Internal.GetSharedData(id)
     return data
 end
 function Internal.SaveSharedData(id, data)
-    local send = BtWTodoCache[id] == nil or not tCompare(data, BtWTodoCache[id], 10)
+    local send = type(BtWTodoCache[id]) ~= type(data) or not tCompare(data, BtWTodoCache[id], 10)
 
     BtWTodoCache[id] = data
 
