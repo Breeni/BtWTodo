@@ -677,6 +677,23 @@ end
 
 -- Maw Assault
 do
+	local SharedDataID = "MAW_ASSAULT_QUESTS"
+	local function GetActiveMawAssaultQuest()
+		local week = Internal.GetSeasonWeek() % 2
+		if week == 0 then
+			if Internal.IsBeforeHalfWeeklyReset() then
+				return 63823 -- Night Fae
+			else
+				return 63822 -- Venthyr
+			end
+		else
+			if Internal.IsBeforeHalfWeeklyReset() then
+				return 63543 -- Necrolord
+			else
+				return 63824 -- Kyrian
+			end
+		end
+	end
 	-- Returns which assaults for the current week
 	Internal.RegisterCustomStateFunction("GetMawAssaults", function ()
 		local week = Internal.GetSeasonWeek() % 2
@@ -686,4 +703,80 @@ do
 			return 63543, 63824 -- Necrolord and Kyrian
 		end
 	end)
+
+	local assaultQuests = {
+		[63543] = { -- Necrolord Assault
+            63774,
+            63455,
+            63664,
+            63625,
+            63669,
+            59004,
+            63773,
+            63772,
+            63753,
+            63621,
+            63545,
+		},
+		[63824] = { -- Kyrian Assault
+            63858,
+            63827,
+            63843,
+            63853,
+            63828,
+            63829,
+            63859,
+            63864,
+            63846,
+            63863,
+		},
+		[63823] = { -- Night Fae Assault
+            63951,
+            63968,
+            63973,
+            63952,
+            63972,
+            63969,
+            63970,
+            63971,
+            63974,
+            63945,
+		},
+		[63822] = { -- Venthyr Assault
+            63837,
+            63838,
+            63836,
+            63839,
+            63841,
+            63833,
+            63842,
+            63840,
+            63834,
+            63835,
+		}
+	}
+	Internal.RegisterCustomStateFunction("GetActiveMawAssaultQuests", function ()
+		local data = Internal.GetSharedData(SharedDataID) or {}
+		local assaultQuest = GetActiveMawAssaultQuest()
+
+		if data.assaultQuest ~= assaultQuest then
+			data.quests = {}
+		end
+
+		data.assaultQuest = assaultQuest
+		data.quests = data.quests or {}
+
+		for _,k in pairs(assaultQuests[assaultQuest]) do
+			if C_QuestLog.GetLogIndexForQuestID(k) or C_QuestLog.IsQuestFlaggedCompleted(k) then
+				data.quests[k] = true
+			end
+		end
+
+		Internal.SaveSharedData(SharedDataID, data)
+		return data
+	end)
+
+	Internal.RegisterEvent("HALF_WEEKLY_RESET", function (event, isWeekly)
+		Internal.WipeSharedData(SharedDataID)
+	end, -1)
 end

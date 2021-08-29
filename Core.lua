@@ -764,6 +764,7 @@ External.RegisterTodos({
         tooltip = [[
             tooltip:AddLine(self:GetName())
             local quests = {Custom.GetMawAssaults()}
+            local data = Custom.GetActiveMawAssaultQuests()
 
             for index,questID in ipairs(quests) do
                 local state = states['quest:' .. questID]
@@ -798,21 +799,8 @@ External.RegisterTodos({
                 for i=first,last do
                     local state = states[i]
 
-                    if state:IsActive() or state:IsCompleted() then
-                        local name = state:GetTitle()
-                        if name == "" then
-                            name = state:GetUniqueKey()
-                        end
-                        if IsShiftKeyDown() then
-                            name = format("%s [%d]", name, state:GetID())
-                        end
-
-                        name = format(" - " .. name)
-                        if state:IsCompleted() then
-                            tooltip:AddLine(name, 0, 1, 0)
-                        else
-                            tooltip:AddLine(name, 1, 1, 1)
-                        end
+                    if state:IsActive() or state:IsCompleted() or data.quests[state:GetID()] then
+                        Custom.AddQuestToTooltip(state, tooltip)
                     end
                 end
             end
