@@ -418,7 +418,8 @@ External.RegisterTodos({
 
             tooltip:AddLine(self:GetName())
             if active then
-                for _,state in ipairs(states) do
+                for i=2,#states do
+                    local state = states[i]
                     local questID = state:GetID()
                     if state:IsCompleted() or state:IsActive() or (active[questID] and (unlocked or Custom.IsBaseKorthiaDaily(questID))) then
                         Custom.AddQuestToTooltip(state, tooltip)
