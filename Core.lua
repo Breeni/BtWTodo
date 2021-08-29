@@ -385,7 +385,7 @@ External.RegisterTodos({
             { type = "quest", id = 63965, },
         },
         completed = [[
-            local unlocked = character:IsQuestFlaggedCompleted(63727) -- The Last Sigil
+            local unlocked = states[1]:IsCompleted() -- The Last Sigil
             local active = Custom.GetKorthiaDailies()
             local count = 3
             if unlocked then
@@ -394,7 +394,7 @@ External.RegisterTodos({
             return tCount(states, "IsCompleted", 2) == count
         ]],
         text = [[
-            local unlocked = character:IsQuestFlaggedCompleted(63727) -- The Last Sigil
+            local unlocked = states[1]:IsCompleted() -- The Last Sigil
             local active = Custom.GetKorthiaDailies()
             local count = 3
             local default = active == nil
@@ -413,7 +413,7 @@ External.RegisterTodos({
             end
         ]],
         tooltip = [[
-            local unlocked = character:IsQuestFlaggedCompleted(63727) -- The Last Sigil
+            local unlocked = states[1]:IsCompleted() -- The Last Sigil
             local active = Custom.GetKorthiaDailies()
 
             tooltip:AddLine(self:GetName())
