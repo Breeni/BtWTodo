@@ -779,6 +779,20 @@ do
 	Internal.RegisterEvent("HALF_WEEKLY_RESET", function (event, isWeekly)
 		Internal.WipeSharedData(SharedDataID)
 	end, -1)
+
+	Internal.RegisterSharedData(SharedDataID, function (id, data)
+		local assaultQuest = GetActiveMawAssaultQuest()
+		if not data or not data.quests or data.assaultQuest ~= assaultQuest then
+			return
+		end
+
+		local count = 0
+		for k in pairs(data.quests) do
+			count = count + 1
+		end
+
+		return count == 4
+	end)
 end
 
 local reservoirQuests = {

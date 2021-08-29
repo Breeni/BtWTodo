@@ -13,6 +13,7 @@ Defines.lua
 Events.lua
 Characters.lua
 State.lua
+Libs.xml
 
 Locales/deDE.lua
 Locales/esES.lua
@@ -27,6 +28,7 @@ Locales/zhTW.lua
 
 Lists.lua
 Core.lua
+Sync.lua
 
 Callings.lua
 Campaign.lua
@@ -40,10 +42,6 @@ Faction.lua
 Torghast.lua
 Vault.lua
 
-Libs.xml
-#@debug@
-Sync.lua
-#@end-debug@
 Config.xml
 Windows.xml
 DataBroker.lua
