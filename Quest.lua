@@ -540,6 +540,16 @@ do
 				questIDs[64103] = true
 				quests[#quests+1] = 64103
 			end
+			if not unlocked then -- Fill in missing quests that unlock later
+				for k in pairs(dailies) do
+					if k ~= "n" then
+						if not questIDs[k] then
+							questIDs[k] = true
+							quests[#quests+1] = k
+						end
+					end
+				end
+			end
 			questIDs.n = #quests
 
 			if unlocked and #quests > 3 then
