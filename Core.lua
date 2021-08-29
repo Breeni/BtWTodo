@@ -441,18 +441,18 @@ External.RegisterTodos({
         },
         completed = [[
             local covenantID = character:GetCovenant()
-            local state = states["quest:" .. Custom.GetReservoirQuestForCovenant(covenantID)]
+            local state = covenantID ~= 0 and states["quest:" .. Custom.GetReservoirQuestForCovenant(covenantID)] or states[1]
             return state:IsCompleted() and states["quest:63949"]:IsCompleted()
         ]],
         text = [[
             local covenantID = character:GetCovenant()
-            local state = states["quest:" .. Custom.GetReservoirQuestForCovenant(covenantID)]
+            local state = covenantID ~= 0 and states["quest:" .. Custom.GetReservoirQuestForCovenant(covenantID)] or states[1]
             return format("%d / %d", (state:IsCompleted() and 1 or 0) + (states["quest:63949"]:IsCompleted() and 1 or 0), 2)
         ]],
         tooltip = [[
             tooltip:AddLine(self:GetName())
             local covenantID = character:GetCovenant()
-            local state = states["quest:" .. Custom.GetReservoirQuestForCovenant(covenantID)]
+            local state = covenantID ~= 0 and states["quest:" .. Custom.GetReservoirQuestForCovenant(covenantID)] or states[1]
             Custom.AddQuestToTooltip(state, tooltip)
             Custom.AddQuestToTooltip(states["quest:63949"], tooltip)
         ]]
