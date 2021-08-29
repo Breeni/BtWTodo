@@ -420,23 +420,8 @@ External.RegisterTodos({
             if active then
                 for _,state in ipairs(states) do
                     local questID = state:GetID()
-                    if active[questID] and (unlocked or Custom.IsBaseKorthiaDaily(questID)) then
-                        local name = state:GetTitle()
-                        if name == "" then
-                            name = state:GetUniqueKey()
-                        end
-                        if IsShiftKeyDown() then
-                            name = format("%s [%d]", name, questID)
-                        end
-                        if state:IsCompleted() then
-                            tooltip:AddLine(Images.COMPLETE .. name, 0, 1, 0)
-                        elseif state:IsComplete() then
-                            tooltip:AddLine(Images.QUEST_TURN_IN .. name, 1, 1, 0)
-                        elseif state:IsActive() then
-                            tooltip:AddLine(Images.PADDING .. name, 1, 1, 0)
-                        else
-                            tooltip:AddLine(Images.QUEST_PICKUP .. name, 1, 1, 1)
-                        end
+                    if state:IsCompleted() or state:IsActive() or (active[questID] and (unlocked or Custom.IsBaseKorthiaDaily(questID))) then
+                        Custom.AddQuestToTooltip(state, tooltip)
                     end
                 end
             end
