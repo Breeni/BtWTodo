@@ -534,6 +534,18 @@ do
 		[63965] = true,
 	}
 	local SharedDataID = "KORTHIA_DAILIES"
+	Internal.RegisterSharedData(SharedDataID, function (id, data)
+		if not data or not data.unlocked then
+			return false
+		end
+		local count = 0
+		for k in pairs(data) do
+			if type(k) == "number" then
+				count = count + 1
+			end
+		end
+		return count == 4 or count == 5
+	end)
 	local function GetKorthiaDailies()
 		local dailies = Internal.GetSharedData(SharedDataID)
 		if C_Map.GetBestMapForUnit("player") == 1961 then
@@ -571,10 +583,9 @@ do
 				end
 			end
 			questIDs.n = #quests
+			questIDs.unlocked = unlocked
 
-			if unlocked and #quests > 3 then
-				Internal.SaveSharedData(SharedDataID, questIDs)
-			end
+			Internal.SaveSharedData(SharedDataID, questIDs)
 
 			dailies = questIDs
 		end
@@ -678,6 +689,20 @@ end
 -- Maw Assault
 do
 	local SharedDataID = "MAW_ASSAULT_QUESTS"
+	Internal.RegisterSharedData(SharedDataID, function (id, data)
+		local assaultQuest = GetActiveMawAssaultQuest()
+		if not data or not data.quests or data.assaultQuest ~= assaultQuest then
+			return
+		end
+
+		local count = 0
+		for k in pairs(data.quests) do
+			count = count + 1
+		end
+
+		return count == 4
+	end)
+
 	local function GetActiveMawAssaultQuest()
 		local week = Internal.GetSeasonWeek() % 2
 		if week == 0 then
@@ -779,20 +804,6 @@ do
 	Internal.RegisterEvent("HALF_WEEKLY_RESET", function (event, isWeekly)
 		Internal.WipeSharedData(SharedDataID)
 	end, -1)
-
-	Internal.RegisterSharedData(SharedDataID, function (id, data)
-		local assaultQuest = GetActiveMawAssaultQuest()
-		if not data or not data.quests or data.assaultQuest ~= assaultQuest then
-			return
-		end
-
-		local count = 0
-		for k in pairs(data.quests) do
-			count = count + 1
-		end
-
-		return count == 4
-	end)
 end
 
 local reservoirQuests = {
