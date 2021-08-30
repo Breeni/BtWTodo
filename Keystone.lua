@@ -56,7 +56,7 @@ function KeystoneMixin:GetChallengeShortMapName()
     end
 end
 function KeystoneMixin:RegisterEventsFor(target)
-    target:RegisterEvents("PLAYER_ENTERING_WORLD", "CHALLENGE_MODE_COMPLETED")
+    target:RegisterEvents("PLAYER_ENTERING_WORLD", "CHALLENGE_MODE_COMPLETED", "CHAT_MSG_LOOT", "ITEM_CHANGED", "WEEKLY_RESET")
 end
 
 local KeystoneProviderMixin = CreateFromMixins(External.StateProviderMixin)
@@ -92,3 +92,11 @@ end
 Internal.RegisterEvent("PLAYER_ENTERING_WORLD", UpdatePlayerKeystone)
 Internal.RegisterEvent("CHALLENGE_MODE_COMPLETED", UpdatePlayerKeystone)
 Internal.RegisterEvent("CHAT_MSG_LOOT", UpdatePlayerKeystone)
+Internal.RegisterEvent("ITEM_CHANGED", UpdatePlayerKeystone)
+
+Internal.RegisterEvent("WEEKLY_RESET", function ()
+    for _,character in Internal.IterateCharacters() do
+		local keystone = character:GetDataTable("keystone")
+		wipe(keystone)
+	end
+end, -1)
