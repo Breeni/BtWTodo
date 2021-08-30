@@ -525,8 +525,14 @@ External.RegisterTodos({
         ]],
         tooltip = [[
             tooltip:AddLine(self:GetName())
-            for index, _, name, level in states[2]:IterateRuns() do
-                local text = format("%s (%d)", name, level)
+            for index, _, name, level, completed in states[2]:IterateRuns() do
+                local text
+                if completed then
+                    text = format("%s (%d)", name, level)
+                else
+                    text = format("%s- (%d)", name, level)
+                end
+
                 if index == 1 or index == 4 or index == 10 then
                     tooltip:AddLine(format("%s : %d ilvl", text, Custom.GetRewardLevelForDifficultyLevel(level)), 0, 1, 0)
                 else
