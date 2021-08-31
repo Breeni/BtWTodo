@@ -689,46 +689,10 @@ end
 -- Maw Assault
 do
 	local SharedDataID = "MAW_ASSAULT_QUESTS"
-	Internal.RegisterSharedData(SharedDataID, function (id, data)
-		local assaultQuest = GetActiveMawAssaultQuest()
-		if not data or not data.quests or data.assaultQuest ~= assaultQuest then
-			return
-		end
-
-		local count = 0
-		for k in pairs(data.quests) do
-			count = count + 1
-		end
-
-		return count == 4
-	end)
-
-	local function GetActiveMawAssaultQuest()
-		local week = Internal.GetSeasonWeek() % 2
-		if week == 0 then
-			if Internal.IsBeforeHalfWeeklyReset() then
-				return 63823 -- Night Fae
-			else
-				return 63822 -- Venthyr
-			end
-		else
-			if Internal.IsBeforeHalfWeeklyReset() then
-				return 63543 -- Necrolord
-			else
-				return 63824 -- Kyrian
-			end
-		end
-	end
-	-- Returns which assaults for the current week
-	Internal.RegisterCustomStateFunction("GetMawAssaults", function ()
-		local week = Internal.GetSeasonWeek() % 2
-		if week == 0 then
-			return 63823, 63822 -- Night Fae and Venthyr
-		else
-			return 63543, 63824 -- Necrolord and Kyrian
-		end
-	end)
-
+	local assaultOrder = {
+		63823, 63822,    63824, 63543,
+		63822, 63823,    63543, 63824,
+	}
 	local assaultQuests = {
 		[63543] = { -- Necrolord Assault
             63774,
@@ -780,6 +744,30 @@ do
             63835,
 		}
 	}
+	local function GetActiveMawAssaultQuest()
+		local week = Internal.GetSeasonWeek() % 4
+		local index = week * 2 + (Internal.IsBeforeHalfWeeklyReset() and 0 or 1) + 1
+		return assaultOrder[index]
+	end
+	Internal.RegisterSharedData(SharedDataID, function (id, data)
+		local assaultQuest = GetActiveMawAssaultQuest()
+		if not data or not data.quests or data.assaultQuest ~= assaultQuest then
+			return
+		end
+
+		local count = 0
+		for k in pairs(data.quests) do
+			count = count + 1
+		end
+
+		return count == 4
+	end)
+	-- Returns which assaults for the current week
+	Internal.RegisterCustomStateFunction("GetMawAssaults", function ()
+		local week = Internal.GetSeasonWeek() % 4
+		local index = week * 2 + 1
+		return unpack(assaultOrder, index, index + 1)
+	end)
 	Internal.RegisterCustomStateFunction("GetActiveMawAssaultQuests", function ()
 		local data = Internal.GetSharedData(SharedDataID) or {}
 		local assaultQuest = GetActiveMawAssaultQuest()
@@ -791,13 +779,18 @@ do
 		data.assaultQuest = assaultQuest
 		data.quests = data.quests or {}
 
+		local save = false
 		for _,k in pairs(assaultQuests[assaultQuest]) do
 			if C_QuestLog.GetLogIndexForQuestID(k) or C_QuestLog.IsQuestFlaggedCompleted(k) then
 				data.quests[k] = true
+				save = true
 			end
 		end
 
-		Internal.SaveSharedData(SharedDataID, data)
+		if save then
+			Internal.SaveSharedData(SharedDataID, data)
+		end
+
 		return data
 	end)
 
