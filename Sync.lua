@@ -124,7 +124,8 @@ end)
 local CharacterEventsStore = {}
 local CharacterDataStore = {}
 Internal.RegisterEvent("CHAT_MSG_ADDON", function (event, prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
-    if prefix ~= PREFIX then
+    local name, realm = UnitFullName("player")
+    if prefix ~= PREFIX or sender == name .. "-" .. realm then
         return
     end
 
@@ -272,6 +273,10 @@ function Internal.SaveSharedData(id, data, dontSend)
     local isDifferent = (type(BtWTodoCache[id]) ~= type(data) or data == nil or not tCompare(data, BtWTodoCache[id], 10))
     local send = (dontSend == nil or dontSend) and isDifferent
 
+    --@debug@
+    print("[BtWTodo] Save Shared Data " .. id, type(BtWTodoCache[id]), type(data), data == nil, type(data) == "table" and type(BtWTodoCache[id]) == "table" and not tCompare(data, BtWTodoCache[id], 10))
+    --@end-debug@
+
     BtWTodoCache[id] = data
     if send then
         Internal.SendSharedData(id, data)
@@ -299,6 +304,10 @@ function Internal.SendSharedData(id, data)
         error("Shared data for " .. id .. " is too large")
         return
     end
+
+    --@debug@
+    print("[BtWTodo] Send Shared Data " .. id)
+    --@end-debug@
 
     if IsInGuild() and (sharedDataLastSeen["GUILD:" .. id] == nil or sharedDataLastSeen["GUILD:" .. id] < GetTime() - 60) then
         sharedDataLastSeen["GUILD:" .. id] = GetTime()
