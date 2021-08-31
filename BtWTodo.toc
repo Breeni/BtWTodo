@@ -30,17 +30,17 @@ Lists.lua
 Core.lua
 Sync.lua
 
-Callings.lua
-Campaign.lua
-Character.lua
-Currency.lua
-Keystone.lua
-Lockout.lua
-MythicPlusRuns.lua
-Quest.lua
-Faction.lua
-Torghast.lua
-Vault.lua
+States/Callings.lua
+States/Campaign.lua
+States/Character.lua
+States/Currency.lua
+States/Faction.lua
+States/Keystone.lua
+States/Lockout.lua
+States/MythicPlusRuns.lua
+States/Quest.lua
+States/Torghast.lua
+States/Vault.lua
 
 Config.xml
 Windows.xml
