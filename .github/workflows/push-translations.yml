@@ -1,8 +1,8 @@
 name: Push translations
 on:
   push:
-    branches:
-      - main
+    paths:
+      - 'Locales/enUS.lua'
 jobs:
   push:
     runs-on: ubuntu-latest
