@@ -246,13 +246,17 @@ function Internal.GetSharedData(id)
 
     local data = BtWTodoCache[id]
 
-    if not data and (lastRequested[id] == nil or lastRequested[id] < GetTime() - 60) and Internal.ValidateSharedData(id, data) then
+    if not data and (lastRequested[id] == nil or lastRequested[id] < GetTime() - 60) then
         lastRequested[id] = GetTime()
         if IsInGuild() then
             ChatThrottleLib:SendAddonMessage("NORMAL", PREFIX, ControlCharacters.RequestSharedData .. id, "GUILD")
         end
         if IsInGroup(LE_PARTY_CATEGORY_HOME) then
-            ChatThrottleLib:SendAddonMessage("NORMAL", PREFIX, ControlCharacters.RequestSharedData .. id, "RAID")
+            if IsInRaid() then
+                ChatThrottleLib:SendAddonMessage("NORMAL", PREFIX, ControlCharacters.RequestSharedData .. id, "RAID")
+            else
+                ChatThrottleLib:SendAddonMessage("NORMAL", PREFIX, ControlCharacters.RequestSharedData .. id, "PARTY")
+            end
         end
         if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
             ChatThrottleLib:SendAddonMessage("NORMAL", PREFIX, ControlCharacters.RequestSharedData .. id, "INSTANCE_CHAT")
@@ -300,9 +304,15 @@ function Internal.SendSharedData(id, data)
         sharedDataLastSeen["GUILD:" .. id] = GetTime()
         ChatThrottleLib:SendAddonMessage("NORMAL", PREFIX, encoded, "GUILD")
     end
-    if IsInGroup(LE_PARTY_CATEGORY_HOME) and (sharedDataLastSeen["RAID:" .. id] == nil or sharedDataLastSeen["RAID:" .. id] < GetTime() - 60) then
-        sharedDataLastSeen["RAID:" .. id] = GetTime()
-        ChatThrottleLib:SendAddonMessage("NORMAL", PREFIX, encoded, "RAID")
+    if IsInGroup(LE_PARTY_CATEGORY_HOME) then
+        if IsInRaid() and (sharedDataLastSeen["RAID:" .. id] == nil or sharedDataLastSeen["RAID:" .. id] < GetTime() - 60) then
+            sharedDataLastSeen["RAID:" .. id] = GetTime()
+            ChatThrottleLib:SendAddonMessage("NORMAL", PREFIX, encoded, "RAID")
+        end
+        if not IsInRaid() and (sharedDataLastSeen["PARTY:" .. id] == nil or sharedDataLastSeen["PARTY:" .. id] < GetTime() - 60) then
+            sharedDataLastSeen["PARTY:" .. id] = GetTime()
+            ChatThrottleLib:SendAddonMessage("NORMAL", PREFIX, encoded, "PARTY")
+        end
     end
     if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and (sharedDataLastSeen["INSTANCE_CHAT:" .. id] == nil or sharedDataLastSeen["INSTANCE_CHAT:" .. id] < GetTime() - 60) then
         sharedDataLastSeen["INSTANCE_CHAT:" .. id] = GetTime()
