@@ -4,3 +4,4 @@ if GetLocale() ~= "ruRU" then
 end
 
 local L = Internal.L
+--@localization(locale="ruRU", format="lua_additive_table")@

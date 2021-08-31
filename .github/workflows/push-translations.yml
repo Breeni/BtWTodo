@@ -1,16 +1,13 @@
-name: Package and release
+name: Push translations
 on:
   push:
-    tags:
-      - '**'
+    branches:
+      - main
 jobs:
-  release:
+  push:
     runs-on: ubuntu-latest
     env:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
-      WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
-      WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
-      GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Clone project
         uses: actions/checkout@v1
@@ -20,6 +17,3 @@ jobs:
         env:
           CF_PROJECT_ID: "515611"
           CF_SOURCE: Locales/enUS.lua
-
-      - name: Package and release
-        uses: BigWigsMods/packager@v1
