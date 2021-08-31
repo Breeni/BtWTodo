@@ -103,6 +103,10 @@ External.RegisterLists({
                 category = "btwtodo:character",
             },
             {
+                id = "btwtodo:gold",
+                category = "btwtodo:character",
+            },
+            {
                 id = "btwtodo:renown",
                 category = "btwtodo:character",
             },
@@ -217,6 +221,10 @@ External.RegisterLists({
         todos = {
             {
                 id = "btwtodo:itemlevel",
+                category = "btwtodo:character",
+            },
+            {
+                id = "btwtodo:gold",
                 category = "btwtodo:character",
             },
             {

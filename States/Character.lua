@@ -15,6 +15,7 @@ local CharacterDataEnum = {
     ItemLevel = 6,
     ItemLevelEquipped = 7,
     ItemLevelPvP = 8,
+    Money = 9,
 }
 local characterDataMapIDToName = {
     [CharacterDataEnum.Level] = L["Level"],
@@ -25,12 +26,14 @@ local characterDataMapIDToName = {
     [CharacterDataEnum.ItemLevel] = L["Item Level (Overall)"],
     [CharacterDataEnum.ItemLevelEquipped] = L["Item Level (Equipped)"],
     [CharacterDataEnum.ItemLevelPvP] = L["Item Level (PvP)"],
+    [CharacterDataEnum.Money] = L["Money"],
 }
 local characterDataMapNameToID = {}
 for id,name in pairs(characterDataMapIDToName) do
     characterDataMapNameToID[name] = id
 end
 characterDataMapNameToID[L["Sex"]] = CharacterDataEnum.Gender
+characterDataMapNameToID[L["Gold"]] = CharacterDataEnum.Money
 
 local CharacterMixin = CreateFromMixins(External.StateMixin)
 function CharacterMixin:Init(dataID)
@@ -73,12 +76,16 @@ function CharacterMixin:GetValue()
 	    return format("%.2f", self:GetCharacter():GetItemLevelEquipped() or 0)
     elseif self.id == CharacterDataEnum.ItemLevelPvP then
 	    return format("%.2f", self:GetCharacter():GetItemLevelPvP() or 0)
+    elseif self.id == CharacterDataEnum.Money then
+	    return GetCoinTextureString(self:GetCharacter():GetMoney() or 0)
     end
 end
 function CharacterMixin:RegisterEventsFor(target)
     local id = self:GetID()
     if id == CharacterDataEnum.ItemLevel or id == CharacterDataEnum.ItemLevelEquipped or id == CharacterDataEnum.ItemLevelPvP then
         target:RegisterEvents("PLAYER_ENTERING_WORLD", "PLAYER_AVG_ITEM_LEVEL_UPDATE")
+    elseif id == CharacterDataEnum.Money then
+        target:RegisterEvents("PLAYER_ENTERING_WORLD", "PLAYER_MONEY")
     end
 end
 

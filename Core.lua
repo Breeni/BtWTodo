@@ -1007,6 +1007,19 @@ External.RegisterTodos({
         ]],
         text = DEFAULT_TEXT_FUNCTION,
     },
+    {
+        id = "btwtodo:gold",
+        name = L["Gold"],
+        states = {
+            { type = "character", id = 9, },
+        },
+        completed = [[
+            return true
+        ]],
+        text = [[
+            return states[1]:GetValue()
+        ]],
+    },
 })
 
 local registeredCategories = {}

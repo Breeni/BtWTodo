@@ -53,6 +53,9 @@ end
 function CharacterMixin:GetItemLevelPvP()
     return self.data.itemLevelPvP
 end
+function CharacterMixin:GetMoney()
+    return self.data.money
+end
 function CharacterMixin:GetCovenant()
     return self.data.covenantID
 end
@@ -117,6 +120,9 @@ function PlayerMixin:GetItemLevelPvP()
 end
 function PlayerMixin:GetCovenant()
     return C_Covenants.GetActiveCovenantID()
+end
+function PlayerMixin:GetMoney()
+    return GetMoney()
 end
 function PlayerMixin:IsQuestFlaggedCompleted(questID)
     return C_QuestLog.IsQuestFlaggedCompleted(questID)
@@ -224,4 +230,7 @@ Internal.RegisterEvent("PLAYER_AVG_ITEM_LEVEL_UPDATE", function ()
 end)
 Internal.RegisterEvent("COVENANT_CHOSEN", function ()
     player.data.covenantID = player:GetCovenant()
+end)
+Internal.RegisterEvent("PLAYER_MONEY", function ()
+    player.data.money = player:GetMoney()
 end)
