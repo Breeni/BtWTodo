@@ -1,5 +1,6 @@
 -- Definitions for localizations, this file isnt shipped, is just used to define other locales
 
+L["Overall %.2f (Equipped %.2f)"] = "Overall %.2f (Equipped %.2f)"
 L["%s (Layer %d)"] = "%s (Layer %d)"
 L["Quantity: %d"] = "Quantity: %d"
 L["Earned this week: %d*"] = "Earned this week: %d*"
