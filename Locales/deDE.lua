@@ -4,4 +4,4 @@ if GetLocale() ~= "deDE" then
 end
 
 local L = Internal.L
---@localization(locale="deDE", format="lua_additive_table")@
+--@localization(locale="deDE", format="lua_additive_table", handle-unlocalized="ignore")@

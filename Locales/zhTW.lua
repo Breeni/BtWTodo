@@ -4,4 +4,4 @@ if GetLocale() ~= "zhTW" then
 end
 
 local L = Internal.L
---@localization(locale="zhTW", format="lua_additive_table")@
+--@localization(locale="zhTW", format="lua_additive_table", handle-unlocalized="ignore")@

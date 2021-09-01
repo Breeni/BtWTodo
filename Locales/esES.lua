@@ -4,4 +4,4 @@ if GetLocale() ~= "esES" then
 end
 
 local L = Internal.L
---@localization(locale="esES", format="lua_additive_table")@
+--@localization(locale="esES", format="lua_additive_table", handle-unlocalized="ignore")@

@@ -4,4 +4,4 @@ if GetLocale() ~= "ptBR" then
 end
 
 local L = Internal.L
---@localization(locale="ptBR", format="lua_additive_table")@
+--@localization(locale="ptBR", format="lua_additive_table", handle-unlocalized="ignore")@
