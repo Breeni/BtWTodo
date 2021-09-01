@@ -16,7 +16,7 @@ function BtWTodoItemMixin:Init(data)
 	if self.type == "todo" then
 		self.todo:SetCharacter(self.character)
 		self.todo:RegisterEventsFor(self, self.character:IsPlayer())
-        Internal.RegisterEvent(self, "MODIFIER_STATE_CHANGED", "Update")
+        Internal.RegisterEvent(self, "MODIFIER_STATE_CHANGED", "UpdateTooltip")
 	end
 
 	self:Update()
@@ -38,6 +38,11 @@ function BtWTodoItemMixin:Update()
 		self:SetText(self.category)
 	end
 
+	if self:IsMouseOver() and self:IsVisible() then
+		self:OnEnter()
+	end
+end
+function BtWTodoItemMixin:UpdateTooltip()
 	if self:IsMouseOver() and self:IsVisible() then
 		self:OnEnter()
 	end
