@@ -338,12 +338,50 @@
                 <Size x="0" y="22"/>
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeKey="$parent.SubText" relativePoint="BOTTOMLEFT" x="0" y="-48"/>
-                    <Anchor point="RIGHT" x="-16" y="0"/>
+                    <Anchor point="RIGHT" x="-96" y="0"/>
                 </Anchors>
                 <Scripts>
                     <OnEnterPressed function="EditBox_ClearFocus"/>
                 </Scripts>
             </EditBox>
+			<Button parentKey="RevertButton" inherits="UIPanelButtonTemplate" text="BTWTODO_REVERT">
+				<Size x="64" y="22"/>
+				<Anchors>
+				  	<Anchor point="LEFT" relativeKey="$parent.Name" relativePoint="RIGHT" x="16" y="0"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK);
+						self:GetParent():RevertTodo()
+					</OnClick>
+					<OnEnter>
+						local lines = self:GetParent():GetTodoChangeLog()
+						if self:GetParent():IsEdited() and lines then
+							GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+							GameTooltip:SetText(BTWTODO_REVERT_TODO);
+							if self:GetParent():IsUpdated() then
+								GameTooltip:AddLine(BTWTODO_UPDATED_MESSAGE, 1, 1, 1, 1, true);
+								if #lines > 0 then
+									GameTooltip:AddLine(" ");
+									GameTooltip:AddLine(BTWTODO_CHANGE_LOG);
+									for _,line in ipairs(lines) do
+										GameTooltip:AddLine(line, 1, 1, 1);
+									end
+								end
+							else
+								GameTooltip:AddLine(BTWTODO_REVERT_MESSAGE, 1, 1, 1, 1, true);
+							end
+							GameTooltip:Show()
+						end
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide()
+					</OnLeave>
+				</Scripts>
+				<NormalFont style="GameFontNormalSmall"/>
+				<DisabledFont style="GameFontDisableSmall"/>
+				<HighlightFont style="GameFontHighlightSmall"/>
+			</Button>
             <ScrollFrame parentKey="States" inherits="BtWTodoConfigStatesInputTemplate">
                 <Size x="0" y="34"/>
                 <Anchors>

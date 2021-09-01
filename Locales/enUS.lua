@@ -134,3 +134,7 @@ L["Renown"] = "Renown" -- COVENANT_SANCTUM_TAB_RENOWN
 L["Select a todo to edit"] = "Select a todo to edit"
 L["Search for a todo to add below"] = "Search for a todo to add below"
 L["Race"] = "Race" -- RACE
+L["Change Log:"] = "Change Log:"
+L["Revert"] = "Revert"
+L["Revert To-do"] = "Revert To-do"
+L["The selected to-do has been updated since you edited it. Click here if you wish to change to the updated version, |cFFFF0000the changes you made will be lost|r."] = "The selected to-do has been updated since you edited it. Click here if you wish to change to the updated version, |cFFFF0000the changes you made will be lost|r."

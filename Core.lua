@@ -174,6 +174,43 @@ end
 function Internal.GetTodo(id)
     return BtWTodoData[id] or registeredTodos[id]
 end
+-- Used for reverting todos to their registered version
+function Internal.GetRegisteredTodo(id)
+    return registeredTodos[id]
+end
+function Internal.CheckTodoForUpdate(id, current)
+    local current, new = current, current
+    if not current and BtWTodoData[id] then
+        local data = BtWTodoData[id]
+        current, new = data.version or 0, data.version or 0
+    end
+    if registeredTodos[id] then
+        local data = registeredTodos[id]
+        current, new = current or data.version or 0, data.version or 0
+    end
+    return current ~= new, current, new
+end
+function Internal.GetTodoChangeLog(id, start)
+    if not registeredTodos[id] then
+        return
+    end
+    local result = {}
+    local source = registeredTodos[id].changeLog
+    if source then
+        for i=start or 1,#source do
+            local item = source[i]
+            if type(item) == "table" then
+                for _,line in ipairs(item) do
+                    result[#result+1] = line
+                end
+            else
+                result[#result+1] = item
+            end
+        end
+    end
+
+    return result
+end
 
 External.RegisterTodos({
     {
@@ -1155,10 +1192,28 @@ function External.CreateTodoByID(id)
     local id, name, states, completed, text, click, tooltip = tbl.id, tbl.name, tbl.states, tbl.completed or DEFAULT_COMPLETED_FUNCTION, tbl.text or DEFAULT_TEXT_FUNCTION, tbl.click, tbl.tooltip
     return Internal.CreateStateDriver(id, name, states, completed, text, click, tooltip)
 end
+function Internal.CompareTodos(a, b) -- Compare everything except id, and version data
+    if a.name ~= b.name then
+        return false
+    end
+    if #a.states ~= b.states then
+        return false
+    end
+    for i=1,#a.states do
+        local aState, bState = a.states[i], b.states[i]
+        if aState.type ~= bState.type or aState.id ~= bState.id or type(aState.values) ~= type(bState.values) or (type(aState.values) == "table" and not tCompare(a.values, b.values, 3)) then
+            return false
+        end
+    end
+    if a.completed ~= b.completed or a.text ~= b.text or a.tooltip ~= b.tooltip then
+        return false
+    end
+    return true
+end
 function Internal.SaveTodo(tbl)
     local id = tbl.id
     if not BtWTodoData[id] and registeredTodos[id] then
-        if tCompare(tbl, registeredTodos[id], 3) then
+        if Internal.CompareTodos(tbl, registeredTodos[id]) then
             BtWTodoData[id] = nil
         else
             BtWTodoData[id] = tbl

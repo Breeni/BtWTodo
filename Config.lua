@@ -56,6 +56,11 @@ BTWTODO_ADVANCED = EFFECTS_LABEL
 BTWTODO_NEW_TODO = L["New Todo"]
 BTWTODO_ADD_ITEM = L["Add %s"]
 BTWTODO_TOGGLE_VISIBILITY = L["Toggle Visibility"]
+BTWTODO_REVERT = L["Revert"]
+BTWTODO_REVERT_TODO = L["Revert To-do"]
+BTWTODO_UPDATED_MESSAGE = L["The selected to-do has been updated since you edited it. Click here if you wish to change to the updated version, |cFFFF0000the changes you made will be lost|r."]
+BTWTODO_REVERT_MESSAGE = L["Revert this to-do back to it's default version, |cFFFF0000any changes you made will be lost|r"]
+BTWTODO_CHANGE_LOG = L["Change Log:"]
 
 BTWTODO_CHARACTERS = L["Characters"]
 BTWTODO_CHARACTERS_SUBTEXT = L["These options allow you to customize your characters, changing which are displayed, and removed old characters."]
@@ -1548,6 +1553,16 @@ function BtWTodoConfigTodoPanelMixin:ValidateScript()
 
     self.ErrorText:Hide()
 end
+function BtWTodoConfigTodoPanelMixin:IsEdited()
+    local registered = Internal.GetRegisteredTodo(self.todo.id)
+    if not registered then
+        return false
+    end
+    return not Internal.CompareTodos(self.todo, registered)
+end
+function BtWTodoConfigTodoPanelMixin:IsUpdated()
+    return Internal.CheckTodoForUpdate(self.todo.id, self.todo.version)
+end
 function BtWTodoConfigTodoPanelMixin:SetTodo(id)
     if self.todos[id] then -- Already started editing
         self.todo = self.todos[id]
@@ -1572,6 +1587,10 @@ function BtWTodoConfigTodoPanelMixin:SetTodo(id)
         todo.click = tbl.click
         todo.tooltip = tbl.tooltip
 
+        if type(id) == "string" then
+            todo.version = tbl.version or 0
+        end
+
         self.editor = self.editor or FUNCTION_TAB_COMPLETED
         self.mode = self.mode or MODE_TAB_ADVANCED
 
@@ -1586,6 +1605,9 @@ function BtWTodoConfigTodoPanelMixin:SetTodo(id)
     self.AddStateText:SetShown(self.States:GetCount() <= 2)
 
     self.Name:Show()
+    self.RevertButton:Show()
+    self.RevertButton:SetEnabled(self:IsEdited())
+
     self.States:Show()
     self.AddButton:Show()
     self.FunctionTabHeader:Show()
@@ -1656,6 +1678,50 @@ function BtWTodoConfigTodoPanelMixin:CloneTodo()
     self.todos[count] = todo
     self:SetTodo(count)
     self.Name:SetFocus()
+end
+function BtWTodoConfigTodoPanelMixin:RevertTodo()
+    if not self.todo then
+        return
+    end
+
+    local id = self.todo.id
+    local tbl = Internal.GetRegisteredTodo(id)
+    if not tbl then
+        error("Unknown todo " .. tostring(id))
+    end
+
+    local todo = {}
+    todo.id = tbl.id
+    todo.name = tbl.name
+    todo.registered = tbl.registered
+
+    todo.driver, todo.states = Internal.CreateStateDriver(tbl.id, "Editor", tbl.states, "", "", "", "")
+    for index,state in ipairs(tbl.states) do
+        todo.states[index].source = state
+    end
+
+    todo.completed = tbl.completed
+    todo.text = tbl.text
+    todo.click = tbl.click
+    todo.tooltip = tbl.tooltip
+
+    if type(id) == "string" then
+        todo.version = tbl.version or 0
+    end
+
+    self.editor = self.editor or FUNCTION_TAB_COMPLETED
+    self.mode = self.mode or MODE_TAB_ADVANCED
+
+    self.todos[id] = todo
+
+    self:SetTodo(id)
+end
+function BtWTodoConfigTodoPanelMixin:GetTodoChangeLog()
+    if not self.todo then
+        return
+    end
+
+    return Internal.GetTodoChangeLog(self.todo.id)
 end
 function BtWTodoConfigTodoPanelMixin:Update()
     if self.todo == nil then
@@ -1741,6 +1807,7 @@ function BtWTodoConfigTodoPanelMixin:okay()
             tbl.text = data.text
             tbl.click = data.click
             tbl.tooltip = data.tooltip
+            tbl.version = data.version
 
             Internal.SaveTodo(tbl)
         end
@@ -1765,6 +1832,7 @@ function BtWTodoConfigTodoPanelMixin:refresh()
         UIDropDownMenu_SetText(self.TodoDropDown, L["Select a todo to edit"]);
 
         self.Name:Hide()
+        self.RevertButton:Hide()
         self.States:Hide()
         self.AddButton:Hide()
         self.FunctionTabHeader:Hide()
