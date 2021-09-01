@@ -26,20 +26,19 @@ function CallingMixin:RefreshCache()
 
     if questID ~= nil then
         if not self.data[questID] then
+            local data = {}
             QuestEventListener:AddCallback(questID, function()
-                local data = {
-                    title = QuestUtils_GetQuestName(questID),
-                    isRepeatable = C_QuestLog.IsRepeatableQuest(questID),
-                    isLegendary = C_QuestLog.IsLegendaryQuest(questID),
-                    objectives = C_QuestLog.GetQuestObjectives(questID),
-                }
+                data.title = QuestUtils_GetQuestName(questID)
+                data.isRepeatable = C_QuestLog.IsRepeatableQuest(questID)
+                data.isLegendary = C_QuestLog.IsLegendaryQuest(questID)
+                data.objectives = C_QuestLog.GetQuestObjectives(questID)
                 for _,objective in ipairs(data.objectives) do
                     objective.numFulfilled = nil
                     objective.finished = nil
                 end
-                self.data[questID] = data
                 Mixin(self, data)
             end);
+            self.data[questID] = data
         else
             Mixin(self, self.data[questID])
         end
