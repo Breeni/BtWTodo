@@ -9,6 +9,7 @@ local L = Internal.L
 
 local CallingMixin = CreateFromMixins(External.StateMixin)
 function CallingMixin:Init(id)
+    self.data = {}
 	External.StateMixin.Init(self, id)
 
     self:RefreshCache()
@@ -24,16 +25,24 @@ function CallingMixin:RefreshCache()
     self.isCalling = nil;
 
     if questID ~= nil then
-        QuestEventListener:AddCallback(questID, function()
-            self.title = QuestUtils_GetQuestName(questID);
-            self.isRepeatable = C_QuestLog.IsRepeatableQuest(questID);
-            self.isLegendary = C_QuestLog.IsLegendaryQuest(questID);
-            self.objectives = C_QuestLog.GetQuestObjectives(questID);
-            for _,objective in ipairs(self.objectives) do
-                objective.numFulfilled = nil
-                objective.finished = nil
-            end
-        end);
+        if not self.data[questID] then
+            QuestEventListener:AddCallback(questID, function()
+                local data = {
+                    title = QuestUtils_GetQuestName(questID),
+                    isRepeatable = C_QuestLog.IsRepeatableQuest(questID),
+                    isLegendary = C_QuestLog.IsLegendaryQuest(questID),
+                    objectives = C_QuestLog.GetQuestObjectives(questID),
+                }
+                for _,objective in ipairs(data.objectives) do
+                    objective.numFulfilled = nil
+                    objective.finished = nil
+                end
+                self.data[questID] = data
+                Mixin(self, data)
+            end);
+        else
+            Mixin(self, self.data[questID])
+        end
     end
 end
 function CallingMixin:GetDisplayName()
