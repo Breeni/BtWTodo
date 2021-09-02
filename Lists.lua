@@ -7,6 +7,71 @@ local L = Internal.L
 local External = _G[ADDON_NAME]
 
 local registeredLists = {}
+
+local function GetTodoIndex(list, id)
+    for index,todo in ipairs(list.todos) do
+        if todo.id == id then
+            return index
+        end
+    end
+end
+-- Add new items from the registered version of the list to the saved version, also update the version numbers if
+-- they are missing/incorrect so saving lists will flush registered lists correctly
+local function UpdateListVersion(id)
+    if not BtWTodoLists then -- Called before ADDON_LOADED
+        return
+    end
+    if registeredLists[id] and BtWTodoLists[id] then
+        local registered, list = registeredLists[id], BtWTodoLists[id]
+        local version = list.version or 0 -- Currently active version
+        local addedCount, newVersion = 0, nil
+
+        if (registered.version or 0) > version then
+            for index,todo in ipairs(registered.todos) do
+                local current = GetTodoIndex(list, todo.id)
+                if current then -- Item is already in saved list
+                    list.todos[current].version = todo.version -- Make sure the version number is correct
+                elseif type(todo.version) == "number" and todo.version > version then
+                    local inserted = false
+                    if index ~= 1 then
+                        -- Find the offset for the item before the one we will insert, going back until we find one
+                        for i=index-1,1,-1 do
+                            local offset = GetTodoIndex(list, registered.todos[i].id)
+                            if offset then
+                                local result = CopyTable(todo)
+                                -- If the previous item has had its category changed then change the new items category too
+                                if registered.todos[i].category == todo.category and list.todos[offset].category ~= registered.todos[i].category then
+                                    result.category = list.todos[i].category
+                                end
+                                table.insert(list.todos, offset + 1, result)
+                                inserted = true
+                                break
+                            end
+                        end
+                    end
+                    if not inserted then -- Either it's the first item or we couldnt find any of its previous items in the list
+                        table.insert(list.todos, index, CopyTable(todo))
+                    end
+
+                    addedCount = addedCount + 1
+                    newVersion = math.max(todo.version, newVersion or 0)
+                end
+            end
+
+            if newVersion then
+                for index,todo in ipairs(list.todos) do
+                    todo.orderIndex = index
+                end
+
+                print("[" .. ADDON_NAME .. "]: " .. format(L["Updated list %s to version %d, added %d items"], list.name, newVersion, addedCount))
+                list.version = newVersion
+            else -- Registered version is somehow newer than the saved version but no new items needed adding
+                list.version = registered.version
+            end
+        end
+    end
+end
+
 function External.RegisterList(list)
     if type(list) ~= "table" then
         error(ADDON_NAME .. ".RegisterList(list): list must be a table")
@@ -23,6 +88,8 @@ function External.RegisterList(list)
     end
 
     registeredLists[list.id] = list
+
+    UpdateListVersion(list.id)
 end
 function External.RegisterLists(tbl)
     for _,list in ipairs(tbl) do
@@ -88,6 +155,10 @@ local function ADDON_LOADED(_, addon)
     if addon == ADDON_NAME then
         BtWTodoLists = BtWTodoLists or {}
 
+        for id in pairs(BtWTodoLists) do
+            UpdateListVersion(id)
+        end
+
         Internal.UnregisterEvent("ADDON_LOADED", ADDON_LOADED)
     end
 end
@@ -105,6 +176,7 @@ External.RegisterLists({
             {
                 id = "btwtodo:gold",
                 category = "btwtodo:character",
+                version = 2,
             },
             {
                 id = "btwtodo:renown",
@@ -217,7 +289,8 @@ External.RegisterLists({
     },
     {
         id = "btwtodo:91",
-        name = L["Sanctum of Domination"],
+        name = L["Chains of Domination"],
+        version = 1,
         todos = {
             {
                 id = "btwtodo:itemlevel",
@@ -226,6 +299,7 @@ External.RegisterLists({
             {
                 id = "btwtodo:gold",
                 category = "btwtodo:character",
+                version = 1,
             },
             {
                 id = "btwtodo:renown",

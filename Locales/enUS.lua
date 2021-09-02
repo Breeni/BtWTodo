@@ -43,6 +43,7 @@ L["Clone"] = "Clone"
 L["Keystone"] = "Keystone"
 L["Invalid %s"] = "Invalid %s"
 L["Sanctum of Domination"] = "Sanctum of Domination" -- db2.uimap[1998].Name
+L["Chains of Domination"] = "Chains of Domination"
 L["Unknown todo %s"] = "Unknown todo %s"
 L["Class"] = "Class" -- CLASS
 L["Raid Vault"] = "Raid Vault"

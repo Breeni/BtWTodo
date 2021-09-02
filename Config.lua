@@ -2023,6 +2023,7 @@ function BtWTodoConfigListsPanelMixin:SetList(id)
 
         list.id = tbl.id
         list.name = tbl.name
+        list.version = tbl.version
 
         local listData = {};
         local previousCategory
@@ -2032,7 +2033,7 @@ function BtWTodoConfigListsPanelMixin:SetList(id)
                 previousCategory = item.category
             end
     
-            listData[#listData+1] = { type = "todo", todo = item.id, hidden = item.hidden, orderIndex = #listData+1 }
+            listData[#listData+1] = { type = "todo", todo = item.id, hidden = item.hidden, version = item.version, orderIndex = #listData+1 }
         end
 
         local dataProvider = CreateDataProvider(listData);
@@ -2151,7 +2152,7 @@ function BtWTodoConfigListsPanelMixin:okay()
 
                     category = item.category
                 else
-                    todos[#todos+1] = { id = item.todo, category = category, hidden = item.hidden, orderIndex = orderIndex }
+                    todos[#todos+1] = { id = item.todo, category = category, hidden = item.hidden, version = item.version, orderIndex = orderIndex }
                     orderIndex = orderIndex + 1
                 end
             end
@@ -2179,7 +2180,8 @@ function BtWTodoConfigListsPanelMixin:okay()
             if Internal.UpdateList({
                 id = id,
                 name = list.name,
-                todos = todos
+                version = list.version,
+                todos = todos,
             }) then
                 External.TriggerEvent("LIST_CHANGED", id)
             end
