@@ -30,6 +30,9 @@ Lists.lua
 Core.lua
 Sync.lua
 
+Register.lua
+Register_Mainline.lua
+
 States/Callings.lua
 States/Campaign.lua
 States/Character.lua

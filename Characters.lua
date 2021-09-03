@@ -2,6 +2,7 @@
     Handles storing data for characters, this gets passed to State Providers before completion states are checked
 ]]
 local ADDON_NAME, Internal = ...
+local CovenantsSupported = C_Covenants ~= nil
 
 local CharacterMixin = {}
 function CharacterMixin:Init(name, realm, data)
@@ -56,8 +57,10 @@ end
 function CharacterMixin:GetMoney()
     return self.data.money
 end
-function CharacterMixin:GetCovenant()
-    return self.data.covenantID
+if CovenantsSupported then
+    function CharacterMixin:GetCovenant()
+        return self.data.covenantID
+    end
 end
 function CharacterMixin:IsQuestFlaggedCompleted(questID)
     return self:GetData("questCompleted", questID)
@@ -118,8 +121,10 @@ end
 function PlayerMixin:GetItemLevelPvP()
     return (select(3, GetAverageItemLevel()))
 end
-function PlayerMixin:GetCovenant()
-    return C_Covenants.GetActiveCovenantID()
+if CovenantsSupported then
+    function PlayerMixin:GetCovenant()
+        return C_Covenants.GetActiveCovenantID()
+    end
 end
 function PlayerMixin:GetMoney()
     return GetMoney()
@@ -223,14 +228,18 @@ Internal.RegisterEvent("PLAYER_LOGOUT", function ()
 end)
 Internal.RegisterEvent("PLAYER_ENTERING_WORLD", function ()
 	player.data.itemLevel, player.data.itemLevelEquipped, player.data.itemLevelPvP = GetAverageItemLevel()
-    player.data.covenantID = player:GetCovenant()
+    if CovenantsSupported then
+        player.data.covenantID = player:GetCovenant()
+    end
 end)
 Internal.RegisterEvent("PLAYER_AVG_ITEM_LEVEL_UPDATE", function ()
 	player.data.itemLevel, player.data.itemLevelEquipped, player.data.itemLevelPvP = GetAverageItemLevel()
 end)
-Internal.RegisterEvent("COVENANT_CHOSEN", function ()
-    player.data.covenantID = player:GetCovenant()
-end)
+if CovenantsSupported then
+    Internal.RegisterEvent("COVENANT_CHOSEN", function ()
+        player.data.covenantID = player:GetCovenant()
+    end)
+end
 Internal.RegisterEvent("PLAYER_MONEY", function ()
     player.data.money = player:GetMoney()
 end)
