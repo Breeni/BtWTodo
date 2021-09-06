@@ -354,7 +354,9 @@ do
 
 		local count = 0
 		for k in pairs(data.quests) do
-			count = count + 1
+            if k ~= 63772 then
+			    count = count + 1
+            end
 		end
 
 		return count == 4
