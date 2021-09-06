@@ -813,6 +813,24 @@ External.RegisterTodos({
         ]],
     },
     {
+        id = "btwtodo:conquest",
+        name = L["Conquest"],
+        states = {
+            { type = "currency", id = 1602, },
+        },
+        completed = "return states[1]:IsCapped()",
+        text = "return format(\"%s / %s / %s\", states[1]:GetQuantity(), states[1]:GetTotalEarned(), states[1]:GetMaxQuantity())",
+        tooltip = [[
+            local quantity = states[1]:GetQuantity()
+            local earned = states[1]:GetTotalEarned()
+            local total = states[1]:GetMaxQuantity()
+            tooltip:AddLine(self:GetName())
+            tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
+            tooltip:AddLine(format(L["Earned this season: %d"], earned), 1, 1, 1)
+            tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
+        ]],
+    },
+    {
         id = "btwtodo:mawworldboss",
         name = L["Maw World Boss"],
         states = {
@@ -1230,6 +1248,7 @@ External.RegisterLists({
     {
         id = "btwtodo:default",
         name = L["Default"],
+        version = 2,
         todos = {
             {
                 id = "btwtodo:itemlevel",
@@ -1336,6 +1355,11 @@ External.RegisterLists({
                 category = "btwtodo:currency",
             },
             {
+                id = "btwtodo:conquest",
+                category = "btwtodo:currency",
+                version = 2,
+            },
+            {
                 id = "btwtodo:towerknowledge",
                 category = "btwtodo:currency",
             },
@@ -1352,7 +1376,7 @@ External.RegisterLists({
     {
         id = "btwtodo:91",
         name = L["Chains of Domination"],
-        version = 1,
+        version = 2,
         todos = {
             {
                 id = "btwtodo:itemlevel",
@@ -1457,6 +1481,11 @@ External.RegisterLists({
             {
                 id = "btwtodo:valor",
                 category = "btwtodo:currency",
+            },
+            {
+                id = "btwtodo:conquest",
+                category = "btwtodo:currency",
+                version = 2,
             },
             {
                 id = "btwtodo:towerknowledge",

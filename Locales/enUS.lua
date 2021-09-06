@@ -116,6 +116,7 @@ L["Character"] = "Character" -- CHARACTER
 L["Add Calling"] = "Add Calling"
 L["List"] = "List"
 L["Valor"] = "Valor" -- db2.currencytypes[1191].Name
+L["Conquest"] = "Conquest" -- db2.currencytypes[1602].Name
 L["Level"] = "Level" -- LEVEL
 L["DoS"] = "DoS"
 L["NW"] = "NW"
