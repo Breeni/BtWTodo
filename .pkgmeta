@@ -1,5 +1,4 @@
 package-as: BtWTodo
-wowi-archive-previous: no
 
 externals:
     Libs/LibStub: https://repos.curseforge.com/wow/libstub/trunk
