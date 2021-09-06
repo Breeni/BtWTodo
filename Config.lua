@@ -67,6 +67,8 @@ BTWTODO_CHARACTERS_SUBTEXT = L["These options allow you to customize your charac
 
 BTWTODO_CLONE = L["Clone"]
 
+BTWTODO_MINIMAP_ICON = L["Show Minimap Icon"]
+
 --@debug@
 local debug = print
 --@end-debug@
@@ -535,10 +537,47 @@ function BtWTodoDragScrollBoxMixin:Remove(orderIndex)
 end
 
 --  [[  Config Panel  ]]
+local ldbi = LibStub("LibDBIcon-1.0")
 
 BtWTodoConfigPanelMixin = {}
 function BtWTodoConfigPanelMixin:OnLoad()
     InterfaceOptions_AddCategory(self)
+end
+function BtWTodoConfigPanelMixin:SetMinimapIcon(checked)
+    if checked then
+        ldbi:Show(ADDON_NAME)
+    else
+        ldbi:Hide(ADDON_NAME)
+    end
+end
+function BtWTodoConfigPanelMixin:okay()
+    xpcall(function()
+        BtWTodoDataBroker.show = self.MinimapIconButton:GetChecked()
+        if BtWTodoDataBroker.show ~= false then
+            ldbi:Show(ADDON_NAME)
+        else
+            ldbi:Hide(ADDON_NAME)
+        end
+    end, geterrorhandler())
+end
+function BtWTodoConfigPanelMixin:cancel()
+    xpcall(function()
+        if BtWTodoDataBroker.show ~= false then
+            ldbi:Show(ADDON_NAME)
+        else
+            ldbi:Hide(ADDON_NAME)
+        end
+    end, geterrorhandler())
+end
+function BtWTodoConfigPanelMixin:default()
+    xpcall(function()
+        self.MinimapIconButton:SetChecked(true)
+    end, geterrorhandler())
+end
+function BtWTodoConfigPanelMixin:refresh()
+    xpcall(function()
+        self.MinimapIconButton:SetChecked(BtWTodoDataBroker.show ~= false)
+    end, geterrorhandler())
 end
 
 do
