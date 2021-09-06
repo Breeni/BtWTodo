@@ -171,7 +171,7 @@ do
 			end
 			if not unlocked then -- Fill in missing quests that unlock later
 				for k in pairs(dailies) do
-					if k ~= "n" then
+					if type(k) == "number" then
 						if not questIDs[k] then
 							questIDs[k] = true
 							quests[#quests+1] = k
@@ -179,6 +179,7 @@ do
 					end
 				end
 			end
+            print("Korthia Dailies", unpack(quests))
 			questIDs.n = #quests
 			questIDs.unlocked = unlocked
 
