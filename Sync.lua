@@ -264,7 +264,7 @@ function Internal.GetSharedData(id)
         end
     end
 
-    return data
+    return data and CopyTable(data)
 end
 function External.GetSharedData(id)
     return Internal.GetSharedData(id)
