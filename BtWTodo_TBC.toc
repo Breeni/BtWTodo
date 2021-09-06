@@ -1,0 +1,44 @@
+## Interface: 20502
+## Title: BtWTodo
+## Version: @project-version@
+## Notes: Highly customizable to-do list
+## Author: Breeni
+## SavedVariables: BtWTodoData, BtWTodoCategories, BtWTodoCharacters, BtWTodoCache, BtWTodoDataBroker, BtWTodoWindows, BtWTodoLists, BtWTodoAuthorization
+## OptionalDeps: LibDBIcon-1.0, LibSerialize, LibDeflate
+## X-Curse-Project-ID: 515611
+## X-WoWI-ID: 26131
+## X-Wago-ID: RBKpRqNE
+
+Defines.lua
+Events.lua
+Characters.lua
+State.lua
+Libs.xml
+
+Locales/deDE.lua
+Locales/esES.lua
+Locales/esMX.lua
+Locales/frFR.lua
+Locales/itIT.lua
+Locales/koKR.lua
+Locales/ptBR.lua
+Locales/ruRU.lua
+Locales/zhCN.lua
+Locales/zhTW.lua
+
+Lists.lua
+Core.lua
+Sync.lua
+
+Register.lua
+Register_TBC.lua
+
+States/Character.lua
+States/Currency.lua
+States/Faction.lua
+States/Lockout.lua
+States/Quest.lua
+
+Config.xml
+Windows.xml
+DataBroker.lua
