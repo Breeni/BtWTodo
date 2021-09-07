@@ -40,7 +40,12 @@ function FactionMixin:HasParagon()
     return C_Reputation.GetFactionParagonInfo(self:GetID()) ~= nil
 end
 function FactionMixin:HasParagonAvailable()
-    return select(4, C_Reputation.GetFactionParagonInfo(self:GetID())) or false
+	if self:GetCharacter():IsPlayer() then
+        return select(4, C_Reputation.GetFactionParagonInfo(self:GetID())) or false
+    else
+        local questID = select(3, C_Reputation.GetFactionParagonInfo(self:GetID()))
+		return self:GetCharacter():GetData("questLog", questID) ~= nil
+    end
 end
 function FactionMixin:GetStanding()
 	if self:GetCharacter():IsPlayer() then
