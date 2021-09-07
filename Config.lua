@@ -544,39 +544,47 @@ function BtWTodoConfigPanelMixin:OnLoad()
     InterfaceOptions_AddCategory(self)
 end
 function BtWTodoConfigPanelMixin:SetMinimapIcon(checked)
+    local icon = ldbi:GetMinimapButton(ADDON_NAME)
     if checked then
-        ldbi:Show(ADDON_NAME)
+        if not icon then
+            ldbi:Show(ADDON_NAME)
+        else
+            icon:Show()
+        end
     else
-        ldbi:Hide(ADDON_NAME)
+        icon:Hide()
     end
 end
 function BtWTodoConfigPanelMixin:okay()
     xpcall(function()
-        BtWTodoDataBroker.show = self.MinimapIconButton:GetChecked()
-        if BtWTodoDataBroker.show ~= false then
-            ldbi:Show(ADDON_NAME)
+        local icon = ldbi:GetMinimapButton(ADDON_NAME)
+        BtWTodoDataBroker.hide = not self.MinimapIconButton:GetChecked()
+        if BtWTodoDataBroker.hide then
+            icon:Hide()
         else
-            ldbi:Hide(ADDON_NAME)
+            icon:Show()
         end
     end, geterrorhandler())
 end
 function BtWTodoConfigPanelMixin:cancel()
     xpcall(function()
-        if BtWTodoDataBroker.show ~= false then
-            ldbi:Show(ADDON_NAME)
+        local icon = ldbi:GetMinimapButton(ADDON_NAME)
+        if BtWTodoDataBroker.hide then
+            icon:Hide()
         else
-            ldbi:Hide(ADDON_NAME)
+            icon:Show()
         end
     end, geterrorhandler())
 end
 function BtWTodoConfigPanelMixin:default()
     xpcall(function()
         self.MinimapIconButton:SetChecked(true)
+        ldbi:GetMinimapButton(ADDON_NAME):Show()
     end, geterrorhandler())
 end
 function BtWTodoConfigPanelMixin:refresh()
     xpcall(function()
-        self.MinimapIconButton:SetChecked(BtWTodoDataBroker.show ~= false)
+        self.MinimapIconButton:SetChecked(not BtWTodoDataBroker.hide)
     end, geterrorhandler())
 end
 
