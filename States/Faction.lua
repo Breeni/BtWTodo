@@ -43,8 +43,7 @@ function FactionMixin:HasParagonAvailable()
 	if self:GetCharacter():IsPlayer() then
         return select(4, C_Reputation.GetFactionParagonInfo(self:GetID())) or false
     else
-        local questID = select(3, C_Reputation.GetFactionParagonInfo(self:GetID()))
-		return self:GetCharacter():GetData("questLog", questID) ~= nil
+		return self:GetCharacter():GetData("factionParagonAvailable", self:GetID())
     end
 end
 function FactionMixin:GetStanding()
@@ -217,12 +216,14 @@ Internal.RegisterEvent("PLAYER_ENTERING_WORLD", function ()
 	local totalQuantity = player:GetDataTable("factionTotalQuantity")
 	local standingMax = player:GetDataTable("factionStandingMax")
 	local standingQuantity = player:GetDataTable("factionStandingQuantity")
+	local paragonAvailable = player:GetDataTable("factionParagonAvailable")
 	local paragonLooted = player:GetDataTable("factionParagonLooted")
     wipe(standing)
     wipe(quantity)
     wipe(totalQuantity)
     wipe(standingMax)
     wipe(standingQuantity)
+    wipe(paragonAvailable)
     wipe(paragonLooted)
 
     for id in pairs(BtWTodoCache.factions) do
@@ -256,6 +257,9 @@ Internal.RegisterEvent("PLAYER_ENTERING_WORLD", function ()
             end
             if currentValue or (standingValue - standingMin) ~= 0 then
                 standingQuantity[id] = currentValue or (standingValue - standingMin)
+            end
+            if hasRewardPending then
+                paragonAvailable[id] = true
             end
             if numLooted ~= nil and numLooted ~= 0 then
                 paragonLooted[id] = numLooted
