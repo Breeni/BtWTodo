@@ -179,7 +179,6 @@ do
 					end
 				end
 			end
-            print("Korthia Dailies", unpack(quests))
 			questIDs.n = #quests
 			questIDs.unlocked = unlocked
 
