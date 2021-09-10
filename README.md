@@ -17,9 +17,9 @@ Currently planned features are:
 - Basic editor for to-do items
 - Syntax Highlighting for advanced editing to-dos
 - Syncing character data between accounts
+- Creating custom windows
+- Updated interface for adding to-do states
 
 # Known Issues
 
-- Some campaign chapters do not show as completed correctly.
 - Calling quests may not show as completed when first installing.
-- Korthia daily quests are only visible after going to Korthia and picking up a quest.
