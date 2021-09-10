@@ -395,7 +395,7 @@
 									GameTooltip:AddLine(" ");
 									GameTooltip:AddLine(BTWTODO_CHANGE_LOG);
 									for _,line in ipairs(lines) do
-										GameTooltip:AddLine(line, 1, 1, 1);
+										GameTooltip:AddLine(line, 1, 1, 1, 1, true);
 									end
 								end
 							else
