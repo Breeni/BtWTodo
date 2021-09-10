@@ -1,6 +1,14 @@
 local ADDON_NAME, Internal = ...
 local External = _G[ADDON_NAME]
 
+local function tMap(tbl, func)
+	local result = {}
+	for k,v in pairs(tbl) do
+		result[k] = func(k, v, tbl)
+	end
+	return result
+end
+
 -- Base Mixin for State
 local StateMixin = {}
 function StateMixin:Init(id)
@@ -175,6 +183,10 @@ local EnvironmentMixin = {
     Custom = CustomStateFunctions,
     Colors = Colors,
     Images = Images,
+    table = table,
+    tFilter = tFilter,
+    tInvert = tInvert,
+    tMap = tMap,
 
     SecondsToTime = SecondsToTime,
 
