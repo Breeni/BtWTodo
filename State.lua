@@ -439,6 +439,9 @@ function StateDriverMixin:Click(button)
             IsCompleted = function ()
                 return self:IsCompleted()
             end,
+            SetFlaggedCompleted = function (_, ...)
+                return self:SetFlaggedCompleted(...)
+            end,
             IsFlaggedCompleted = function ()
                 return self:IsFlaggedCompleted()
             end,
