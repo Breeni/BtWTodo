@@ -56,7 +56,7 @@ function KeystoneMixin:GetChallengeShortMapName()
     end
 end
 function KeystoneMixin:RegisterEventsFor(target)
-    target:RegisterEvents("PLAYER_ENTERING_WORLD", "CHALLENGE_MODE_COMPLETED", "CHAT_MSG_LOOT", "ITEM_CHANGED", "GOSSIP_CLOSED", "WEEKLY_RESET")
+    target:RegisterEvents("PLAYER_ENTERING_WORLD", "CHALLENGE_MODE_MAPS_UPDATE", "CHALLENGE_MODE_START", "BAG_UPDATE_DELAYED", "GOSSIP_CLOSED", "WEEKLY_RESET")
 end
 
 local KeystoneProviderMixin = CreateFromMixins(External.StateProviderMixin)
@@ -90,10 +90,10 @@ local function UpdatePlayerKeystone ()
     })
 end
 Internal.RegisterEvent("PLAYER_ENTERING_WORLD", UpdatePlayerKeystone)
-Internal.RegisterEvent("CHALLENGE_MODE_COMPLETED", UpdatePlayerKeystone)
-Internal.RegisterEvent("CHAT_MSG_LOOT", UpdatePlayerKeystone)
-Internal.RegisterEvent("GOSSIP_CLOSED", UpdatePlayerKeystone)
-Internal.RegisterEvent("ITEM_CHANGED", UpdatePlayerKeystone)
+Internal.RegisterEvent("CHALLENGE_MODE_START", UpdatePlayerKeystone) -- Dungeon start, keystone is -1 levels
+Internal.RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE", UpdatePlayerKeystone) -- Dungeon end, CHALLENGE_MODE_COMPLETED is too early for new keystone
+Internal.RegisterEvent("BAG_UPDATE_DELAYED", UpdatePlayerKeystone) -- Got keystone from vault
+Internal.RegisterEvent("GOSSIP_CLOSED", UpdatePlayerKeystone) -- Lowered keystone within Oribos
 
 Internal.RegisterEvent("WEEKLY_RESET", function ()
     for _,character in Internal.IterateCharacters() do
