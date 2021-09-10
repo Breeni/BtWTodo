@@ -7,7 +7,7 @@ local External = _G[ADDON_NAME]
 local L = Internal.L
 
 local DEFAULT_COMPLETED_FUNCTION = "return self:IsFlaggedCompleted()"
-local DEFAULT_TEXT_FUNCTION = [[return self:IsCompleted() and Images.COMPLETE or ""]]
+local DEFAULT_TEXT_FUNCTION = [[return self:IsCompleted() and Images.COMPLETE or "-"]]
 local DEFAULT_CLICK_FUNCTION = [[self:SetFlaggedCompleted(not self:IsFlaggedCompleted())]]
 
 -- DST doesnt effect daily/weekly/halfweekly resets so these should always be accurate
