@@ -32,7 +32,6 @@ SlashCmdList["BTWTODO"] = function(msg)
 /btwtodo [main]: Toggle main frame
 /btwtodo minimap: Toggle minimap icon
 /btwtodo small: Toggle small frame
-/btwtodo usage: Show this message
-]] ])
+/btwtodo usage: Show this message]] ])
     end
 end

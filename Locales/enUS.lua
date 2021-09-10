@@ -1,5 +1,6 @@
 -- Definitions for localizations, this file isnt shipped, is just used to define other locales
 
+L = L or {}
 L["Overall %.2f (Equipped %.2f)"] = "Overall %.2f (Equipped %.2f)"
 L["%s (Layer %d)"] = "%s (Layer %d)"
 L["Quantity: %d"] = "Quantity: %d" -- format(SUBTITLE_FORMAT, AUCTION_HOUSE_QUANTITY_LABEL, "%d")
@@ -143,3 +144,4 @@ L["The selected to-do has been updated since you edited it. Click here if you wi
 L["Updated display to show completed quest count and tooltip to show countdown to second weekly assault"] = "Updated display to show completed quest count and tooltip to show countdown to second weekly assault"
 L["Show Minimap Icon"] = "Show Minimap Icon"
 L["Show Minimap Tooltip"] = "Show Minimap Tooltip"
+L["BtWTodo usage:\n/btwtodo [main]: Toggle main frame\n/btwtodo minimap: Toggle minimap icon\n/btwtodo small: Toggle small frame\n/btwtodo usage: Show this message"] = "BtWTodo usage:\n/btwtodo [main]: Toggle main frame\n/btwtodo minimap: Toggle minimap icon\n/btwtodo small: Toggle small frame\n/btwtodo usage: Show this message"
