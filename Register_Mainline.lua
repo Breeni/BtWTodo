@@ -989,23 +989,43 @@ External.RegisterTodos({
             return not Custom.IsBeforeHalfWeeklyReset() and (states[1]:IsCompleted() or states[2]:IsCompleted() or states[3]:IsCompleted() or states[4]:IsCompleted())
         ]],
         text = [[
-            local count = 0
-            if states[1]:IsCompleted() or states[2]:IsCompleted() or states[3]:IsCompleted() or states[4]:IsCompleted() then
-                count = count + 1
-            end
-            if not Custom.IsBeforeHalfWeeklyReset() and character.data.firstMawAssaultCompleted then
-                count = count + 1
-            end
-            local total = 2
-            if not Custom.IsBeforeHalfWeeklyReset() and not character.data.firstMawAssaultCompleted then
-                total = 1
-            end
-            local text = format("%d / %d", count, total)
-            if Custom.IsBeforeHalfWeeklyReset() and count == 1 then
-                return Colors.STALLED:WrapTextInColorCode(text)
+            local current = "-"
+            local state
+            if Custom.IsBeforeHalfWeeklyReset() then
+                state = states['quest:' .. Custom.GetMawAssaults()]
             else
-                return text
+                state = states['quest:' .. select(2, Custom.GetMawAssaults())]
             end
+            if state:IsCompleted() then
+                current = Images.COMPLETE
+            else
+                local first, last
+                if state == states[1] then -- Necrolord
+                    first, last = 5, 15
+                elseif state == states[2] then -- Kyrian
+                    first, last = 16, 25
+                elseif state == states[3] then -- Night Fae
+                    first, last = 26, 35
+                elseif state == states[4] then -- Venthyr
+                    first, last = 36, 45
+                end
+                current = tCount(states, "IsCompleted", first, last)
+                if tCount(states, "IsActive", first, last) == 0 then
+                    current = Images.QUEST_PICKUP
+                end
+            end
+
+            local a, b = "-", "-"
+            if Custom.IsBeforeHalfWeeklyReset() then
+                a = current
+            else
+                if character.data.firstMawAssaultCompleted then
+                    a = Images.COMPLETE
+                end
+                b = current
+            end
+
+            return a .. " / " .. b
         ]],
         tooltip = [[
             tooltip:AddLine(self:GetName())
