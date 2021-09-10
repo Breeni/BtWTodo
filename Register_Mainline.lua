@@ -411,6 +411,30 @@ end)
 
 External.RegisterTodos({
     {
+        id = "btwtodo:mythicplusrating",
+        name = L["M+ Rating"],
+        states = {
+            { type = "mythicplusrating", id = 0, },
+            { type = "mythicplusrating", id = 375, },
+            { type = "mythicplusrating", id = 376, },
+            { type = "mythicplusrating", id = 377, },
+            { type = "mythicplusrating", id = 378, },
+            { type = "mythicplusrating", id = 379, },
+            { type = "mythicplusrating", id = 380, },
+            { type = "mythicplusrating", id = 381, },
+            { type = "mythicplusrating", id = 382, },
+        },
+        completed = [[return false]],
+        text = [[return states[1]:GetRatingColor():WrapTextInColorCode(states[1]:GetRating())]],
+        tooltip = [[tooltip:SetText(self:GetName())
+for _,state in ipairs(states) do
+    if state:GetID() ~= 0 then
+        tooltip:AddLine(format(L["%s (Rating: %s)"], state:GetName(), state:GetRatingColor():WrapTextInColorCode(state:GetRating())), 1, 1, 1)
+    end
+end]]
+    },
+
+    {
         id = "btwtodo:renown",
         name = L["Renown"],
         states = {
@@ -1275,11 +1299,16 @@ External.RegisterLists({
     {
         id = "btwtodo:default",
         name = L["Default"],
-        version = 2,
+        version = 3,
         todos = {
             {
                 id = "btwtodo:itemlevel",
                 category = "btwtodo:character",
+            },
+            {
+                id = "btwtodo:mythicplusrating",
+                category = "btwtodo:character",
+                version = 3,
             },
             {
                 id = "btwtodo:gold",
@@ -1403,11 +1432,16 @@ External.RegisterLists({
     {
         id = "btwtodo:91",
         name = L["Chains of Domination"],
-        version = 2,
+        version = 3,
         todos = {
             {
                 id = "btwtodo:itemlevel",
                 category = "btwtodo:character",
+            },
+            {
+                id = "btwtodo:mythicplusrating",
+                category = "btwtodo:character",
+                version = 3,
             },
             {
                 id = "btwtodo:gold",
