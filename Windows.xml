@@ -5,7 +5,7 @@
 	<Button name="BtWTodoItemTemplate" mixin="BtWTodoItemMixin" virtual="true" enableMouse="true">
 		<Size x="100" y="30"/>
 		<NormalFont style="GameFontHighlightSmall"/>
-		<ButtonText setAllPoints="true" justifyH="CENTER" justifyV="MIDDLE" text=" "/>
+		<ButtonText parentKey="Text" setAllPoints="true" justifyH="CENTER" justifyV="MIDDLE" text=" "/>
 		<!-- <Layers>
 			<Layer level="ARTWORK">
 				<FontString parentKey="Text" inherits="GameFontHighlightSmall" wordwrap="false" justifyH="LEFT" setAllPoints="true"/>
@@ -20,8 +20,19 @@
 			<OnLeave method="OnLeave"/>
 		</Scripts>
     </Button>
+	<Frame name="BtWTodoTooltipItemTemplate" mixin="BtWTodoItemMixin" virtual="true" enableMouse="false">
+		<Size x="100" y="30"/>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString parentKey="Text" inherits="GameFontHighlightSmall" text=" " justifyH="CENTER" justifyV="MIDDLE" setAllPoints="true"/>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+		</Scripts>
+    </Frame>
 
-	<Frame name="BtWTodoRowTemplate" mixin="BtWTodoRowMixin" virtual="true" enableMouse="true">
+	<Frame name="BtWTodoRowTemplate" mixin="BtWTodoRowMixin" virtual="true">
 		<Size x="100" y="30"/>
 		<Layers>
 			<Layer level="ARTWORK">
@@ -56,6 +67,12 @@
     </Frame>
 	
 	<Frame name="BtWTodoScrollRowTemplate" mixin="BtWTodoScrollRowMixin" inherits="BtWTodoRowTemplate" virtual="true" enableMouse="true"/>
+	<Frame name="BtWTodoTooltipRowTemplate" mixin="BtWTodoTooltipRowMixin" inherits="BtWTodoRowTemplate" virtual="true">
+		<KeyValues>
+			<KeyValue key="frameType" value="Frame" type="string"/>
+			<KeyValue key="frameTemplate" value="BtWTodoTooltipItemTemplate" type="string"/>
+		</KeyValues>
+	</Frame>
 
 	<Frame name="BtWTodoViewTemplate" mixin="BtWTodoViewMixin" virtual="true">
 		<Frames>
@@ -144,6 +161,7 @@
 		<Size x="500" y="496"/>
 		<KeyValues>
 			<KeyValue key="id" value="tooltip" type="string"/>
+			<KeyValue key="rowTemplate" value="BtWTodoTooltipRowTemplate" type="string"/>
 		</KeyValues>
 		<Scripts>
             <OnLoad method="OnLoad"/>

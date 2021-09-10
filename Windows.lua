@@ -23,19 +23,19 @@ function BtWTodoItemMixin:Init(data)
 end
 function BtWTodoItemMixin:Update()
 	if self.type == "corner" then
-		self:SetText("")
+		self.Text:SetText("")
 	elseif self.type == "character" then
-		self:SetText(self.character:GetDisplayName())
-		self:GetFontString():SetJustifyH("CENTER")
+		self.Text:SetText(self.character:GetDisplayName())
+		self.Text:SetJustifyH("CENTER")
 	elseif self.type == "title" then
-		self:SetText(self.todo:GetName())
-		self:GetFontString():SetJustifyH("LEFT")
+		self.Text:SetText(self.todo:GetName())
+		self.Text:SetJustifyH("LEFT")
 	elseif self.type == "todo" then
 		self.todo:SetCharacter(self.character)
-		self:SetText(self.todo:GetText())
-		self:GetFontString():SetJustifyH("CENTER")
+		self.Text:SetText(self.todo:GetText())
+		self.Text:SetJustifyH("CENTER")
 	elseif self.type == "category" then
-		self:SetText(self.category)
+		self.Text:SetText(self.category)
 	end
 
 	if self:IsMouseOver() and self:IsVisible() then
@@ -115,8 +115,7 @@ end
 
 BtWTodoRowMixin = {}
 function BtWTodoRowMixin:OnLoad()
-    self:RegisterForDrag("LeftButton");
-    self.pool = CreateFramePool("Button", self, "BtWTodoItemTemplate")
+    self.pool = CreateFramePool(self.frameType or "Button", self, self.frameTemplate or "BtWTodoItemTemplate")
 
 	PixelUtil.SetHeight(self.Left, 1)
 	PixelUtil.SetPoint(self.Left, "LEFT", self, "LEFT", 0, -1);
@@ -210,16 +209,28 @@ function BtWTodoRowMixin:OnDragStop()
 end
 
 BtWTodoScrollRowMixin = {}
+function BtWTodoScrollRowMixin:OnLoad()
+	BtWTodoRowMixin.OnLoad(self)
+    self:RegisterForDrag("LeftButton");
+end
 function BtWTodoScrollRowMixin:GetCharacters()
 	return self:GetParent():GetParent():GetParent():GetCharacters()
 end
 
+BtWTodoTooltipRowMixin = {}
+function BtWTodoTooltipRowMixin:OnLoad()
+	BtWTodoRowMixin.OnLoad(self)
+    self:EnableMouse(false)
+end
+function BtWTodoTooltipRowMixin:GetCharacters()
+	return self:GetParent():GetParent():GetParent():GetCharacters()
+end
 
 BtWTodoViewMixin = {}
 function BtWTodoViewMixin:OnLoad()
 	local view = CreateScrollBoxListLinearView();
 	view:SetElementExtent(self:GetItemHeight())
-	view:SetElementInitializer("Button", "BtWTodoScrollRowTemplate", function(list, elementData)
+	view:SetElementInitializer(self.rowType or "Frame", self.rowTemplate or "BtWTodoScrollRowTemplate", function(list, elementData)
 		list:Init(elementData, self:GetItemWidth(), self:GetItemHeight());
 	end);
 
@@ -410,6 +421,10 @@ BtWTodoTooltipFrameMixin = {}
 function BtWTodoTooltipFrameMixin:OnLoad()
 	BackdropTemplateMixin.OnBackdropLoaded(self)
 	BtWTodoFrameMixin.OnLoad(self)
+
+	-- Disable mouse events to prevent flickering
+	self.ScrollBox.ScrollTarget:EnableMouse(false)
+	self.ScrollBox.ScrollTarget:EnableMouseWheel(false)
 end
 
 function External.ToggleMainFrame()
