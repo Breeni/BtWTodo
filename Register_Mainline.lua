@@ -1070,6 +1070,10 @@ External.RegisterTodos({
                     end
                 end
             end
+            if Custom.IsBeforeHalfWeeklyReset() then
+                local countdown = Custom.GetHalfWeeklyCountdown()
+                tooltip:AddLine(Images.PADDING .. format(L["Active in %s"], SecondsToTime(countdown)), 1, 1, 1)
+            end
         ]],
     },
     {

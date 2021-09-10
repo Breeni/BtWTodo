@@ -16,6 +16,15 @@ function Internal.IsBeforeHalfWeeklyReset()
     return nextHalfWeeklyReset > GetServerTime();
 end
 Internal.RegisterCustomStateFunction("IsBeforeHalfWeeklyReset", Internal.IsBeforeHalfWeeklyReset)
+Internal.RegisterCustomStateFunction("GetHalfWeeklyCountdown", function ()
+    local nextHalfWeeklyReset = Internal.GetNextWeeklyResetTimestamp() - SECONDS_PER_HALF_WEEK
+    local timestamp = GetServerTime()
+    if nextHalfWeeklyReset < timestamp then
+        return Internal.GetNextWeeklyResetTimestamp() - GetServerTime(), true
+    else
+        return nextHalfWeeklyReset - GetServerTime(), false
+    end
+end)
 
 External.RegisterCategories({
     { id = "btwtodo:character", name = L["Character"], color = CreateColor(0.91, 0.310, 0.392, 1) },
