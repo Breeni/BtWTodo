@@ -40,6 +40,7 @@ States/Currency.lua
 States/Faction.lua
 States/Keystone.lua
 States/Lockout.lua
+States/MythicPlusRating.lua
 States/MythicPlusRuns.lua
 States/PvPRating.lua
 States/Quest.lua
