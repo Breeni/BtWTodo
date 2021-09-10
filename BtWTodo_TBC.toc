@@ -42,3 +42,4 @@ States/Quest.lua
 Config.xml
 Windows.xml
 DataBroker.lua
+Slash.lua

@@ -48,3 +48,4 @@ States/Vault.lua
 Config.xml
 Windows.xml
 DataBroker.lua
+Slash.lua
