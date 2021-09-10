@@ -21,9 +21,15 @@ local dataBroker = ldb:NewDataObject(ADDON_NAME, {
         end
     end,
     OnEnter = function(button)
-        BtWTodoTooltipFrame:ClearAllPoints()
-        BtWTodoTooltipFrame:SetPoint("TOPRIGHT", button, "TOPLEFT")
-        BtWTodoTooltipFrame:Show()
+        local show = not BtWTodoDataBroker.hideTooltip
+        if InterfaceOptionsFrame:IsShown() then
+            show = BtWTodoConfigPanel.MinimapTooltipButton:GetChecked()
+        end
+        if show then
+            BtWTodoTooltipFrame:ClearAllPoints()
+            BtWTodoTooltipFrame:SetPoint("TOPRIGHT", button, "TOPLEFT")
+            BtWTodoTooltipFrame:Show()
+        end
     end,
     OnLeave = function()
         BtWTodoTooltipFrame:Hide()

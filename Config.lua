@@ -68,6 +68,7 @@ BTWTODO_CHARACTERS_SUBTEXT = L["These options allow you to customize your charac
 BTWTODO_CLONE = L["Clone"]
 
 BTWTODO_MINIMAP_ICON = L["Show Minimap Icon"]
+BTWTODO_MINIMAP_TOOLTIP = L["Show Minimap Tooltip"]
 
 --@debug@
 local debug = print
@@ -555,15 +556,20 @@ function BtWTodoConfigPanelMixin:SetMinimapIcon(checked)
         icon:Hide()
     end
 end
+function BtWTodoConfigPanelMixin:SetMinimapTooltip(checked)
+end
 function BtWTodoConfigPanelMixin:okay()
     xpcall(function()
         local icon = ldbi:GetMinimapButton(ADDON_NAME)
+
         BtWTodoDataBroker.hide = not self.MinimapIconButton:GetChecked()
         if BtWTodoDataBroker.hide then
             icon:Hide()
         else
             icon:Show()
         end
+
+        BtWTodoDataBroker.hideTooltip = not self.MinimapTooltipButton:GetChecked()
     end, geterrorhandler())
 end
 function BtWTodoConfigPanelMixin:cancel()
@@ -585,6 +591,7 @@ end
 function BtWTodoConfigPanelMixin:refresh()
     xpcall(function()
         self.MinimapIconButton:SetChecked(not BtWTodoDataBroker.hide)
+        self.MinimapTooltipButton:SetChecked(not BtWTodoDataBroker.hideTooltip)
     end, geterrorhandler())
 end
 

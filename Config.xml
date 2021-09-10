@@ -179,6 +179,34 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
+			<CheckButton parentKey="MinimapTooltipButton" inherits="OptionsBaseCheckButtonTemplate" text="BTWTODO_MINIMAP_TOOLTIP">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeKey="$parent.MinimapIconButton" relativePoint="BOTTOMLEFT" x="0" y="0"/>
+				</Anchors>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Text" inherits="GameFontHighlight" text="BTWTODO_MINIMAP_TOOLTIP">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="RIGHT">
+									<Offset>
+										<AbsDimension x="0" y="1"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnClick>
+						if ( self:GetChecked() ) then
+							PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+						else
+							PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF);
+						end
+						self:GetParent():SetMinimapTooltip(self:GetChecked())
+					</OnClick>
+				</Scripts>
+			</CheckButton>
 		</Frames>
 		<Scripts>
 			<OnLoad method="OnLoad"/>
