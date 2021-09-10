@@ -537,7 +537,7 @@ External.RegisterTodos({
             end
         ]],
     },
-    { 
+    {
         id = "btwtodo:korthiadailies",
         name = L["Korthia"],
         states = {
@@ -930,6 +930,10 @@ External.RegisterTodos({
     {
         id = "btwtodo:mawassault",
         name = L["Maw Assault"],
+        version = 1,
+        changeLog = {
+            L["Updated display to show completed quest count and tooltip to show countdown to second weekly assault"],
+        },
         states = {
             { type = "quest", id = 63543, }, -- Necrolord Assault
             { type = "quest", id = 63824, }, -- Kyrian Assault
