@@ -51,7 +51,7 @@ function MythicPlusRatingMixin:GetRating()
             return (select(2, C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(id)))
         end
     else
-		return self:GetCharacter():GetData("mythicPlusRating", self:GetID())
+		return self:GetCharacter():GetData("mythicPlusRating", self:GetID()) or 0
     end
 end
 function MythicPlusRatingMixin:GetRatingColor()
@@ -119,3 +119,17 @@ function MythicPlusRatingProviderMixin:FillAutoComplete(tbl, text, offset, lengt
     end
 end
 Internal.RegisterStateProvider(CreateFromMixins(MythicPlusRatingProviderMixin))
+
+local function UpdateRatings()
+    local player = Internal.GetPlayer()
+    local ratings = {}
+
+    ratings[0] = C_ChallengeMode.GetOverallDungeonScore()
+    for _,id in ipairs(challengeMapIDs) do
+        ratings[id] = select(2, C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(id))
+    end
+
+    player:SetDataTable("mythicPlusRating", ratings)
+end
+Internal.RegisterEvent("PLAYER_ENTERING_WORLD", UpdateRatings)
+Internal.RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE", UpdateRatings)
