@@ -122,6 +122,27 @@ local function PLAYER_LOGOUT()
 end
 Internal.RegisterEvent("PLAYER_LOGOUT", PLAYER_LOGOUT)
 
+-- The C_MythicPlus.RequestMapInfo will update C_MythicPlus.GetRunHistory but there is a limit on how
+-- often it will cause the update, below we put a minute delay before we call it since the previous call
+local previousRequest = nil
+hooksecurefunc(C_MythicPlus, "RequestMapInfo", function ()
+    --@debug@
+    print("RequestMapInfo called")
+    --@end-debug@
+    previousRequest = GetTime()
+end)
+--@debug@
+Internal.RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE", function ()
+    print("Run Count", #C_MythicPlus.GetRunHistory(false, true))
+end)
+--@end-debug@
+local function RequestMapInfoAsap()
+    if previousRequest <= GetTime() - 60 then
+        C_MythicPlus.RequestMapInfo()
+    else
+        C_Timer.After(previousRequest + 60 - GetTime(), RequestMapInfoAsap)
+    end
+end
 Internal.RegisterEvent("CHALLENGE_MODE_COMPLETED", function ()
-    C_Timer.After(5, C_MythicPlus.RequestMapInfo)
+    C_Timer.After(5, RequestMapInfoAsap)
 end)
