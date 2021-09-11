@@ -18,7 +18,6 @@ Currently planned features are:
 - Syntax Highlighting for advanced editing to-dos
 - Syncing character data between accounts
 - Creating custom windows
-- Updated interface for adding to-do states
 
 # Known Issues
 
