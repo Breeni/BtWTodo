@@ -193,7 +193,7 @@ do
 	local baseDailies = {
 		[64271] = nil,   -- A More Civilized Way
 		[63783] = true,  -- Anima Reclamation
-		[63779] = nil,   -- A Semblance of Normalcy
+		[63779] = false, -- A Semblance of Normalcy
 		[63934] = true,  -- Assail Mail
 		[63793] = true,  -- Broker's Bounty: Ensydius the Defiler
 		[63964] = true,  -- ? Broker's Bounty: Grimtalon
@@ -218,7 +218,7 @@ do
 		[63782] = true,  -- Mawsworn Rituals
 		[63937] = nil,   -- Nasty, Big, Pointy Teeth
 		[63962] = true,  -- Observational Records
-		[63959] = true,  -- ? Observational Records
+		[63959] = true,  -- Observational Records
 		[63776] = true,  -- ? Observational Records
 		[63957] = true,  -- ? Observational Records
 		[63958] = true,  -- Observational Records
@@ -229,7 +229,7 @@ do
 		[64016] = false, -- Oozing with Character
 		[63989] = false, -- Oozing with Character
 		[63935] = true,  -- Precious Roots
-		[64166] = nil,   -- Random Memory Access
+		[64166] = false, -- Random Memory Access
 		[63965] = nil,   -- Razorwing Egg Rescue
 		[63950] = true,  -- Razorwing Talons
 		[63961] = true,  -- Sealed Secrets
