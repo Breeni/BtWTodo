@@ -4,9 +4,7 @@
 
 
 	<Button name="BtWTodoAutoCompleteButtonTemplate" mixin="BtWTodoAutoCompleteButtonMixin" virtual="true">
-		<Size>
-			<AbsDimension x="120" y="14"/>
-		</Size>
+		<Size x="120" y="14"/>
 		<Scripts>
 			<OnLoad>
 				self:GetFontString():SetPoint("LEFT", self, "LEFT", 15, 0)
@@ -42,7 +40,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame parentKey="AutoCompleteList" mixin="BtWTodoAddFrameAutoCompleteListMixin" inherits="TooltipBackdropTemplate">
+			<Frame parentKey="AutoCompleteList" mixin="BtWTodoAddFrameAutoCompleteListMixin" inherits="TooltipBackdropTemplate" frameLevel="15">
 				<Size x="300" y="32"/>
 				<Scripts>
 					<OnLoad method="OnLoad"/>
