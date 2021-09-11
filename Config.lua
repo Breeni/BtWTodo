@@ -116,7 +116,8 @@ BtWTodoAddFrameAutoCompleteListMixin = {}
 function BtWTodoAddFrameAutoCompleteListMixin:OnLoad()
 	BackdropTemplateMixin.OnBackdropLoaded(self)
     self.items = {}
-    self.maxButtons = 4
+    self.offset = 0
+    self.maxButtons = 6
     self.selectedIndex = 1
     self.Buttons = {}
 end
@@ -132,7 +133,13 @@ function BtWTodoAddFrameAutoCompleteListMixin:GetSelectedIndex()
     return self.selectedIndex
 end
 function BtWTodoAddFrameAutoCompleteListMixin:SetSelectedIndex(index)
-    self.selectedIndex = tonumber(index) or 1
+    index = tonumber(index) or 1
+    if index < self.selectedIndex then
+        self.offset = min(index - 1, self.offset)
+    else
+        self.offset = max(self.offset, index - self.maxButtons)
+    end
+    self.selectedIndex = index
     self:Update()
 end
 function BtWTodoAddFrameAutoCompleteListMixin:SetItems(items)
@@ -155,10 +162,12 @@ function BtWTodoAddFrameAutoCompleteListMixin:Update()
     end
 
     local count = min(self.maxButtons, #self.items)
-    self.selectedIndex = max(1, min(self.selectedIndex, count))
+    self.selectedIndex = max(1, min(self.selectedIndex, #self.items))
+    self.offset = max(0, min(self.offset, #self.items - self.maxButtons))
 
     local width = 120
     for i=1,count do
+        local index = i + self.offset
         local button = self.Buttons[i]
         if not button then
             button = CreateFrame("Button", nil, self, "BtWTodoAutoCompleteButtonTemplate")
@@ -169,8 +178,8 @@ function BtWTodoAddFrameAutoCompleteListMixin:Update()
             end
             self.Buttons[i] = button
         end
-        button:SetID(i)
-        button:Set(self.items[i], i == self:GetSelectedIndex())
+        button:SetID(index)
+        button:Set(self.items[index], index == self:GetSelectedIndex())
 
         width = max(width, button:GetFontString():GetWidth() + 30)
 		button:Enable();
@@ -239,7 +248,7 @@ function BtWTodoAddFrameEditBoxMixin:HideAutoCompleteFrame()
     end
 end
 function BtWTodoAddFrameEditBoxMixin:IncrementSelection(up)
-    if self:HasAutoCompleteList() and self.autoCompleteListFrame:IsShown() then
+    if self:HasAutoCompleteList() then
         local selectedIndex = self:GetSelectedIndex()
         local numReturns = self:GetNumResults()
         if up then
@@ -258,9 +267,19 @@ function BtWTodoAddFrameEditBoxMixin:IncrementSelection(up)
     end
 end
 function BtWTodoAddFrameEditBoxMixin:OnTabPressed()
+    if self:HasAutoCompleteList() and not self.autoCompleteListFrame:IsShown() then
+        self:UpdateAutoCompleteList()
+        self.autoCompleteListFrame:Update()
+        return
+    end
     self:IncrementSelection(IsShiftKeyDown())
 end
 function BtWTodoAddFrameEditBoxMixin:OnArrowPressed(key)
+    if self:HasAutoCompleteList() and not self.autoCompleteListFrame:IsShown() then
+        self:UpdateAutoCompleteList()
+        self.autoCompleteListFrame:Update()
+        return
+    end
 	if key == "UP" then
         return self:IncrementSelection(true)
 	elseif key == "DOWN" then
@@ -286,9 +305,6 @@ function BtWTodoAddFrameEditBoxMixin:OnTextChanged(userInput)
             self:UpdateAutoCompleteList()
             self.autoCompleteListFrame:Update()
 		end
-    end
-    if self:GetText() == "" then
-        self:HideAutoCompleteFrame()
     end
 end
 function BtWTodoAddFrameEditBoxMixin:OnKeyDown(key)
@@ -330,6 +346,10 @@ function BtWTodoAddFrameEditBoxMixin:OnChar()
 	if self.addHighlightedText and self:GetUTF8CursorPosition() == strlenutf8(self:GetText()) then
 		self:AddHighlightedText(self:GetText());
 	end
+end
+function BtWTodoAddFrameEditBoxMixin:OnEditFocusGained()
+    self:UpdateAutoCompleteList()
+    self.autoCompleteListFrame:Update()
 end
 function BtWTodoAddFrameEditBoxMixin:OnEditFocusLost()
 	self:HighlightText(0, 0);

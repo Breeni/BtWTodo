@@ -59,6 +59,7 @@
 					<OnEnterPressed method="OnEnterPressed"/>
 					<OnTextChanged method="OnTextChanged"/>
 					<OnChar method="OnChar"/>
+					<OnEditFocusGained method="OnEditFocusGained"/>
 					<OnEditFocusLost method="OnEditFocusLost"/>
 					<OnEscapePressed method="OnEscapePressed"/>
 					<OnArrowPressed method="OnArrowPressed"/>
