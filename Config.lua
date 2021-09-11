@@ -348,8 +348,10 @@ function BtWTodoAddFrameEditBoxMixin:OnChar()
 	end
 end
 function BtWTodoAddFrameEditBoxMixin:OnEditFocusGained()
-    self:UpdateAutoCompleteList()
-    self.autoCompleteListFrame:Update()
+    if self:HasAutoCompleteList() then
+        self:UpdateAutoCompleteList()
+        self.autoCompleteListFrame:Update()
+    end
 end
 function BtWTodoAddFrameEditBoxMixin:OnEditFocusLost()
 	self:HighlightText(0, 0);
@@ -373,8 +375,8 @@ end
 
 BtWTodoAddItemOverlayMixin = {}
 function BtWTodoAddItemOverlayMixin:OnShow()
-    self.EditBox:SetFocus()
     self.EditBox:SetAutoCompleteListFrame(self.AutoCompleteList)
+    self.EditBox:SetFocus()
 end
 function BtWTodoAddItemOverlayMixin:GetText()
     return self.EditBox:GetText()
