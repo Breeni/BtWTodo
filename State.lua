@@ -165,6 +165,7 @@ local EnvironmentMixin = {
     format = format,
     ipairs = ipairs,
     concat = table.concat,
+    select = select,
     math = math,
     tCount = function (tbl, func, from, to, every, ...)
         from = from or 1
