@@ -296,7 +296,7 @@ function Internal.CompareTodos(a, b) -- Compare everything except id, and versio
     if a.name ~= b.name then
         return false
     end
-    if #a.states ~= b.states then
+    if #a.states ~= #b.states then
         return false
     end
     for i=1,#a.states do
@@ -305,19 +305,15 @@ function Internal.CompareTodos(a, b) -- Compare everything except id, and versio
             return false
         end
     end
-    if a.completed ~= b.completed or a.text ~= b.text or a.tooltip ~= b.tooltip then
+    if a.completed ~= b.completed or a.text ~= b.text or a.tooltip ~= b.tooltip or a.click ~= b.click then
         return false
     end
     return true
 end
 function Internal.SaveTodo(tbl)
     local id = tbl.id
-    if not BtWTodoData[id] and registeredTodos[id] then
-        if Internal.CompareTodos(tbl, registeredTodos[id]) then
-            BtWTodoData[id] = nil
-        else
-            BtWTodoData[id] = tbl
-        end
+    if registeredTodos[id] and Internal.CompareTodos(tbl, registeredTodos[id]) then
+        BtWTodoData[id] = nil
     else
         BtWTodoData[id] = tbl
     end
