@@ -426,7 +426,8 @@ External.RegisterTodos({
         },
         completed = [[return false]],
         text = [[return states[1]:GetRatingColor():WrapTextInColorCode(states[1]:GetRating())]],
-        tooltip = [[tooltip:SetText(self:GetName())
+        tooltip = [[
+tooltip:SetText(self:GetName())
 for _,state in ipairs(states) do
     if state:GetID() ~= 0 then
         tooltip:AddLine(format(L["%s (Rating: %s)"], state:GetName(), state:GetRatingColor():WrapTextInColorCode(state:GetRating())), 1, 1, 1)
@@ -440,12 +441,8 @@ end]]
         states = {
             { type = "currency", id = 1822, },
         },
-        completed = [[
-            return states[1]:GetQuantity() + 1 == Custom.GetMaxRenownForWeek(Custom.GetSeasonWeek())
-        ]],
-        text = [[
-            return format("%d / %d", states[1]:GetQuantity() + 1, Custom.GetMaxRenownForWeek(Custom.GetSeasonWeek()))
-        ]],
+        completed = [[return states[1]:GetQuantity() + 1 == Custom.GetMaxRenownForWeek(Custom.GetSeasonWeek())]],
+        text = [[return format("%d / %d", states[1]:GetQuantity() + 1, Custom.GetMaxRenownForWeek(Custom.GetSeasonWeek()))]],
     },
     {
         id = "btwtodo:91campaign",
@@ -455,29 +452,29 @@ end]]
         },
         completed = "return states[1]:IsCompleted() -- Test Comment for editor",
         text = [=[
-            if self:IsCompleted() then -- Last chapter doesnt show as completed correctly, it has an extra quest
-                return format("%s / %s", states[1]:GetChaptersTotal(), states[1]:GetChaptersTotal())
-            end
-            local text = format("%s / %s", states[1]:GetChaptersCompleted(), states[1]:GetChaptersTotal())
-            if states[1]:IsStalled() then
-                return Colors.STALLED:WrapTextInColorCode(text)
-            else
-                return text
-            end
-        ]=],
+if self:IsCompleted() then -- Last chapter doesnt show as completed correctly, it has an extra quest
+    return format("%s / %s", states[1]:GetChaptersTotal(), states[1]:GetChaptersTotal())
+end
+local text = format("%s / %s", states[1]:GetChaptersCompleted(), states[1]:GetChaptersTotal())
+if states[1]:IsStalled() then
+    return Colors.STALLED:WrapTextInColorCode(text)
+else
+    return text
+end
+]=],
         tooltip = [[
-            tooltip:AddLine(self:GetName())
-            for i=1,states[1]:GetChaptersTotal() do
-                local name = states[1]:GetChapterName(i)
-                if self:IsCompleted() or states[1]:IsChapterCompleted(i) then
-                    tooltip:AddLine(name, 0, 1, 0)
-                elseif states[1]:IsChapterInProgress(i) then
-                    tooltip:AddLine(name, 1, 1, 1)
-                else
-                    tooltip:AddLine(name, 0.5, 0.5, 0.5)
-                end
-            end
-        ]],
+tooltip:AddLine(self:GetName())
+for i=1,states[1]:GetChaptersTotal() do
+    local name = states[1]:GetChapterName(i)
+    if self:IsCompleted() or states[1]:IsChapterCompleted(i) then
+        tooltip:AddLine(name, 0, 1, 0)
+    elseif states[1]:IsChapterInProgress(i) then
+        tooltip:AddLine(name, 1, 1, 1)
+    else
+        tooltip:AddLine(name, 0.5, 0.5, 0.5)
+    end
+end
+]],
     },
     {
         id = "btwtodo:thearchivistscodex",
@@ -487,12 +484,12 @@ end]]
         },
         completed = "return states[1]:IsCapped()",
         text = [[
-            if self:IsCompleted() then
-                return Images.COMPLETE
-            else
-                return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
-            end
-        ]],
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+end
+]],
     },
     {
         id = "btwtodo:deathsadvance",
@@ -501,9 +498,7 @@ end]]
             { type = "faction", id = 2470, },
         },
         completed = "return states[1]:HasParagonAvailable()",
-        text = [[
-            return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
-        ]],
+        text = [[return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())]],
     },
     {
         id = "btwtodo:deathsadvanceexalted",
@@ -513,12 +508,12 @@ end]]
         },
         completed = "return states[1]:IsCapped()",
         text = [[
-            if self:IsCompleted() then
-                return Images.COMPLETE
-            else
-                return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
-            end
-        ]],
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+end
+]],
     },
 
     { 
@@ -529,37 +524,33 @@ end]]
             { type = "calling", id = 2, },
             { type = "calling", id = 3, },
         },
-        completed = [[
-            return tCount(states, "IsCompleted") == 3
-        ]],
-        text = [[
-            return format("%s / %s", tCount(states, "IsCompleted"), 3)
-        ]],
+        completed = [[return tCount(states, "IsCompleted") == 3]],
+        text = [[return format("%s / %s", tCount(states, "IsCompleted"), 3)]],
         tooltip = [[
-            tooltip:AddLine(self:GetName())
-            for i=1,#states do
-                local state = states[i]
-                local name = state:GetTitle()
-                if name == "" then
-                    name = L["Unknown"]
-                end
-                if state:IsCompleted() then
-                    tooltip:AddLine(Images.COMPLETE .. name, 0, 1, 0)
-                elseif state:IsComplete() then
-                    tooltip:AddLine(Images.QUEST_TURN_IN .. name, 1, 1, 0)
-                elseif state:IsActive() then
-                    local objectiveType = state:GetObjectiveType(1)
-                    local fulfilled, required = state:GetObjectiveProgress(1)
-                    if objectiveType == "progressbar" then
-                        tooltip:AddLine(Images.PADDING .. format("%s (%d%%)", name, math.ceil(fulfilled / required * 100)), 1, 1, 1)
-                    else
-                        tooltip:AddLine(Images.PADDING .. format("%s (%d/%d)", name, fulfilled, required), 1, 1, 1)
-                    end
-                else
-                    tooltip:AddLine(Images.QUEST_PICKUP .. name, 1, 1, 1)
-                end
-            end
-        ]],
+tooltip:AddLine(self:GetName())
+for i=1,#states do
+    local state = states[i]
+    local name = state:GetTitle()
+    if name == "" then
+        name = L["Unknown"]
+    end
+    if state:IsCompleted() then
+        tooltip:AddLine(Images.COMPLETE .. name, 0, 1, 0)
+    elseif state:IsComplete() then
+        tooltip:AddLine(Images.QUEST_TURN_IN .. name, 1, 1, 0)
+    elseif state:IsActive() then
+        local objectiveType = state:GetObjectiveType(1)
+        local fulfilled, required = state:GetObjectiveProgress(1)
+        if objectiveType == "progressbar" then
+            tooltip:AddLine(Images.PADDING .. format("%s (%d%%)", name, math.ceil(fulfilled / required * 100)), 1, 1, 1)
+        else
+            tooltip:AddLine(Images.PADDING .. format("%s (%d/%d)", name, fulfilled, required), 1, 1, 1)
+        end
+    else
+        tooltip:AddLine(Images.QUEST_PICKUP .. name, 1, 1, 1)
+    end
+end
+]],
     },
     {
         id = "btwtodo:korthiadailies",
@@ -630,48 +621,48 @@ end]]
             { type = "quest", id = 63965, },
         },
         completed = [[
-            local unlocked = states[1]:IsCompleted() -- The Last Sigil
-            local active = Custom.GetKorthiaDailies()
-            local count = 3
-            if unlocked then
-                count = active and active.n or 5
-            end
-            return tCount(states, "IsCompleted", 2) == count
-        ]],
+local unlocked = states[1]:IsCompleted() -- The Last Sigil
+local active = Custom.GetKorthiaDailies()
+local count = 3
+if unlocked then
+    count = active and active.n or 5
+end
+return tCount(states, "IsCompleted", 2) == count
+]],
         text = [[
-            local unlocked = states[1]:IsCompleted() -- The Last Sigil
-            local active = Custom.GetKorthiaDailies()
-            local count = 3
-            local default = active == nil
-            if unlocked then
-                if active and active.n <= 3 then
-                    count = 5
-                    default = true
-                else
-                    count = active and active.n or 5
-                end
-            end
-            if default then
-                return format("%s / %s*", tCount(states, "IsCompleted", 2), count)
-            else
-                return format("%s / %s", tCount(states, "IsCompleted", 2), count)
-            end
-        ]],
+local unlocked = states[1]:IsCompleted() -- The Last Sigil
+local active = Custom.GetKorthiaDailies()
+local count = 3
+local default = active == nil
+if unlocked then
+    if active and active.n <= 3 then
+        count = 5
+        default = true
+    else
+        count = active and active.n or 5
+    end
+end
+if default then
+    return format("%s / %s*", tCount(states, "IsCompleted", 2), count)
+else
+    return format("%s / %s", tCount(states, "IsCompleted", 2), count)
+end
+]],
         tooltip = [[
-            local unlocked = states[1]:IsCompleted() -- The Last Sigil
-            local active = Custom.GetKorthiaDailies()
+local unlocked = states[1]:IsCompleted() -- The Last Sigil
+local active = Custom.GetKorthiaDailies()
 
-            tooltip:AddLine(self:GetName())
-            if active then
-                for i=2,#states do
-                    local state = states[i]
-                    local questID = state:GetID()
-                    if state:IsCompleted() or state:IsActive() or (active[questID] and (unlocked or Custom.IsBaseKorthiaDaily(questID))) then
-                        Custom.AddQuestToTooltip(state, tooltip)
-                    end
-                end
-            end
-        ]],
+tooltip:AddLine(self:GetName())
+if active then
+    for i=2,#states do
+        local state = states[i]
+        local questID = state:GetID()
+        if state:IsCompleted() or state:IsActive() or (active[questID] and (unlocked or Custom.IsBaseKorthiaDaily(questID))) then
+            Custom.AddQuestToTooltip(state, tooltip)
+        end
+    end
+end
+]],
     },
 
     {
@@ -685,22 +676,22 @@ end]]
             { type = "quest", id = 63949, }, -- Shaping Fates
         },
         completed = [[
-            local covenantID = character:GetCovenant()
-            local state = covenantID ~= 0 and states["quest:" .. Custom.GetReservoirQuestForCovenant(covenantID)] or states[1]
-            return state:IsCompleted() and states["quest:63949"]:IsCompleted()
-        ]],
+local covenantID = character:GetCovenant()
+local state = covenantID ~= 0 and states["quest:" .. Custom.GetReservoirQuestForCovenant(covenantID)] or states[1]
+return state:IsCompleted() and states["quest:63949"]:IsCompleted()
+]],
         text = [[
-            local covenantID = character:GetCovenant()
-            local state = covenantID ~= 0 and states["quest:" .. Custom.GetReservoirQuestForCovenant(covenantID)] or states[1]
-            return format("%d / %d", (state:IsCompleted() and 1 or 0) + (states["quest:63949"]:IsCompleted() and 1 or 0), 2)
-        ]],
+local covenantID = character:GetCovenant()
+local state = covenantID ~= 0 and states["quest:" .. Custom.GetReservoirQuestForCovenant(covenantID)] or states[1]
+return format("%d / %d", (state:IsCompleted() and 1 or 0) + (states["quest:63949"]:IsCompleted() and 1 or 0), 2)
+]],
         tooltip = [[
-            tooltip:AddLine(self:GetName())
-            local covenantID = character:GetCovenant()
-            local state = covenantID ~= 0 and states["quest:" .. Custom.GetReservoirQuestForCovenant(covenantID)] or states[1]
-            Custom.AddQuestToTooltip(state, tooltip)
-            Custom.AddQuestToTooltip(states["quest:63949"], tooltip)
-        ]]
+tooltip:AddLine(self:GetName())
+local covenantID = character:GetCovenant()
+local state = covenantID ~= 0 and states["quest:" .. Custom.GetReservoirQuestForCovenant(covenantID)] or states[1]
+Custom.AddQuestToTooltip(state, tooltip)
+Custom.AddQuestToTooltip(states["quest:63949"], tooltip)
+]]
     },
     {
         id = "btwtodo:raidvault",
@@ -714,38 +705,36 @@ end]]
         },
         completed = "return states[1]:IsThreshold(3)",
         text = [[
-            local text = format("%s / %s / %s", states[1]:GetLevelInitial(1), states[1]:GetLevelInitial(2), states[1]:GetLevelInitial(3))
-            if self:IsCompleted() then
-                return text -- Already color coded
-            elseif states[1]:IsThreshold(2) then
-                return Colors.STALLED:WrapTextInColorCode(text)
-            elseif states[1]:IsThreshold(1) then
-                return Colors.STARTED:WrapTextInColorCode(text)
-            else
-                return text
-            end
-        ]],
+local text = format("%s / %s / %s", states[1]:GetLevelInitial(1), states[1]:GetLevelInitial(2), states[1]:GetLevelInitial(3))
+if self:IsCompleted() then
+    return text -- Already color coded
+elseif states[1]:IsThreshold(2) then
+    return Colors.STALLED:WrapTextInColorCode(text)
+elseif states[1]:IsThreshold(1) then
+    return Colors.STARTED:WrapTextInColorCode(text)
+else
+    return text
+end
+]],
         tooltip = [[
-            tooltip:AddLine(self:GetName())
-            local state = states[5]
-            for i=1,state:GetBossCount() do
-                local name = state:GetBossName(i)
-                if states[5]:IsBossCompleted(i) then
-                    tooltip:AddLine(format("%s (%s)", name, states[5]:GetDifficultyName()), Colors.LEGENDARY:GetRGB())
-                elseif states[4]:IsBossCompleted(i) then
-                    tooltip:AddLine(format("%s (%s)", name, states[4]:GetDifficultyName()), Colors.EPIC:GetRGB())
-                elseif states[3]:IsBossCompleted(i) then
-                    tooltip:AddLine(format("%s (%s)", name, states[3]:GetDifficultyName()), Colors.RARE:GetRGB())
-                elseif states[2]:IsBossCompleted(i) then
-                    tooltip:AddLine(format("%s (%s)", name, states[2]:GetDifficultyName()), Colors.UNCOMMON:GetRGB())
-                else
-                    tooltip:AddLine(name, 1, 1, 1)
-                end
-            end
-        ]],
-        click = [[
-            Custom.OpenVaultFrame()
-        ]]
+tooltip:AddLine(self:GetName())
+local state = states[5]
+for i=1,state:GetBossCount() do
+    local name = state:GetBossName(i)
+    if states[5]:IsBossCompleted(i) then
+        tooltip:AddLine(format("%s (%s)", name, states[5]:GetDifficultyName()), Colors.LEGENDARY:GetRGB())
+    elseif states[4]:IsBossCompleted(i) then
+        tooltip:AddLine(format("%s (%s)", name, states[4]:GetDifficultyName()), Colors.EPIC:GetRGB())
+    elseif states[3]:IsBossCompleted(i) then
+        tooltip:AddLine(format("%s (%s)", name, states[3]:GetDifficultyName()), Colors.RARE:GetRGB())
+    elseif states[2]:IsBossCompleted(i) then
+        tooltip:AddLine(format("%s (%s)", name, states[2]:GetDifficultyName()), Colors.UNCOMMON:GetRGB())
+    else
+        tooltip:AddLine(name, 1, 1, 1)
+    end
+end
+]],
+        click = [[Custom.OpenVaultFrame()]]
     },
     {
         id = "btwtodo:dungeonvault",
@@ -756,42 +745,40 @@ end]]
         },
         completed = "return states[1]:GetLevel(3) >= 15",
         text = [[
-            local a, b, c = states[1]:GetLevel(1), states[1]:GetLevel(2), states[1]:GetLevel(3)
-            local text = format("%s / %s / %s", a == 0 and "-" or a, b == 0 and "-" or b, c == 0 and "-" or c)
-            if self:IsCompleted() then
-                return text -- Already color coded
-            elseif states[1]:IsThreshold(2) then
-                return Colors.STALLED:WrapTextInColorCode(text)
-            elseif states[1]:IsThreshold(1) then
-                return Colors.STARTED:WrapTextInColorCode(text)
-            else
-                return text
-            end
-        ]],
+local a, b, c = states[1]:GetLevel(1), states[1]:GetLevel(2), states[1]:GetLevel(3)
+local text = format("%s / %s / %s", a == 0 and "-" or a, b == 0 and "-" or b, c == 0 and "-" or c)
+if self:IsCompleted() then
+    return text -- Already color coded
+elseif states[1]:IsThreshold(2) then
+    return Colors.STALLED:WrapTextInColorCode(text)
+elseif states[1]:IsThreshold(1) then
+    return Colors.STARTED:WrapTextInColorCode(text)
+else
+    return text
+end
+]],
         tooltip = [[
-            tooltip:AddLine(self:GetName())
-            for index, _, name, level, completed in states[2]:IterateRuns() do
-                local text
-                if completed then
-                    text = format("%s (%d)", name, level)
-                else
-                    text = format("%s- (%d)", name, level)
-                end
+tooltip:AddLine(self:GetName())
+for index, _, name, level, completed in states[2]:IterateRuns() do
+    local text
+    if completed then
+        text = format("%s (%d)", name, level)
+    else
+        text = format("%s- (%d)", name, level)
+    end
 
-                if index == 1 or index == 4 or index == 10 then
-                    tooltip:AddLine(format("%s : %d ilvl", text, Custom.GetRewardLevelForDifficultyLevel(level)), 0, 1, 0)
-                else
-                    tooltip:AddLine(text, 1, 1, 1)
-                end
-                -- Only show max top 10
-                if index == 10 then
-                    break
-                end
-            end
-        ]],
-        click = [[
-            Custom.OpenVaultFrame()
-        ]]
+    if index == 1 or index == 4 or index == 10 then
+        tooltip:AddLine(format("%s : %d ilvl", text, Custom.GetRewardLevelForDifficultyLevel(level)), 0, 1, 0)
+    else
+        tooltip:AddLine(text, 1, 1, 1)
+    end
+    -- Only show max top 10
+    if index == 10 then
+        break
+    end
+end
+]],
+        click = [[Custom.OpenVaultFrame()]]
     },
     {
         id = "btwtodo:keystone",
@@ -801,21 +788,21 @@ end]]
         },
         completed = "return states[1]:GetChallengeMapID() ~= nil",
         text = [[
-            local short, level = states[1]:GetChallengeShortMapName(), states[1]:GetLevel()
-            if short then
-                return format("%s (%d)", short, level)
-            else
-                return ""
-            end
-        ]],
+local short, level = states[1]:GetChallengeShortMapName(), states[1]:GetLevel()
+if short then
+    return format("%s (%d)", short, level)
+else
+    return ""
+end
+]],
         tooltip = [[
-            if states[1]:GetChallengeMapID() then
-                local name, level = states[1]:GetChallengeMapName(), states[1]:GetLevel()
-                local _, ilvl = Custom.GetRewardLevelForDifficultyLevel(level)
-                tooltip:AddLine(format(L["%s (Level %d)"], name, level))
-                tooltip:AddLine(format(L["Rewards item level %d"], ilvl), 1, 1, 1)
-            end
-        ]],
+if states[1]:GetChallengeMapID() then
+    local name, level = states[1]:GetChallengeMapName(), states[1]:GetLevel()
+    local _, ilvl = Custom.GetRewardLevelForDifficultyLevel(level)
+    tooltip:AddLine(format(L["%s (Level %d)"], name, level))
+    tooltip:AddLine(format(L["Rewards item level %d"], ilvl), 1, 1, 1)
+end
+]],
     },
     {
         id = "btwtodo:valor",
@@ -826,14 +813,14 @@ end]]
         completed = "return states[1]:IsCapped()",
         text = "return format(\"%s / %s / %s\", states[1]:GetQuantity(), states[1]:GetTotalEarned(), states[1]:GetMaxQuantity())",
         tooltip = [[
-            local quantity = states[1]:GetQuantity()
-            local earned = states[1]:GetTotalEarned()
-            local total = states[1]:GetMaxQuantity()
-            tooltip:AddLine(self:GetName())
-            tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
-            tooltip:AddLine(format(L["Earned this season: %d"], earned), 1, 1, 1)
-            tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
-        ]],
+local quantity = states[1]:GetQuantity()
+local earned = states[1]:GetTotalEarned()
+local total = states[1]:GetMaxQuantity()
+tooltip:AddLine(self:GetName())
+tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
+tooltip:AddLine(format(L["Earned this season: %d"], earned), 1, 1, 1)
+tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
+]],
     },
     {
         id = "btwtodo:conquest",
@@ -844,14 +831,14 @@ end]]
         completed = "return states[1]:IsCapped()",
         text = "return format(\"%s / %s / %s\", states[1]:GetQuantity(), states[1]:GetTotalEarned(), states[1]:GetMaxQuantity())",
         tooltip = [[
-            local quantity = states[1]:GetQuantity()
-            local earned = states[1]:GetTotalEarned()
-            local total = states[1]:GetMaxQuantity()
-            tooltip:AddLine(self:GetName())
-            tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
-            tooltip:AddLine(format(L["Earned this season: %d"], earned), 1, 1, 1)
-            tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
-        ]],
+local quantity = states[1]:GetQuantity()
+local earned = states[1]:GetTotalEarned()
+local total = states[1]:GetMaxQuantity()
+tooltip:AddLine(self:GetName())
+tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
+tooltip:AddLine(format(L["Earned this season: %d"], earned), 1, 1, 1)
+tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
+]],
     },
     {
         id = "btwtodo:mawworldboss",
@@ -870,25 +857,25 @@ end]]
         },
         completed = "return Custom.GetWeeklySoulCindersEarned(character) == Custom.GetWeeklyMaxSoulCindersForSeasonWeek(character, Custom.GetSeasonWeek())",
         text = [[
-            local quantity = states[1]:GetQuantity()
-            local earned = Custom.GetWeeklySoulCindersEarned(character)
-            local total = Custom.GetWeeklyMaxSoulCindersForSeasonWeek(character, Custom.GetSeasonWeek())
-            local text = format("%s / %s / %s", quantity, earned, total)
-            if Custom.IsBeforeHalfWeeklyReset() and earned == total - 50 then
-                return Colors.STALLED:WrapTextInColorCode(text)
-            else
-                return text
-            end
-        ]],
+local quantity = states[1]:GetQuantity()
+local earned = Custom.GetWeeklySoulCindersEarned(character)
+local total = Custom.GetWeeklyMaxSoulCindersForSeasonWeek(character, Custom.GetSeasonWeek())
+local text = format("%s / %s / %s", quantity, earned, total)
+if Custom.IsBeforeHalfWeeklyReset() and earned == total - 50 then
+    return Colors.STALLED:WrapTextInColorCode(text)
+else
+    return text
+end
+]],
         tooltip = [[
-            local quantity = states[1]:GetQuantity()
-            local earned = Custom.GetWeeklySoulCindersEarned(character)
-            local total = Custom.GetWeeklyMaxSoulCindersForSeasonWeek(character, Custom.GetSeasonWeek())
-            tooltip:AddLine(self:GetName())
-            tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
-            tooltip:AddLine(format(L["Earned this week: %d*"], earned), 1, 1, 1)
-            tooltip:AddLine(format(L["Max this week: %d*"], total), 1, 1, 1)
-        ]],
+local quantity = states[1]:GetQuantity()
+local earned = Custom.GetWeeklySoulCindersEarned(character)
+local total = Custom.GetWeeklyMaxSoulCindersForSeasonWeek(character, Custom.GetSeasonWeek())
+tooltip:AddLine(self:GetName())
+tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
+tooltip:AddLine(format(L["Earned this week: %d*"], earned), 1, 1, 1)
+tooltip:AddLine(format(L["Max this week: %d*"], total), 1, 1, 1)
+]],
     },
     {
         id = "btwtodo:torghast",
@@ -901,37 +888,35 @@ end]]
             { type = "torghast", id = 5, },
             { type = "torghast", id = 6, },
         },
-        completed = [[
-            return tCount(states, "IsCompleted") == 2
-        ]],
+        completed = [[return tCount(states, "IsCompleted") == 2]],
         text = [[
-            local layers = {}
-            for _,state in ipairs(states) do
-                if state:IsAvailable() then
-                    local value = state:GetCompletedLayer()
-                    if value == 0 then
-                        value = "-"
-                    end
-                    layers[#layers+1] = value
-                end
-            end
-            return concat(layers, " / ")
-        ]],
+local layers = {}
+for _,state in ipairs(states) do
+    if state:IsAvailable() then
+        local value = state:GetCompletedLayer()
+        if value == 0 then
+            value = "-"
+        end
+        layers[#layers+1] = value
+    end
+end
+return concat(layers, " / ")
+]],
         tooltip = [[
-            tooltip:AddLine(self:GetName())
-            for _,state in ipairs(states) do
-                local name = state:GetName()
-                if state:IsCompleted() then
-                    tooltip:AddLine(format(L["%s (Layer %d)"], name, state:GetCompletedLayer()), 0, 1, 0)
-                elseif state:IsAvailable() then
-                    if state:GetCompletedLayer() ~= 0 then
-                        tooltip:AddLine(format(L["%s (Layer %d)"], name, state:GetCompletedLayer()), 1, 1, 1)
-                    else
-                        tooltip:AddLine(name, 1, 1, 1)
-                    end
-                end
-            end
-        ]],
+tooltip:AddLine(self:GetName())
+for _,state in ipairs(states) do
+    local name = state:GetName()
+    if state:IsCompleted() then
+        tooltip:AddLine(format(L["%s (Layer %d)"], name, state:GetCompletedLayer()), 0, 1, 0)
+    elseif state:IsAvailable() then
+        if state:GetCompletedLayer() ~= 0 then
+            tooltip:AddLine(format(L["%s (Layer %d)"], name, state:GetCompletedLayer()), 1, 1, 1)
+        else
+            tooltip:AddLine(name, 1, 1, 1)
+        end
+    end
+end
+]],
     },
     {
         id = "btwtodo:towerknowledge",
@@ -942,14 +927,14 @@ end]]
         completed = "return states[1]:IsCapped()",
         text = "return format(\"%s / %s / %s\", states[1]:GetQuantity(), states[1]:GetTotalEarned(), states[1]:GetMaxQuantity())",
         tooltip = [[
-            local quantity = states[1]:GetQuantity()
-            local earned = states[1]:GetTotalEarned()
-            local total = states[1]:GetMaxQuantity()
-            tooltip:AddLine(self:GetName())
-            tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
-            tooltip:AddLine(format(L["Earned this season: %d"], earned), 1, 1, 1)
-            tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
-        ]],
+local quantity = states[1]:GetQuantity()
+local earned = states[1]:GetTotalEarned()
+local total = states[1]:GetMaxQuantity()
+tooltip:AddLine(self:GetName())
+tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
+tooltip:AddLine(format(L["Earned this season: %d"], earned), 1, 1, 1)
+tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
+]],
     },
     {
         id = "btwtodo:mawassault",
@@ -1013,96 +998,94 @@ end]]
             { type = "quest", id = 63834, },
             { type = "quest", id = 63835, }, -- [45]
         },
-        completed = [[
-            return not Custom.IsBeforeHalfWeeklyReset() and (states[1]:IsCompleted() or states[2]:IsCompleted() or states[3]:IsCompleted() or states[4]:IsCompleted())
-        ]],
+        completed = [[return not Custom.IsBeforeHalfWeeklyReset() and (states[1]:IsCompleted() or states[2]:IsCompleted() or states[3]:IsCompleted() or states[4]:IsCompleted())]],
         text = [[
-            local current = "-"
-            local state
-            if Custom.IsBeforeHalfWeeklyReset() then
-                state = states['quest:' .. Custom.GetMawAssaults()]
-            else
-                state = states['quest:' .. select(2, Custom.GetMawAssaults())]
-            end
-            if state:IsCompleted() then
-                current = Images.COMPLETE
-            else
-                local first, last
-                if state == states[1] then -- Necrolord
-                    first, last = 5, 15
-                elseif state == states[2] then -- Kyrian
-                    first, last = 16, 25
-                elseif state == states[3] then -- Night Fae
-                    first, last = 26, 35
-                elseif state == states[4] then -- Venthyr
-                    first, last = 36, 45
-                end
-                current = tCount(states, "IsCompleted", first, last)
-                if tCount(states, "IsActive", first, last) == 0 then
-                    current = Images.QUEST_PICKUP
-                end
-            end
+local current = "-"
+local state
+if Custom.IsBeforeHalfWeeklyReset() then
+    state = states['quest:' .. Custom.GetMawAssaults()]
+else
+    state = states['quest:' .. select(2, Custom.GetMawAssaults())]
+end
+if state:IsCompleted() then
+    current = Images.COMPLETE
+else
+    local first, last
+    if state == states[1] then -- Necrolord
+        first, last = 5, 15
+    elseif state == states[2] then -- Kyrian
+        first, last = 16, 25
+    elseif state == states[3] then -- Night Fae
+        first, last = 26, 35
+    elseif state == states[4] then -- Venthyr
+        first, last = 36, 45
+    end
+    current = tCount(states, "IsCompleted", first, last)
+    if tCount(states, "IsActive", first, last) == 0 then
+        current = Images.QUEST_PICKUP
+    end
+end
 
-            local a, b = "-", "-"
-            if Custom.IsBeforeHalfWeeklyReset() then
-                a = current
-            else
-                if character.data.firstMawAssaultCompleted then
-                    a = Images.COMPLETE
-                end
-                b = current
-            end
+local a, b = "-", "-"
+if Custom.IsBeforeHalfWeeklyReset() then
+    a = current
+else
+    if character.data.firstMawAssaultCompleted then
+        a = Images.COMPLETE
+    end
+    b = current
+end
 
-            return a .. " / " .. b
-        ]],
+return a .. " / " .. b
+]],
         tooltip = [[
-            tooltip:AddLine(self:GetName())
-            local quests = {Custom.GetMawAssaults()}
-            local data = Custom.GetActiveMawAssaultQuests()
+tooltip:AddLine(self:GetName())
+local quests = {Custom.GetMawAssaults()}
+local data = Custom.GetActiveMawAssaultQuests()
 
-            for index,questID in ipairs(quests) do
-                local state = states['quest:' .. questID]
-                local name = state:GetTitle()
-                if name == "" then
-                    name = state:GetUniqueKey()
-                end
-                if IsShiftKeyDown() then
-                    name = format("%s [%d]", name, questID)
-                end
-                if index == 1 and not Custom.IsBeforeHalfWeeklyReset() and not character.data.firstMawAssaultCompleted then
-                    name = Colors.COMMON:WrapTextInColorCode(name)
-                end
+for index,questID in ipairs(quests) do
+    local state = states['quest:' .. questID]
+    local name = state:GetTitle()
+    if name == "" then
+        name = state:GetUniqueKey()
+    end
+    if IsShiftKeyDown() then
+        name = format("%s [%d]", name, questID)
+    end
+    if index == 1 and not Custom.IsBeforeHalfWeeklyReset() and not character.data.firstMawAssaultCompleted then
+        name = Colors.COMMON:WrapTextInColorCode(name)
+    end
 
-                if state:IsCompleted() or state:GetID() == character.data.firstMawAssaultCompleted then
-                    tooltip:AddLine(name, 0, 1, 0)
-                else
-                    tooltip:AddLine(name, 1, 1, 1)
-                end
+    if state:IsCompleted() or state:GetID() == character.data.firstMawAssaultCompleted then
+        tooltip:AddLine(name, 0, 1, 0)
+    else
+        tooltip:AddLine(name, 1, 1, 1)
+    end
 
-                local first, last
-                if state == states[1] then -- Necrolord
-                    first, last = 5, 15
-                elseif state == states[2] then -- Kyrian
-                    first, last = 16, 25
-                elseif state == states[3] then -- Night Fae
-                    first, last = 26, 35
-                elseif state == states[4] then -- Venthyr
-                    first, last = 36, 45
-                end
+    local first, last
+    if state == states[1] then -- Necrolord
+        first, last = 5, 15
+    elseif state == states[2] then -- Kyrian
+        first, last = 16, 25
+    elseif state == states[3] then -- Night Fae
+        first, last = 26, 35
+    elseif state == states[4] then -- Venthyr
+        first, last = 36, 45
+    end
 
-                for i=first,last do
-                    local state = states[i]
+    for i=first,last do
+        local state = states[i]
 
-                    if state:IsActive() or state:IsCompleted() or data.quests[state:GetID()] then
-                        Custom.AddQuestToTooltip(state, tooltip)
-                    end
-                end
-            end
-            if Custom.IsBeforeHalfWeeklyReset() then
-                local countdown = Custom.GetHalfWeeklyCountdown()
-                tooltip:AddLine(Images.PADDING .. format(L["Active in %s"], SecondsToTime(countdown)), 1, 1, 1)
-            end
-        ]],
+        if state:IsActive() or state:IsCompleted() or data.quests[state:GetID()] then
+            Custom.AddQuestToTooltip(state, tooltip)
+        end
+    end
+end
+if Custom.IsBeforeHalfWeeklyReset() then
+    local countdown = Custom.GetHalfWeeklyCountdown()
+    tooltip:AddLine(Images.PADDING .. format(L["Active in %s"], SecondsToTime(countdown)), 1, 1, 1)
+end
+]],
     },
     {
         id = "btwtodo:tormentors",
@@ -1113,16 +1096,16 @@ end]]
         completed = "return states[1]:IsCompleted()",
         text = DEFAULT_TEXT_FUNCTION,
         tooltip = [[
-            tooltip:AddLine(self:GetName())
+tooltip:AddLine(self:GetName())
 
-            local next, isActive = Custom.GetTormentorCountdown()
-            if isActive then
-                tooltip:AddLine(format(L["Active!"]), 1, 1, 1)
-            else
-                tooltip:AddLine(format(L["Active in %s"], SecondsToTime(next)), 1, 1, 1)
-                return 1
-            end
-        ]],
+local next, isActive = Custom.GetTormentorCountdown()
+if isActive then
+    tooltip:AddLine(format(L["Active!"]), 1, 1, 1)
+else
+    tooltip:AddLine(format(L["Active in %s"], SecondsToTime(next)), 1, 1, 1)
+    return 1
+end
+]],
     },
     {
         id = "btwtodo:mawsoulsquest",
@@ -1145,12 +1128,8 @@ end]]
             { type = "quest", id = 64363, },
             { type = "quest", id = 64364, },
         },
-        completed = [[
-            return tCount(states, "IsCompleted") == 3
-        ]],
-        text = [[
-            return format("%s / %s", tCount(states, "IsCompleted"), 3)
-        ]],
+        completed = [[return tCount(states, "IsCompleted") == 3]],
+        text = [[return format("%s / %s", tCount(states, "IsCompleted"), 3)]],
     },
     {
         id = "btwtodo:invasivemawshroom",
@@ -1162,12 +1141,8 @@ end]]
             { type = "quest", id = 64356, },
             { type = "quest", id = 64357, },
         },
-        completed = [[
-            return tCount(states, "IsCompleted") == 5
-        ]],
-        text = [[
-            return format("%s / %s", tCount(states, "IsCompleted"), 5)
-        ]],
+        completed = [[return tCount(states, "IsCompleted") == 5]],
+        text = [[return format("%s / %s", tCount(states, "IsCompleted"), 5)]],
     },
     {
         id = "btwtodo:nestofunusualmaterials",
@@ -1179,12 +1154,8 @@ end]]
             { type = "quest", id = 64361, },
             { type = "quest", id = 64362, },
         },
-        completed = [[
-            return tCount(states, "IsCompleted") == 5
-        ]],
-        text = [[
-            return format("%s / %s", tCount(states, "IsCompleted"), 5)
-        ]],
+        completed = [[return tCount(states, "IsCompleted") == 5]],
+        text = [[return format("%s / %s", tCount(states, "IsCompleted"), 5)]],
     },
     {
         id = "btwtodo:reliccache",
@@ -1196,12 +1167,8 @@ end]]
             { type = "quest", id = 64564, },
             { type = "quest", id = 64565, },
         },
-        completed = [[
-            return tCount(states, "IsCompleted") == 5
-        ]],
-        text = [[
-            return format("%s / %s", tCount(states, "IsCompleted"), 5)
-        ]],
+        completed = [[return tCount(states, "IsCompleted") == 5]],
+        text = [[return format("%s / %s", tCount(states, "IsCompleted"), 5)]],
     },
     {
         id = "btwtodo:spectralboundchest",
@@ -1213,22 +1180,20 @@ end]]
             { type = "quest", id = 64249, },
             { type = "quest", id = 64250, },
         },
-        completed = [[
-            return states[1]:IsCompleted()
-        ]],
+        completed = [[return states[1]:IsCompleted()]],
         text = [[
-            if states[1]:IsCompleted() then
-                return Images.COMPLETE
-            else
-                local count = tCount(states, "IsCompleted", 2)
-                local text = format("%s / %s", count, 3)
-                if count == 3 then
-                    return Colors.STALLED:WrapTextInColorCode(text)
-                else
-                    return text
-                end
-            end
-        ]],
+if states[1]:IsCompleted() then
+    return Images.COMPLETE
+else
+    local count = tCount(states, "IsCompleted", 2)
+    local text = format("%s / %s", count, 3)
+    if count == 3 then
+        return Colors.STALLED:WrapTextInColorCode(text)
+    else
+        return text
+    end
+end
+]],
     },
     {
         id = "btwtodo:riftboundcache",
@@ -1239,12 +1204,8 @@ end]]
             { type = "quest", id = 64472, },
             { type = "quest", id = 64456, },
         },
-        completed = [[
-            return tCount(states, "IsCompleted") == 4
-        ]],
-        text = [[
-            return format("%s / %s", tCount(states, "IsCompleted"), 4)
-        ]],
+        completed = [[return tCount(states, "IsCompleted") == 4]],
+        text = [[return format("%s / %s", tCount(states, "IsCompleted"), 4)]],
     },
     {
         id = "btwtodo:covenantcampaign",
@@ -1255,32 +1216,30 @@ end]]
             { type = "campaign", id = 117, }, -- Night Fae
             { type = "campaign", id = 115, }, -- Necrolord
         },
-        completed = [[
-            return states[character:GetCovenant()]:IsCompleted()
-        ]],
+        completed = [[return states[character:GetCovenant()]:IsCompleted()]],
         text = [=[
-            local state = states[character:GetCovenant()]
-            local text = format("%s / %s", state:GetChaptersCompleted(), state:GetChaptersTotal())
-            if state:IsStalled() then
-                return Colors.STALLED:WrapTextInColorCode(text)
-            else
-                return text
-            end
-        ]=],
+local state = states[character:GetCovenant()]
+local text = format("%s / %s", state:GetChaptersCompleted(), state:GetChaptersTotal())
+if state:IsStalled() then
+    return Colors.STALLED:WrapTextInColorCode(text)
+else
+    return text
+end
+]=],
         tooltip = [[
-            local state = states[character:GetCovenant()]
-            tooltip:AddLine(self:GetName())
-            for i=1,state:GetChaptersTotal() do
-                local name = state:GetChapterName(i)
-                if state:IsChapterCompleted(i) then
-                    tooltip:AddLine(name, 0, 1, 0)
-                elseif state:IsChapterInProgress(i) then
-                    tooltip:AddLine(name, 1, 1, 1)
-                else
-                    tooltip:AddLine(name, 0.5, 0.5, 0.5)
-                end
-            end
-        ]],
+local state = states[character:GetCovenant()]
+tooltip:AddLine(self:GetName())
+for i=1,state:GetChaptersTotal() do
+    local name = state:GetChapterName(i)
+    if state:IsChapterCompleted(i) then
+        tooltip:AddLine(name, 0, 1, 0)
+    elseif state:IsChapterInProgress(i) then
+        tooltip:AddLine(name, 1, 1, 1)
+    else
+        tooltip:AddLine(name, 0.5, 0.5, 0.5)
+    end
+end
+]],
     },
     {
         id = "btwtodo:deathboundshard",
@@ -1288,9 +1247,7 @@ end]]
         states = {
             { type = "quest", id = 64347, },
         },
-        completed = [[
-            return states[1]:IsCompleted()
-        ]],
+        completed = [[return states[1]:IsCompleted()]],
         text = DEFAULT_TEXT_FUNCTION,
     },
 })

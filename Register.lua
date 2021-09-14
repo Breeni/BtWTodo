@@ -42,16 +42,12 @@ External.RegisterTodos({
             { type = "character", id = 6, },
             { type = "character", id = 7, },
         },
-        completed = [[
-            return true
-        ]],
-        text = [[
-            return states[2]:GetValue()
-        ]],
+        completed = [[return true]],
+        text = [[return states[2]:GetValue()]],
         tooltip = [[
-            tooltip:AddLine(self:GetName())
-            tooltip:AddLine(format(L["Overall %.2f (Equipped %.2f)"], states[1]:GetValue(), states[2]:GetValue()), 1, 1, 1)
-        ]],
+tooltip:AddLine(self:GetName())
+tooltip:AddLine(format(L["Overall %.2f (Equipped %.2f)"], states[1]:GetValue(), states[2]:GetValue()), 1, 1, 1)
+]],
     },
     {
         id = "btwtodo:gold",
@@ -59,11 +55,7 @@ External.RegisterTodos({
         states = {
             { type = "character", id = 9, },
         },
-        completed = [[
-            return true
-        ]],
-        text = [[
-            return states[1]:GetValue()
-        ]],
+        completed = [[return true]],
+        text = [[return states[1]:GetValue()]],
     },
 })
