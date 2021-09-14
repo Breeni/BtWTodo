@@ -239,8 +239,8 @@ do
 		[63956] = true,  -- ? Sealed Secrets
 		[63780] = true,  -- See How THEY Like It!
 		[64430] = nil,   -- Spill the Tea
-		[64070] = nil,   -- Staying Scrappy
-		[64432] = nil,   -- Strength to Weakness
+		[64070] = false, -- Staying Scrappy
+		[64432] = false, -- Strength to Weakness
 		[63786] = false, -- Sweep the Windswept Aerie
 		[64089] = nil,   -- Teas and Tinctures
 		[64101] = true,  -- The Proper Procedures
