@@ -274,7 +274,9 @@ function Internal.SaveSharedData(id, data, dontSend)
     local send = (dontSend == nil or dontSend) and isDifferent
 
     --@debug@
-    print("[BtWTodo] Save Shared Data " .. id, type(BtWTodoCache[id]), type(data), data == nil, type(data) == "table" and type(BtWTodoCache[id]) == "table" and not tCompare(data, BtWTodoCache[id], 10))
+    if isDifferent then
+        print("[" .. ADDON_NAME .. "] Save Shared Data " .. id, type(BtWTodoCache[id]), type(data), data == nil, type(data) == "table" and type(BtWTodoCache[id]) == "table" and not tCompare(data, BtWTodoCache[id], 10))
+    end
     --@end-debug@
 
     BtWTodoCache[id] = data
