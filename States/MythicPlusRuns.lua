@@ -137,10 +137,10 @@ Internal.RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE", function ()
 end)
 --@end-debug@
 local function RequestMapInfoAsap()
-    if previousRequest <= GetTime() - 60 then
+    if previousRequest <= GetTime() - 70 then
         C_MythicPlus.RequestMapInfo()
     else
-        C_Timer.After(previousRequest + 60 - GetTime(), RequestMapInfoAsap)
+        C_Timer.After(previousRequest + 70 - GetTime(), RequestMapInfoAsap)
     end
 end
 Internal.RegisterEvent("CHALLENGE_MODE_COMPLETED", function ()
