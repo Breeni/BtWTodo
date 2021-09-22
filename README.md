@@ -18,6 +18,7 @@ Currently planned features are:
 - Syntax Highlighting for advanced editing to-dos
 - Syncing character data between accounts
 - Creating custom windows
+- Vaults should show if there is loot available
 
 # Known Issues
 
