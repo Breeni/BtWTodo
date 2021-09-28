@@ -261,7 +261,53 @@ end
 
 -- Tormentors of Torghast
 do
-	--@TODO currently shows local time, should be an option?
+    local bosses = {
+        (GetAchievementCriteriaInfoByID(15054, 52105)), -- L["Manifestation of Pain"],
+        (GetAchievementCriteriaInfoByID(15054, 51655)), -- L["Versya the Damned"],
+        (GetAchievementCriteriaInfoByID(15054, 52101)), -- L["Zul'gath the Flayer"],
+        (GetAchievementCriteriaInfoByID(15054, 52106)), -- L["Golmak the Monstrosity"],
+        (GetAchievementCriteriaInfoByID(15054, 51643)), -- L["Sentinel Pyrophus"],
+        (GetAchievementCriteriaInfoByID(15054, 51660)), -- L["Mugrem the Soul Devourer"],
+        (GetAchievementCriteriaInfoByID(15054, 52104)), -- L["Kazj the Sentinel"],
+        (GetAchievementCriteriaInfoByID(15054, 51644)), -- L["Promathiz"],
+        (GetAchievementCriteriaInfoByID(15054, 52103)), -- L["Sentinel Shakorzeth"],
+        (GetAchievementCriteriaInfoByID(15054, 51661)), -- L["Intercessor Razzram"],
+        (GetAchievementCriteriaInfoByID(15054, 51653)), -- L["Gruukuuek the Elder"],
+        (GetAchievementCriteriaInfoByID(15054, 52102)), -- L["Algel the Haunter"],
+        (GetAchievementCriteriaInfoByID(15054, 51648)), -- L["Malleus Grakizz"],
+        (GetAchievementCriteriaInfoByID(15054, 51654)), -- L["Gralebboih"],
+        (GetAchievementCriteriaInfoByID(15054, 51639)), -- L["The Mass of Souls"],
+    }
+    _G['bosses'] = bosses
+    local bossRegionOffset = {
+        [1] = 3, -- US
+        [2] = 0, -- TW
+        [3] = 0, -- EU
+        [4] = 0, -- KR
+        [5] = 0, -- CN
+    }
+	Internal.RegisterCustomStateFunction("GetTormentorsBoss", function ()
+		local seasonStartTimestamp = Internal.GetSeasonStartTimestamp()
+		local previous = math.floor((GetServerTime() - seasonStartTimestamp) / (2 * 60 * 60)) + bossRegionOffset[GetCurrentRegion()]
+        return bosses[previous % #bosses + 1], bosses[(previous + 1) % #bosses + 1], bosses[(previous + 2) % #bosses + 1], bosses[(previous + 3) % #bosses + 1], bosses[(previous + 4) % #bosses + 1]
+    end)
+    local vignetteIDs = {
+        [4723] = true,
+        [4773] = true,
+    }
+    -- returns vignette table and if the tormentors is within countdown
+	Internal.RegisterCustomStateFunction("GetActiveTormentorsInfo", function ()
+		for _,vignetteGUID in ipairs(C_VignetteInfo.GetVignettes()) do
+            local vignette = C_VignetteInfo.GetVignetteInfo(vignetteGUID)
+            if vignetteIDs[vignette.vignetteID] then
+                local widgets = C_UIWidgetManager.GetAllWidgetsBySetID(vignette.widgetSetID)
+                local widget = C_UIWidgetManager.GetTextWithStateWidgetVisualizationInfo(widgets[1].widgetID)
+                print(vignette.vignetteID, widget and widget.text, widget.hasTimer, widgets[1].widgetID)
+                return vignette, widget.hasTimer
+            end
+        end
+    end)
+
 	Internal.RegisterCustomStateFunction("GetTormentorTimers", function ()
 		local seasonStartTimestamp = Internal.GetSeasonStartTimestamp()
 		local previous = seasonStartTimestamp + math.floor((GetServerTime() - seasonStartTimestamp) / (2 * 60 * 60)) * (2 * 60 * 60)
@@ -925,7 +971,13 @@ end
             { type = "currency", id = 1904, },
         },
         completed = "return states[1]:IsCapped()",
-        text = "return format(\"%s / %s / %s\", states[1]:GetQuantity(), states[1]:GetTotalEarned(), states[1]:GetMaxQuantity())",
+        text = [[
+if states[1]:GetTotalEarned() == 3510 then
+    return Images.COMPLETE
+else
+    return format("%s / %s / %s", states[1]:GetQuantity(), states[1]:GetTotalEarned(), states[1]:GetMaxQuantity())
+end
+]],
         tooltip = [[
 local quantity = states[1]:GetQuantity()
 local earned = states[1]:GetTotalEarned()
@@ -1098,13 +1150,32 @@ end
         tooltip = [[
 tooltip:AddLine(self:GetName())
 
+local vignette, isCountdown = Custom.GetActiveTormentorsInfo()
 local next, isActive = Custom.GetTormentorCountdown()
-if isActive then
-    tooltip:AddLine(format(L["Active!"]), 1, 1, 1)
+local bosses = {Custom.GetTormentorsBoss()}
+if vignette or isActive then
+    if vignette and not isCountdown then
+        tooltip:AddLine(format(L["Active!"]), 1, 1, 1)
+        tooltip:AddLine(format(L[" - %s"], bosses[1]), 1, 1, 1)
+    else
+        tooltip:AddLine(format(L["Active soon"]), 1, 1, 1)
+        tooltip:AddLine(format(L[" - %s"], bosses[1]), 1, 1, 1)
+    end
+
+    tooltip:AddLine(" ")
+
+    tooltip:AddLine(format(L["Next in about %s"], SecondsToTime(next)), 1, 1, 1)
+    tooltip:AddLine(format(L[" - %s"], bosses[2]), 1, 1, 1)
 else
-    tooltip:AddLine(format(L["Active in %s"], SecondsToTime(next)), 1, 1, 1)
-    return 1
+    tooltip:AddLine(format(L["Active in about %s"], SecondsToTime(next)), 1, 1, 1)
+    tooltip:AddLine(format(L[" - %s"], bosses[2]), 1, 1, 1)
 end
+if IsShiftKeyDown() then
+    for i=3,#bosses do
+        tooltip:AddLine(format(L[" - %s"], bosses[i]), 1, 1, 1)
+    end
+end
+return 1
 ]],
     },
     {
