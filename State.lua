@@ -189,6 +189,7 @@ local EnvironmentMixin = {
     tInvert = tInvert,
     tMap = tMap,
 
+    GetMoneyString = GetMoneyString,
     SecondsToTime = SecondsToTime,
 
     IsAltKeyDown = IsAltKeyDown,

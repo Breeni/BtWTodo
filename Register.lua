@@ -56,6 +56,12 @@ tooltip:AddLine(format(L["Overall %.2f (Equipped %.2f)"], states[1]:GetValue(), 
             { type = "character", id = 9, },
         },
         completed = [[return true]],
-        text = [[return states[1]:GetValue()]],
+        text = [[
+            local amount = states[1]:GetValue(true)
+            if amount >= 1000000 then
+                amount = math.floor(amount * 0.0001) * 10000
+            end
+            return GetMoneyString(amount, true)
+        ]],
     },
 })
