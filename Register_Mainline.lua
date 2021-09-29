@@ -299,7 +299,7 @@ do
 	Internal.RegisterCustomStateFunction("GetActiveTormentorsInfo", function ()
 		for _,vignetteGUID in ipairs(C_VignetteInfo.GetVignettes()) do
             local vignette = C_VignetteInfo.GetVignetteInfo(vignetteGUID)
-            if vignetteIDs[vignette.vignetteID] then
+            if vignette and vignetteIDs[vignette.vignetteID] then
                 local widgets = C_UIWidgetManager.GetAllWidgetsBySetID(vignette.widgetSetID)
                 local widget = C_UIWidgetManager.GetTextWithStateWidgetVisualizationInfo(widgets[1].widgetID)
                 return vignette, widget.hasTimer
