@@ -50,34 +50,66 @@ end
 function CharacterMixin:GetName()
     return self.name
 end
-function CharacterMixin:GetValue()
+function CharacterMixin:GetValue(raw)
     if self.id == CharacterDataEnum.Level then
 	    return self:GetCharacter():GetLevel() or 1
     elseif self.id == CharacterDataEnum.Class then
-        local data = C_CreatureInfo.GetClassInfo(self:GetCharacter():GetClass() or 0)
-	    return data and data.className or ""
+        if raw then
+            return self:GetCharacter():GetClass() or 0
+        else
+            local data = C_CreatureInfo.GetClassInfo(self:GetCharacter():GetClass() or 0)
+            return data and data.className or ""
+        end
     elseif self.id == CharacterDataEnum.Race then
-        local data = C_CreatureInfo.GetRaceInfo(self:GetCharacter():GetRace() or 0)
-	    return data and data.raceName or ""
+        if raw then
+            return self:GetCharacter():GetRace() or 0
+        else
+            local data = C_CreatureInfo.GetRaceInfo(self:GetCharacter():GetRace() or 0)
+            return data and data.raceName or ""
+        end
     elseif self.id == CharacterDataEnum.Faction then
-        local data = C_CreatureInfo.GetFactionInfo(self:GetCharacter():GetRace() or 0)
-	    return data and data.name or ""
+        if raw then
+            return self:GetCharacter():GetRace() or 0
+        else
+            local data = C_CreatureInfo.GetFactionInfo(self:GetCharacter():GetRace() or 0)
+            return data and data.name or ""
+        end
     elseif self.id == CharacterDataEnum.Sex then
         local gender = self:GetCharacter():GetSex()
-        if gender == 2 then
-	        return L["Male"]
-        elseif gender == 3 then
-	        return L["Female"]
+        if raw then
+            return gender
+        else
+            if gender == 2 then
+                return L["Male"]
+            elseif gender == 3 then
+                return L["Female"]
+            end
+            return ""
         end
-        return ""
     elseif self.id == CharacterDataEnum.ItemLevel then
-	    return format("%.2f", self:GetCharacter():GetItemLevel() or 0)
+        if raw then
+            return self:GetCharacter():GetItemLevel() or 0
+        else
+            return format("%.2f", self:GetCharacter():GetItemLevel() or 0)
+        end
     elseif self.id == CharacterDataEnum.ItemLevelEquipped then
-	    return format("%.2f", self:GetCharacter():GetItemLevelEquipped() or 0)
+        if raw then
+            return self:GetCharacter():GetItemLevelEquipped() or 0
+        else
+            return format("%.2f", self:GetCharacter():GetItemLevelEquipped() or 0)
+        end
     elseif self.id == CharacterDataEnum.ItemLevelPvP then
-	    return format("%.2f", self:GetCharacter():GetItemLevelPvP() or 0)
+        if raw then
+            return self:GetCharacter():GetItemLevelPvP() or 0
+        else
+            return format("%.2f", self:GetCharacter():GetItemLevelPvP() or 0)
+        end
     elseif self.id == CharacterDataEnum.Money then
-	    return GetCoinTextureString(self:GetCharacter():GetMoney() or 0)
+        if raw then
+            return self:GetCharacter():GetMoney() or 0
+        else
+            return GetMoneyString(self:GetCharacter():GetMoney() or 0, true)
+        end
     end
 end
 function CharacterMixin:RegisterEventsFor(target)
