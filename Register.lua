@@ -52,6 +52,7 @@ tooltip:AddLine(format(L["Overall %.2f (Equipped %.2f)"], states[1]:GetValue(), 
     {
         id = "btwtodo:gold",
         name = L["Gold"],
+        version = 1,
         states = {
             { type = "character", id = 9, },
         },
