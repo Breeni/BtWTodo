@@ -302,7 +302,6 @@ do
             if vignetteIDs[vignette.vignetteID] then
                 local widgets = C_UIWidgetManager.GetAllWidgetsBySetID(vignette.widgetSetID)
                 local widget = C_UIWidgetManager.GetTextWithStateWidgetVisualizationInfo(widgets[1].widgetID)
-                print(vignette.vignetteID, widget and widget.text, widget.hasTimer, widgets[1].widgetID)
                 return vignette, widget.hasTimer
             end
         end
