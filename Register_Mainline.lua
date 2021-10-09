@@ -50,7 +50,7 @@ local function GetMaxRenownForWeek(week)
     if week <= 6 then
         return MAX_RENOWN_FOR_WEEK[week]
     end
-    return MAX_RENOWN_FOR_WEEK[6] + (week - 6) * 2
+    return math.min(MAX_RENOWN_FOR_WEEK[6] + (week - 6) * 2, 80)
 end
 Internal.RegisterCustomStateFunction("GetMaxRenownForWeek", GetMaxRenownForWeek)
 
