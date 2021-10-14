@@ -307,6 +307,7 @@ function BtWTodoViewMixin:GetItemWidth()
 end
 function BtWTodoViewMixin:SetItemHeight(value)
 	self.itemHeight = math.max(value, 1)
+	self.ScrollBox:GetView():SetElementExtent(self:GetItemHeight())
 end
 function BtWTodoViewMixin:GetItemHeight()
 	return self.itemHeight or 1
