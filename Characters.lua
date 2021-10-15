@@ -182,7 +182,7 @@ local player
 function Internal.GetPlayer()
     if not player then
         local name, realm = UnitFullName("player")
-        assert(name and realm, "GetPlayer called to early, UnitFullName missing name or realm")
+        assert(name and realm, "GetPlayer called to early, UnitFullName missing name or realm" .. (Internal.GetActiveEvent() ~= nil and (", during event " .. Internal.GetActiveEvent()) or ""))
         player = Internal.GetCharacter(name, realm)
     end
 

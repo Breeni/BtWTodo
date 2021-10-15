@@ -56,6 +56,7 @@ function EventHandler:UnregisterEventsFor(target)
 end
 function EventHandler:OnEvent(event, ...)
     if self.targets[event] then
+        self.event = event
         local sorted = {}
         for target,callbacks in pairs(self.targets[event]) do
             for callback,prio in pairs(callbacks) do
@@ -75,9 +76,13 @@ function EventHandler:OnEvent(event, ...)
                 callback.func(callback.target, event, ...)
             end
         end
+        self.event = nil
     end
 end
 EventHandler:SetScript("OnEvent", EventHandler.OnEvent)
+function Internal.GetActiveEvent()
+    return EventHandler.event
+end
 
 function External.TriggerEvent(event, ...)
     EventHandler:OnEvent(event, ...)
