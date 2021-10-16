@@ -89,11 +89,18 @@ local function UpdatePlayerKeystone ()
         level = C_MythicPlus.GetOwnedKeystoneLevel(),
     })
 end
-Internal.RegisterEvent("PLAYER_ENTERING_WORLD", UpdatePlayerKeystone)
-Internal.RegisterEvent("CHALLENGE_MODE_START", UpdatePlayerKeystone) -- Dungeon start, keystone is -1 levels
-Internal.RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE", UpdatePlayerKeystone) -- Dungeon end, CHALLENGE_MODE_COMPLETED is too early for new keystone
-Internal.RegisterEvent("BAG_UPDATE_DELAYED", UpdatePlayerKeystone) -- Got keystone from vault
-Internal.RegisterEvent("GOSSIP_CLOSED", UpdatePlayerKeystone) -- Lowered keystone within Oribos
+local function RegisterEvents()
+    Internal.RegisterEvent("PLAYER_ENTERING_WORLD", UpdatePlayerKeystone)
+    Internal.RegisterEvent("CHALLENGE_MODE_START", UpdatePlayerKeystone) -- Dungeon start, keystone is -1 levels
+    Internal.RegisterEvent("CHALLENGE_MODE_MAPS_UPDATE", UpdatePlayerKeystone) -- Dungeon end, CHALLENGE_MODE_COMPLETED is too early for new keystone
+    Internal.RegisterEvent("BAG_UPDATE_DELAYED", UpdatePlayerKeystone) -- Got keystone from vault
+    Internal.RegisterEvent("GOSSIP_CLOSED", UpdatePlayerKeystone) -- Lowered keystone within Oribos
+
+    Internal.UnregisterEvent("PLAYER_ENTERING_WORLD", RegisterEvents)
+
+    UpdatePlayerKeystone()
+end
+Internal.RegisterEvent("PLAYER_ENTERING_WORLD", RegisterEvents)
 
 Internal.RegisterEvent("WEEKLY_RESET", function ()
     for _,character in Internal.IterateCharacters() do
