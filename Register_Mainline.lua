@@ -169,7 +169,7 @@ do
 				questIDs[64103] = true
 				quests[#quests+1] = 64103
 			end
-			if not unlocked then -- Fill in missing quests that unlock later
+			if not unlocked and dailies then -- Fill in missing quests that unlock later
 				for k in pairs(dailies) do
 					if type(k) == "number" then
 						if not questIDs[k] then
