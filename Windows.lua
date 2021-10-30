@@ -422,6 +422,9 @@ BtWTodoTooltipFrameMixin = {}
 function BtWTodoTooltipFrameMixin:OnLoad()
 	BackdropTemplateMixin.OnBackdropLoaded(self)
 	BtWTodoFrameMixin.OnLoad(self)
+	if self.TooltipBackdropOnLoad then
+		self:TooltipBackdropOnLoad()
+	end
 
 	-- Disable mouse events to prevent flickering
 	self.ScrollBox.ScrollTarget:EnableMouse(false)
