@@ -30,6 +30,9 @@ local function UpdateListVersion(id)
             for index,todo in ipairs(registered.todos) do
                 local current = GetTodoIndex(list, todo.id)
                 if current then -- Item is already in saved list
+                    if type(todo.version) == "number" and todo.version > version and todo.hidden ~= list.todos[current].hidden then
+                        list.todos[current].hidden = todo.hidden
+                    end
                     list.todos[current].version = todo.version -- Make sure the version number is correct
                 elseif type(todo.version) == "number" and todo.version > version then
                     local inserted = false
