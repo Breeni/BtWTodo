@@ -850,6 +850,14 @@ end
 ]],
     },
     {
+        id = "btwtodo:anima",
+        name = L["Anima"],
+        states = {
+            { type = "currency", id = 1813, },
+        },
+        completed = "return false",
+        text = "return states[1]:GetQuantity()",
+    },
         id = "btwtodo:valor",
         name = L["Valor"],
         states = {
