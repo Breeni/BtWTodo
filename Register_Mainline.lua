@@ -1337,7 +1337,7 @@ External.RegisterLists({
     {
         id = "btwtodo:default",
         name = L["Default"],
-        version = 3,
+        version = 4,
         todos = {
             {
                 id = "btwtodo:itemlevel",
@@ -1441,8 +1441,15 @@ External.RegisterLists({
                 hidden = true,
             },
             {
+                id = "btwtodo:anima",
+                category = "btwtodo:currency",
+                version = 4,
+            },
+            {
                 id = "btwtodo:soulcinders",
                 category = "btwtodo:currency",
+                hidden = true,
+                version = 4,
             },
             {
                 id = "btwtodo:valor",
@@ -1470,7 +1477,7 @@ External.RegisterLists({
     {
         id = "btwtodo:91",
         name = L["Chains of Domination"],
-        version = 3,
+        version = 4,
         todos = {
             {
                 id = "btwtodo:itemlevel",
@@ -1574,8 +1581,15 @@ External.RegisterLists({
                 hidden = true,
             },
             {
+                id = "btwtodo:anima",
+                category = "btwtodo:currency",
+                version = 4,
+            },
+            {
                 id = "btwtodo:soulcinders",
                 category = "btwtodo:currency",
+                hidden = true,
+                version = 4,
             },
             {
                 id = "btwtodo:valor",
