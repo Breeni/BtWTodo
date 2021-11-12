@@ -908,30 +908,15 @@ tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
     {
         id = "btwtodo:soulcinders",
         name = L["Soul Cinders"],
+        version = 1,
+        changeLog = {
+            L["Soul Cinders has been uncapped, switching to standard currency display"],
+        },
         states = {
             { type = "currency", id = 1906, },
         },
-        completed = "return Custom.GetWeeklySoulCindersEarned(character) == Custom.GetWeeklyMaxSoulCindersForSeasonWeek(character, Custom.GetSeasonWeek())",
-        text = [[
-local quantity = states[1]:GetQuantity()
-local earned = Custom.GetWeeklySoulCindersEarned(character)
-local total = Custom.GetWeeklyMaxSoulCindersForSeasonWeek(character, Custom.GetSeasonWeek())
-local text = format("%s / %s / %s", quantity, earned, total)
-if Custom.IsBeforeHalfWeeklyReset() and earned == total - 50 then
-    return Colors.STALLED:WrapTextInColorCode(text)
-else
-    return text
-end
-]],
-        tooltip = [[
-local quantity = states[1]:GetQuantity()
-local earned = Custom.GetWeeklySoulCindersEarned(character)
-local total = Custom.GetWeeklyMaxSoulCindersForSeasonWeek(character, Custom.GetSeasonWeek())
-tooltip:AddLine(self:GetName())
-tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
-tooltip:AddLine(format(L["Earned this week: %d*"], earned), 1, 1, 1)
-tooltip:AddLine(format(L["Max this week: %d*"], total), 1, 1, 1)
-]],
+        completed = "return false",
+        text = [[return states[1]:GetQuantity()]],
     },
     {
         id = "btwtodo:torghast",
@@ -1337,7 +1322,7 @@ External.RegisterLists({
     {
         id = "btwtodo:default",
         name = L["Default"],
-        version = 4,
+        version = 5,
         todos = {
             {
                 id = "btwtodo:itemlevel",
@@ -1448,8 +1433,7 @@ External.RegisterLists({
             {
                 id = "btwtodo:soulcinders",
                 category = "btwtodo:currency",
-                hidden = true,
-                version = 4,
+                version = 5,
             },
             {
                 id = "btwtodo:valor",
@@ -1477,7 +1461,7 @@ External.RegisterLists({
     {
         id = "btwtodo:91",
         name = L["Chains of Domination"],
-        version = 4,
+        version = 5,
         todos = {
             {
                 id = "btwtodo:itemlevel",
@@ -1588,8 +1572,7 @@ External.RegisterLists({
             {
                 id = "btwtodo:soulcinders",
                 category = "btwtodo:currency",
-                hidden = true,
-                version = 4,
+                version = 5,
             },
             {
                 id = "btwtodo:valor",
