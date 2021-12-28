@@ -1276,33 +1276,48 @@ end
     {
         id = "btwtodo:covenantcampaign",
         name = L["Covenant Campaign"],
+        version = 1,
+        changeLog = {
+            L["Fixed an error for characters that have not selected a covenant yet."],
+        },
         states = { -- Ordered by covenant id
             { type = "campaign", id = 119, }, -- Kyrian
             { type = "campaign", id = 113, }, -- Venthyr
             { type = "campaign", id = 117, }, -- Night Fae
             { type = "campaign", id = 115, }, -- Necrolord
         },
-        completed = [[return states[character:GetCovenant()]:IsCompleted()]],
+        completed = [[
+            local state = states[character:GetCovenant()]
+            if state then
+                return state:IsCompleted()
+            end
+        ]],
         text = [=[
 local state = states[character:GetCovenant()]
-local text = format("%s / %s", state:GetChaptersCompleted(), state:GetChaptersTotal())
-if state:IsStalled() then
-    return Colors.STALLED:WrapTextInColorCode(text)
+if state then
+    local text = format("%s / %s", state:GetChaptersCompleted(), state:GetChaptersTotal())
+    if state:IsStalled() then
+        return Colors.STALLED:WrapTextInColorCode(text)
+    else
+        return text
+    end
 else
-    return text
+    return "0 / 9"
 end
 ]=],
         tooltip = [[
 local state = states[character:GetCovenant()]
-tooltip:AddLine(self:GetName())
-for i=1,state:GetChaptersTotal() do
-    local name = state:GetChapterName(i)
-    if state:IsChapterCompleted(i) then
-        tooltip:AddLine(name, 0, 1, 0)
-    elseif state:IsChapterInProgress(i) then
-        tooltip:AddLine(name, 1, 1, 1)
-    else
-        tooltip:AddLine(name, 0.5, 0.5, 0.5)
+if state then
+    tooltip:AddLine(self:GetName())
+    for i=1,state:GetChaptersTotal() do
+        local name = state:GetChapterName(i)
+        if state:IsChapterCompleted(i) then
+            tooltip:AddLine(name, 0, 1, 0)
+        elseif state:IsChapterInProgress(i) then
+            tooltip:AddLine(name, 1, 1, 1)
+        else
+            tooltip:AddLine(name, 0.5, 0.5, 0.5)
+        end
     end
 end
 ]],
