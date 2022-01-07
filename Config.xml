@@ -147,6 +147,12 @@
 						<Anchor point="RIGHT" x="-16" y="0"/>
 					</Anchors>
 				</FontString>
+				<FontString parentKey="MinimapLeftClickTitle" text="BTWTODO_MINIMAP_LEFT_CLICK" inherits="GameFontNormal" justifyH="LEFT" justifyV="MIDDLE">
+					<Size x="0" y="22"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="16" y="-125"/>
+					</Anchors>
+				</FontString>
 		  	</Layer>
 		</Layers>
 		<Frames>
@@ -206,6 +212,12 @@
 					</OnClick>
 				</Scripts>
 			</CheckButton>
+			<Frame parentKey="MinimapLeftClickDropDown" inherits="UIDropDownMenuTemplate">
+				<Size x="40" y="28"/>
+				<Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.MinimapTooltipButton" relativePoint="BOTTOMLEFT" x="0" y="-25"/>
+				</Anchors>
+			</Frame>
 		</Frames>
 		<Scripts>
 			<OnLoad method="OnLoad"/>

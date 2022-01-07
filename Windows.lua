@@ -437,6 +437,15 @@ end
 function External.ToggleSmallFrame()
 	BtWTodoSmallFrame:SetShown(not BtWTodoSmallFrame:IsShown())
 end
+function External.RunAction(action)
+	if action == "toggleMain" then
+		External.ToggleMainFrame()
+	elseif action == "toggleSmall" then
+		External.ToggleSmallFrame()
+	elseif action == "openConfig" then
+		External.OpenConfiguration()
+	end
+end
 
 Internal.RegisterEvent("FRAME_CHANGED", function (event, id)
 	for _,frame in ipairs(frames) do
