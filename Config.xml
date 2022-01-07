@@ -153,6 +153,19 @@
 						<Anchor point="TOPLEFT" x="16" y="-125"/>
 					</Anchors>
 				</FontString>
+				<FontString parentKey="MinimapShiftLeftClickTitle" text="BTWTODO_MINIMAP_SHIFT_LEFT_CLICK" inherits="GameFontNormal" justifyH="LEFT" justifyV="MIDDLE">
+					<Size x="0" y="22"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="16" y="-175"/>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="MinimapRightClickTitle" text="BTWTODO_MINIMAP_RIGHT_CLICK" inherits="GameFontNormal" justifyH="LEFT" justifyV="MIDDLE">
+					<Size x="0" y="22"/>
+					<Anchors>
+						<Anchor point="TOPLEFT" x="16" y="-225"/>
+					</Anchors>
+				</FontString>
+
 		  	</Layer>
 		</Layers>
 		<Frames>
@@ -215,7 +228,19 @@
 			<Frame parentKey="MinimapLeftClickDropDown" inherits="UIDropDownMenuTemplate">
 				<Size x="40" y="28"/>
 				<Anchors>
-                    <Anchor point="TOPLEFT" relativeKey="$parent.MinimapTooltipButton" relativePoint="BOTTOMLEFT" x="0" y="-25"/>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.MinimapTooltipButton" relativePoint="BOTTOMLEFT" x="0" y="-20"/>
+				</Anchors>
+			</Frame>
+			<Frame parentKey="MinimapShiftLeftClickDropDown" inherits="UIDropDownMenuTemplate">
+				<Size x="40" y="28"/>
+				<Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.MinimapLeftClickDropDown" relativePoint="BOTTOMLEFT" x="0" y="-18"/>
+				</Anchors>
+			</Frame>
+			<Frame parentKey="MinimapRightClickDropDown" inherits="UIDropDownMenuTemplate">
+				<Size x="40" y="28"/>
+				<Anchors>
+                    <Anchor point="TOPLEFT" relativeKey="$parent.MinimapShiftLeftClickDropDown" relativePoint="BOTTOMLEFT" x="0" y="-18"/>
 				</Anchors>
 			</Frame>
 		</Frames>
