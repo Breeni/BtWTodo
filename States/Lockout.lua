@@ -938,6 +938,18 @@ local journalEncounterData = {
     2449,
     2455,
 }
+if select(4, GetBuildInfo()) >= 90200 then
+    tinsert(journalEncounterData, 2458)
+    tinsert(journalEncounterData, 2465)
+    tinsert(journalEncounterData, 2470)
+    tinsert(journalEncounterData, 2459)
+    tinsert(journalEncounterData, 2460)
+    tinsert(journalEncounterData, 2461)
+    tinsert(journalEncounterData, 2463)
+    tinsert(journalEncounterData, 2469)
+    tinsert(journalEncounterData, 2457)
+    tinsert(journalEncounterData, 2467)
+end
 local dungeonInstanceData = {}
 local dungeonEncounterData = {}
 
@@ -1125,6 +1137,10 @@ local instanceDifficulties = {
     [2296] = raidDifficultiesAll, -- Castle Nathria
     [2450] = raidDifficultiesAll, -- Sanctum of Domination
 }
+if select(4, GetBuildInfo()) >= 90200 then
+    instanceDifficulties[2441] = { 2,  8, 23} -- Tazavesh, the Veiled Market
+    instanceDifficulties[2481] = raidDifficultiesAll -- Sepulcher of the First Ones
+end
 
 local LockoutMixin = CreateFromMixins(External.StateMixin)
 function LockoutMixin:Init(instanceID, difficultyID)
