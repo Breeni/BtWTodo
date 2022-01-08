@@ -565,11 +565,35 @@ end
 --  [[  Config Panel  ]]
 local ldbi = LibStub("LibDBIcon-1.0")
 
-local minimapButtonActionsNames = {
-    toggleMain = L["Toggle Main Frame"],
-    toggleSmall = L["Toggle Small Frame"],
+-- TODO: when custom frames are added, construct this list of actions dynamically
+local minimapButtonActions = {
+    "toggleWindow:main",
+    "toggleWindow:small",
+    "openConfig",
+}
+
+local minimapButtonActionNames = {
+    toggleWindow = L["Toggle %s Window"],
     openConfig = L["Open Options"],
 }
+
+function SplitAction(actionStr)
+    local action, subAction
+    for str in string.gmatch(actionStr, "([^:]+)") do
+        if (action == nil) then
+            action = str
+        elseif (subAction == nil) then
+            subAction = str
+        end
+    end
+    return action, subAction
+end
+
+function ActionName(action, subAction)
+    local name = minimapButtonActionNames[action]
+    name = string.format(name, subAction and subAction:gsub("^%l", string.upper))
+    return name
+end
 
 BtWTodoConfigPanelMixin = {}
 function BtWTodoConfigPanelMixin:OnLoad()
@@ -585,10 +609,10 @@ function BtWTodoConfigPanelMixin:OnLoad()
             self:SetMinimapLeftClickAction(arg1)
         end
 
-        for id,name in pairs(minimapButtonActionsNames) do
-            info.arg1 = id
-            info.text = name
-            info.checked = selected == id
+        for _,actionStr in pairs(minimapButtonActions) do
+            info.arg1 = actionStr
+            info.text = ActionName(SplitAction(actionStr))
+            info.checked = selected == actionStr
             UIDropDownMenu_AddButton(info, level)
         end
     end);
@@ -603,10 +627,10 @@ function BtWTodoConfigPanelMixin:OnLoad()
             self:SetMinimapShiftLeftClickAction(arg1)
         end
 
-        for id,name in pairs(minimapButtonActionsNames) do
-            info.arg1 = id
-            info.text = name
-            info.checked = selected == id
+        for _,actionStr in pairs(minimapButtonActions) do
+            info.arg1 = actionStr
+            info.text = ActionName(SplitAction(actionStr))
+            info.checked = selected == actionStr
             UIDropDownMenu_AddButton(info, level)
         end
     end);
@@ -621,10 +645,10 @@ function BtWTodoConfigPanelMixin:OnLoad()
             self:SetMinimapRightClickAction(arg1)
         end
 
-        for id,name in pairs(minimapButtonActionsNames) do
-            info.arg1 = id
-            info.text = name
-            info.checked = selected == id
+        for _,actionStr in pairs(minimapButtonActions) do
+            info.arg1 = actionStr
+            info.text = ActionName(SplitAction(actionStr))
+            info.checked = selected == actionStr
             UIDropDownMenu_AddButton(info, level)
         end
     end);
@@ -646,23 +670,23 @@ end
 function BtWTodoConfigPanelMixin:GetMinimapLeftClickAction()
     return self.minimapLeftClickAction;
 end
-function BtWTodoConfigPanelMixin:SetMinimapLeftClickAction(action)
-    self.minimapLeftClickAction = action;
-    UIDropDownMenu_SetText(self.MinimapLeftClickDropDown, minimapButtonActionsNames[action])
+function BtWTodoConfigPanelMixin:SetMinimapLeftClickAction(actionStr)
+    self.minimapLeftClickAction = actionStr;
+    UIDropDownMenu_SetText(self.MinimapLeftClickDropDown, ActionName(SplitAction(actionStr)))
 end
 function BtWTodoConfigPanelMixin:GetMinimapShiftLeftClickAction()
     return self.minimapShiftLeftClickAction;
 end
-function BtWTodoConfigPanelMixin:SetMinimapShiftLeftClickAction(action)
-    self.minimapShiftLeftClickAction = action;
-    UIDropDownMenu_SetText(self.MinimapShiftLeftClickDropDown, minimapButtonActionsNames[action])
+function BtWTodoConfigPanelMixin:SetMinimapShiftLeftClickAction(actionStr)
+    self.minimapShiftLeftClickAction = actionStr;
+    UIDropDownMenu_SetText(self.MinimapShiftLeftClickDropDown, ActionName(SplitAction(actionStr)))
 end
 function BtWTodoConfigPanelMixin:GetMinimapRightClickAction()
     return self.minimapRightClickAction;
 end
-function BtWTodoConfigPanelMixin:SetMinimapRightClickAction(action)
-    self.minimapRightClickAction = action;
-    UIDropDownMenu_SetText(self.MinimapRightClickDropDown, minimapButtonActionsNames[action])
+function BtWTodoConfigPanelMixin:SetMinimapRightClickAction(actionStr)
+    self.minimapRightClickAction = actionStr;
+    UIDropDownMenu_SetText(self.MinimapRightClickDropDown, ActionName(SplitAction(actionStr)))
 end
 function BtWTodoConfigPanelMixin:okay()
     xpcall(function()

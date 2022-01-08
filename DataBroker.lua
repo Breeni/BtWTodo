@@ -43,8 +43,8 @@ local function ADDON_LOADED(_, addon)
         end
 
         -- defaults
-        if not BtWTodoDataBroker.leftClickAction then BtWTodoDataBroker.leftClickAction = "toggleMain" end
-        if not BtWTodoDataBroker.shiftLeftClickAction then BtWTodoDataBroker.shiftLeftClickAction = "toggleSmall" end
+        if not BtWTodoDataBroker.leftClickAction then BtWTodoDataBroker.leftClickAction = "toggleWindow:main" end
+        if not BtWTodoDataBroker.shiftLeftClickAction then BtWTodoDataBroker.shiftLeftClickAction = "toggleWindow:small" end
         if not BtWTodoDataBroker.rightClickAction then BtWTodoDataBroker.rightClickAction = "openConfig" end
 
         ldbi:Register(ADDON_NAME, dataBroker, BtWTodoDataBroker)
