@@ -454,6 +454,18 @@ Internal.RegisterCustomStateFunction("GetReservoirQuestForCovenant", function (c
 	return reservoirQuests[covenantID]
 end)
 
+-- Return Lost Souls
+local returnLostSouls = {
+    61332, 62861, 62862, 62863, -- Return Lost Souls - Kyrian
+    61334, 62867, 62868, 62869, -- Return Lost Souls - Venthyr
+    61331, 62858, 62859, 62860, -- Return Lost Souls - Night Fae
+    61333, 62864, 62865, 62866, -- Return Lost Souls - Necrolord
+}
+Internal.RegisterCustomStateFunction("GetReturnLostSoulQuestsForCovenant", function (covenantID)
+    local index = (covenantID - 1) * 4
+    return returnLostSouls[index + 1], returnLostSouls[index + 2], returnLostSouls[index + 3], returnLostSouls[index + 4]
+end)
+
 External.RegisterTodos({
     {
         id = "btwtodo:mythicplusrating",
