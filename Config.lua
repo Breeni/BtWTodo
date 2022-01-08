@@ -577,21 +577,22 @@ local minimapButtonActionNames = {
     openConfig = L["Open Options"],
 }
 
+local frameNames = {
+    main = L["Main"],
+    small = L["Small"],
+    tooltip = L["Tooltip"],
+}
+
 function SplitAction(actionStr)
-    local action, subAction
-    for str in string.gmatch(actionStr, "([^:]+)") do
-        if (action == nil) then
-            action = str
-        elseif (subAction == nil) then
-            subAction = str
-        end
-    end
+    local action, subAction = strsplit(":", actionStr, 2)
     return action, subAction
 end
 
 function ActionName(action, subAction)
     local name = minimapButtonActionNames[action]
-    name = string.format(name, subAction and subAction:gsub("^%l", string.upper))
+    if action == "toggleWindow" then
+        name = string.format(name, frameNames[subAction])
+    end
     return name
 end
 
@@ -2422,12 +2423,6 @@ end
 function BtWTodoConfigCharacterItemMixin:Delete()
     self:GetParent():GetParent():Remove(self.data.orderIndex)
 end
-
-local frameNames = {
-    main = L["Main"],
-    small = L["Small"],
-    tooltip = L["Tooltip"],
-}
 
 BtWTodoConfigWindowsPanelMixin = {}
 function BtWTodoConfigWindowsPanelMixin:OnLoad()
