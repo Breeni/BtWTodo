@@ -1345,6 +1345,87 @@ end
     },
 })
 
+if select(4, GetBuildInfo()) >= 90200 then --@TODO hard code change when 9.2 is released
+    External.RegisterTodos({
+        {
+            id = "btwtodo:92campaign",
+            name = L["9.2 Campaign"],
+            states = {
+                { type = "campaign", id = 158, },
+            },
+            completed = "return states[1]:IsCompleted()",
+            text = [=[
+local text = format("%s / %s", states[1]:GetChaptersCompleted(), states[1]:GetChaptersTotal())
+if states[1]:IsStalled() then
+    return Colors.STALLED:WrapTextInColorCode(text)
+else
+    return text
+end
+]=],
+            tooltip = [[
+tooltip:AddLine(self:GetName())
+for i=1,states[1]:GetChaptersTotal() do
+    local name = states[1]:GetChapterName(i)
+    if self:IsCompleted() or states[1]:IsChapterCompleted(i) then
+        tooltip:AddLine(name, 0, 1, 0)
+    elseif states[1]:IsChapterInProgress(i) then
+        tooltip:AddLine(name, 1, 1, 1)
+    else
+        tooltip:AddLine(name, 0.5, 0.5, 0.5)
+    end
+end
+]],
+        },
+        {
+            id = "btwtodo:automa",
+            name = L["Automa"],
+            states = {
+                { type = "faction", id = 2480, },
+            },
+            completed = "return states[1]:HasParagonAvailable()",
+            text = [[return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())]],
+        },
+        {
+            id = "btwtodo:theenlightened",
+            name = L["The Enlightened"],
+            states = {
+                { type = "faction", id = 2478, },
+            },
+            completed = "return states[1]:HasParagonAvailable()",
+            text = [[return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())]],
+        },
+        {
+            id = "btwtodo:zerethmortisworldboss",
+            name = L["Zereth Mortis Boss"],
+            states = {
+                { type = "quest", id = 64547, },
+            },
+            completed = "return states[1]:IsCompleted()",
+            text = DEFAULT_TEXT_FUNCTION,
+        },
+        {
+            id = "btwtodo:patternswithinpatterns",
+            name = L["Patterns Within Patterns"],
+            states = {
+                { type = "quest", id = 65324, },
+            },
+            completed = "return states[1]:IsCompleted()",
+            text = DEFAULT_TEXT_FUNCTION,
+        },
+    })
+
+    local function ADDON_LOADED(event, addon)
+        if addon == ADDON_NAME then
+            local todo = Internal.GetTodo("btwtodo:raidvault")
+            for i=2,5 do
+                todo.states[i].id = 2481
+            end
+            Internal.UnregisterEvent("ADDON_LOADED", ADDON_LOADED)
+        end
+    end
+    Internal.RegisterEvent("ADDON_LOADED", ADDON_LOADED)
+end
+
 External.RegisterLists({
     {
         id = "btwtodo:default",
@@ -1625,3 +1706,99 @@ External.RegisterLists({
         },
     }
 })
+
+if select(4, GetBuildInfo()) >= 90200 then
+    External.RegisterLists({
+        {
+            id = "btwtodo:92",
+            name = L["Eternity's End"],
+            todos = {
+                {
+                    id = "btwtodo:itemlevel",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:mythicplusrating",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:gold",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:renown",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:92campaign",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:callings",
+                    category = "btwtodo:daily",
+                },
+                {
+                    id = "btwtodo:renownquests",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:raidvault",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:dungeonvault",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:keystone",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:zerethmortisworldboss",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:torghast",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:deathboundshard",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:patternswithinpatterns",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:anima",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:soulcinders",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:valor",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:conquest",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:towerknowledge",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:automa",
+                    category = "btwtodo:reputation",
+                },
+                {
+                    id = "btwtodo:theenlightened",
+                    category = "btwtodo:reputation",
+                },
+            },
+        }
+    })
+end
