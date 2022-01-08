@@ -29,11 +29,11 @@ http_code=$(curl -sS -X POST -w "%{http_code}" -o "$tempfile" "https://www.curse
 case $http_code in
 	200)
 		echo "Done"
+		exit 0
 	;;
 	*)
 		echo -n "Error - "
 		[ -s "$tempfile" ] && grep -q "errorMessage" "$tempfile" | jq --raw-output '.errorMessage' "$tempfile"
+		exit 1
 	;;
 esac
-
-exit 0

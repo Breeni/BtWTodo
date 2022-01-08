@@ -1,6 +1,5 @@
 -- Definitions for localizations, this file isnt shipped, is just used to define other locales
 
-L = L or {}
 L["Overall %.2f (Equipped %.2f)"] = "Overall %.2f (Equipped %.2f)"
 L["%s (Layer %d)"] = "%s (Layer %d)"
 L["Quantity: %d"] = "Quantity: %d" -- format(SUBTITLE_FORMAT, AUCTION_HOUSE_QUANTITY_LABEL, "%d")
