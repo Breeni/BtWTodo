@@ -69,6 +69,9 @@ BTWTODO_CLONE = L["Clone"]
 
 BTWTODO_MINIMAP_ICON = L["Show Minimap Icon"]
 BTWTODO_MINIMAP_TOOLTIP = L["Show Minimap Tooltip"]
+BTWTODO_MINIMAP_LEFT_CLICK = L["Left Click Action"]
+BTWTODO_MINIMAP_SHIFT_LEFT_CLICK = L["Shift Left Click Action"]
+BTWTODO_MINIMAP_RIGHT_CLICK = L["Right Click Action"]
 
 --@debug@
 local debug = print
@@ -562,9 +565,94 @@ end
 --  [[  Config Panel  ]]
 local ldbi = LibStub("LibDBIcon-1.0")
 
+-- TODO: when custom frames are added, construct this list of actions dynamically
+local minimapButtonActions = {
+    "toggleWindow:main",
+    "toggleWindow:small",
+    "openConfig",
+}
+
+local minimapButtonActionNames = {
+    toggleWindow = L["Toggle %s Window"],
+    openConfig = L["Open Options"],
+}
+
+local frameNames = {
+    main = L["Main"],
+    small = L["Small"],
+    tooltip = L["Tooltip"],
+}
+
+function SplitAction(actionStr)
+    local action, subAction = strsplit(":", actionStr, 2)
+    return action, subAction
+end
+
+function ActionName(action, subAction)
+    local name = minimapButtonActionNames[action]
+    if action == "toggleWindow" then
+        name = string.format(name, frameNames[subAction])
+    end
+    return name
+end
+
 BtWTodoConfigPanelMixin = {}
 function BtWTodoConfigPanelMixin:OnLoad()
     InterfaceOptions_AddCategory(self)
+
+    UIDropDownMenu_SetWidth(self.MinimapLeftClickDropDown, 175);
+    UIDropDownMenu_JustifyText(self.MinimapLeftClickDropDown, "LEFT");
+    UIDropDownMenu_Initialize(self.MinimapLeftClickDropDown, function (_, level, menuList)
+        local selected = self:GetMinimapLeftClickAction()
+
+        local info = UIDropDownMenu_CreateInfo();
+        info.func = function (_, arg1, arg2, checked)
+            self:SetMinimapLeftClickAction(arg1)
+        end
+
+        for _,actionStr in pairs(minimapButtonActions) do
+            info.arg1 = actionStr
+            info.text = ActionName(SplitAction(actionStr))
+            info.checked = selected == actionStr
+            UIDropDownMenu_AddButton(info, level)
+        end
+    end);
+
+    UIDropDownMenu_SetWidth(self.MinimapShiftLeftClickDropDown, 175);
+    UIDropDownMenu_JustifyText(self.MinimapShiftLeftClickDropDown, "LEFT");
+    UIDropDownMenu_Initialize(self.MinimapShiftLeftClickDropDown, function (_, level, menuList)
+        local selected = self:GetMinimapShiftLeftClickAction()
+
+        local info = UIDropDownMenu_CreateInfo();
+        info.func = function (_, arg1, arg2, checked)
+            self:SetMinimapShiftLeftClickAction(arg1)
+        end
+
+        for _,actionStr in pairs(minimapButtonActions) do
+            info.arg1 = actionStr
+            info.text = ActionName(SplitAction(actionStr))
+            info.checked = selected == actionStr
+            UIDropDownMenu_AddButton(info, level)
+        end
+    end);
+
+    UIDropDownMenu_SetWidth(self.MinimapRightClickDropDown, 175);
+    UIDropDownMenu_JustifyText(self.MinimapRightClickDropDown, "LEFT");
+    UIDropDownMenu_Initialize(self.MinimapRightClickDropDown, function (_, level, menuList)
+        local selected = self:GetMinimapRightClickAction()
+
+        local info = UIDropDownMenu_CreateInfo();
+        info.func = function (_, arg1, arg2, checked)
+            self:SetMinimapRightClickAction(arg1)
+        end
+
+        for _,actionStr in pairs(minimapButtonActions) do
+            info.arg1 = actionStr
+            info.text = ActionName(SplitAction(actionStr))
+            info.checked = selected == actionStr
+            UIDropDownMenu_AddButton(info, level)
+        end
+    end);
 end
 function BtWTodoConfigPanelMixin:SetMinimapIcon(checked)
     local icon = ldbi:GetMinimapButton(ADDON_NAME)
@@ -580,6 +668,27 @@ function BtWTodoConfigPanelMixin:SetMinimapIcon(checked)
 end
 function BtWTodoConfigPanelMixin:SetMinimapTooltip(checked)
 end
+function BtWTodoConfigPanelMixin:GetMinimapLeftClickAction()
+    return self.minimapLeftClickAction;
+end
+function BtWTodoConfigPanelMixin:SetMinimapLeftClickAction(actionStr)
+    self.minimapLeftClickAction = actionStr;
+    UIDropDownMenu_SetText(self.MinimapLeftClickDropDown, ActionName(SplitAction(actionStr)))
+end
+function BtWTodoConfigPanelMixin:GetMinimapShiftLeftClickAction()
+    return self.minimapShiftLeftClickAction;
+end
+function BtWTodoConfigPanelMixin:SetMinimapShiftLeftClickAction(actionStr)
+    self.minimapShiftLeftClickAction = actionStr;
+    UIDropDownMenu_SetText(self.MinimapShiftLeftClickDropDown, ActionName(SplitAction(actionStr)))
+end
+function BtWTodoConfigPanelMixin:GetMinimapRightClickAction()
+    return self.minimapRightClickAction;
+end
+function BtWTodoConfigPanelMixin:SetMinimapRightClickAction(actionStr)
+    self.minimapRightClickAction = actionStr;
+    UIDropDownMenu_SetText(self.MinimapRightClickDropDown, ActionName(SplitAction(actionStr)))
+end
 function BtWTodoConfigPanelMixin:okay()
     xpcall(function()
         local icon = ldbi:GetMinimapButton(ADDON_NAME)
@@ -592,6 +701,9 @@ function BtWTodoConfigPanelMixin:okay()
         end
 
         BtWTodoDataBroker.hideTooltip = not self.MinimapTooltipButton:GetChecked()
+        BtWTodoDataBroker.leftClickAction = self:GetMinimapLeftClickAction()
+        BtWTodoDataBroker.shiftLeftClickAction = self:GetMinimapShiftLeftClickAction()
+        BtWTodoDataBroker.rightClickAction = self:GetMinimapRightClickAction()
     end, geterrorhandler())
 end
 function BtWTodoConfigPanelMixin:cancel()
@@ -614,6 +726,9 @@ function BtWTodoConfigPanelMixin:refresh()
     xpcall(function()
         self.MinimapIconButton:SetChecked(not BtWTodoDataBroker.hide)
         self.MinimapTooltipButton:SetChecked(not BtWTodoDataBroker.hideTooltip)
+        self:SetMinimapLeftClickAction(BtWTodoDataBroker.leftClickAction)
+        self:SetMinimapShiftLeftClickAction(BtWTodoDataBroker.shiftLeftClickAction)
+        self:SetMinimapRightClickAction(BtWTodoDataBroker.rightClickAction)
     end, geterrorhandler())
 end
 
@@ -2308,12 +2423,6 @@ end
 function BtWTodoConfigCharacterItemMixin:Delete()
     self:GetParent():GetParent():Remove(self.data.orderIndex)
 end
-
-local frameNames = {
-    main = L["Main"],
-    small = L["Small"],
-    tooltip = L["Tooltip"],
-}
 
 BtWTodoConfigWindowsPanelMixin = {}
 function BtWTodoConfigWindowsPanelMixin:OnLoad()

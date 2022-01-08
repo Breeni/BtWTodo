@@ -12,12 +12,12 @@ local dataBroker = ldb:NewDataObject(ADDON_NAME, {
     OnClick = function(clickedframe, button)
         if button == "LeftButton" then
             if IsShiftKeyDown() then
-                External.ToggleSmallFrame()
+                External.RunAction(BtWTodoDataBroker.shiftLeftClickAction)
             else
-                External.ToggleMainFrame()
+                External.RunAction(BtWTodoDataBroker.leftClickAction)
             end
         else
-            External.OpenConfiguration()
+            External.RunAction(BtWTodoDataBroker.rightClickAction)
         end
     end,
     OnEnter = function(button)
@@ -41,6 +41,11 @@ local function ADDON_LOADED(_, addon)
         if not BtWTodoDataBroker then
             BtWTodoDataBroker = {}
         end
+
+        -- defaults
+        if not BtWTodoDataBroker.leftClickAction then BtWTodoDataBroker.leftClickAction = "toggleWindow:main" end
+        if not BtWTodoDataBroker.shiftLeftClickAction then BtWTodoDataBroker.shiftLeftClickAction = "toggleWindow:small" end
+        if not BtWTodoDataBroker.rightClickAction then BtWTodoDataBroker.rightClickAction = "openConfig" end
 
         ldbi:Register(ADDON_NAME, dataBroker, BtWTodoDataBroker)
 

@@ -146,6 +146,11 @@ L["The selected to-do has been updated since you edited it. Click here if you wi
 L["Updated display to show completed quest count and tooltip to show countdown to second weekly assault"] = "Updated display to show completed quest count and tooltip to show countdown to second weekly assault"
 L["Show Minimap Icon"] = "Show Minimap Icon"
 L["Show Minimap Tooltip"] = "Show Minimap Tooltip"
+L["Left Click Action"] = "Left Click Action"
+L["Shift Left Click Action"] = "Shift Left Click Action"
+L["Right Click Action"] = "Right Click Action"
+L["Toggle %s Window"] = "Toggle %s Window"
+L["Open Options"] = "Open Options"
 L["BtWTodo usage:\n/btwtodo [main]: Toggle main frame\n/btwtodo minimap: Toggle minimap icon\n/btwtodo small: Toggle small frame\n/btwtodo usage: Show this message"] = "BtWTodo usage:\n/btwtodo [main]: Toggle main frame\n/btwtodo minimap: Toggle minimap icon\n/btwtodo small: Toggle small frame\n/btwtodo usage: Show this message"
 -- L["Manifestation of Pain"] = "Manifestation of Pain" -- db2.criteriatree[91699].Description
 -- L["Versya the Damned"] = "Versya the Damned" -- db2.criteriatree[91686].Description
