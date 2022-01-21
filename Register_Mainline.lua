@@ -573,7 +573,7 @@ end
 ]],
     },
 
-    { 
+    {
         id = "btwtodo:callings",
         name = L["Callings"],
         states = {
@@ -1414,6 +1414,15 @@ end
             completed = "return states[1]:IsCompleted()",
             text = DEFAULT_TEXT_FUNCTION,
         },
+        {
+            id = "btwtodo:cyphersofthefirstones",
+            name = L["Cyphers of the First Ones"],
+            states = {
+                { type = "currency", id = 1979, },
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
     })
 
     local function ADDON_LOADED(event, addon)
@@ -1790,6 +1799,10 @@ if select(4, GetBuildInfo()) >= 90200 then
                 },
                 {
                     id = "btwtodo:towerknowledge",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:cyphersofthefirstones",
                     category = "btwtodo:currency",
                 },
                 {

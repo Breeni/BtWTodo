@@ -27,8 +27,6 @@ function VaultMixin:GetProgress()
 	else
 		return character:GetData("vaultProgress", self:GetID()) or 0
 	end
-
-	return 0
 end
 function VaultMixin:GetTotal()
 	local data = C_WeeklyRewards.GetActivities(self:GetID())

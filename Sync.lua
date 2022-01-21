@@ -77,7 +77,7 @@ function Internal.RegisterRemoteCharacterEvent(slug, event)
     registerFrame:Show()
 end
 do
-    -- local 
+    -- local
     function Internal.SendRemoteCharacterDataTable(slug, key, ...)
 
     end

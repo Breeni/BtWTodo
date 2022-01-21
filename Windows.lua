@@ -438,7 +438,7 @@ function External.ToggleSmallFrame()
 	BtWTodoSmallFrame:SetShown(not BtWTodoSmallFrame:IsShown())
 end
 function External.RunAction(actionStr)
-	local action, subAction = SplitAction(actionStr)
+	local action, subAction = Internal.SplitAction(actionStr)
 
 	if action == "toggleWindow" then
 		if subAction == "main" then

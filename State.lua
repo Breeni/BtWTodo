@@ -70,7 +70,7 @@ function StateProviderMixin:GetAddTitle()
 	return string.format(BTWTODO_ADD_ITEM, self:GetName())
 end
 function StateProviderMixin:Acquire(...)
-	return CreateFromMixinAndInit(self.mixin, ...)
+	return CreateAndInitFromMixin(self.mixin, ...)
 end
 -- Returns data describing the possible basic functions
 function StateProviderMixin:GetFunctions()
@@ -92,7 +92,7 @@ function External.CreateBasicStateProvider(id, name, mixin)
     assert(type(name) == "string", "Usage: CreateBasicStateProvider(id, name, mixin): expected name to be string")
     assert(type(mixin) == "table", "Usage: CreateBasicStateProvider(id, name, mixin): expected mixin to be table")
 
-    return CreateFromMixinAndInit(StateProviderMixin, id, name, mixin)
+    return CreateAndInitFromMixin(StateProviderMixin, id, name, mixin)
 end
 
 local stateProviders = {}

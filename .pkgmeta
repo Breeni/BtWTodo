@@ -10,6 +10,7 @@ externals:
 
 ignore:
     - README.md
+    - .luacheckrc
     - download-translations.sh
     - Locales/enUS.lua
 
