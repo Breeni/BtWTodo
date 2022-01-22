@@ -46,9 +46,9 @@ function MythicPlusRatingMixin:GetRating()
     if self:GetCharacter():IsPlayer() then
         local id = self:GetID()
         if id == 0 then
-            return C_ChallengeMode.GetOverallDungeonScore()
+            return C_ChallengeMode.GetOverallDungeonScore() or 0
         else
-            return (select(2, C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(id)))
+            return (select(2, C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(id))) or 0
         end
     else
 		return self:GetCharacter():GetData("mythicPlusRating", self:GetID()) or 0
