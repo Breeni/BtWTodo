@@ -1758,10 +1758,6 @@ if select(4, GetBuildInfo()) >= 90200 then
                     category = "btwtodo:daily",
                 },
                 {
-                    id = "btwtodo:renownquests",
-                    category = "btwtodo:weekly",
-                },
-                {
                     id = "btwtodo:raidvault",
                     category = "btwtodo:weekly",
                 },
@@ -1775,10 +1771,6 @@ if select(4, GetBuildInfo()) >= 90200 then
                 },
                 {
                     id = "btwtodo:zerethmortisworldboss",
-                    category = "btwtodo:weekly",
-                },
-                {
-                    id = "btwtodo:torghast",
                     category = "btwtodo:weekly",
                 },
                 {
