@@ -166,3 +166,7 @@ L["BtWTodo usage:\n/btwtodo [main]: Toggle main frame\n/btwtodo minimap: Toggle 
 -- L["Malleus Grakizz"] = "Malleus Grakizz" -- db2.criteriatree[91698].Description
 -- L["Gralebboih"] = "Gralebboih" -- db2.criteriatree[91687].Description
 -- L["The Mass of Souls"] = "The Mass of Souls" -- db2.criteriatree[91693].Description
+L["Cosmic Flux"] = "Cosmic Flux" -- db2.currencytypes[2009].Name
+L["Cyphers of the First Ones"] = "Cyphers of the First Ones" -- db2.currencytypes[1979].Name
+L["Automa"] = "Automa" -- db2.faction[2480].Name
+L["The Enlightened"] = "The Enlightened" -- db2.faction[2478].Name

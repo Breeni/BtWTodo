@@ -1415,6 +1415,15 @@ end
             text = DEFAULT_TEXT_FUNCTION,
         },
         {
+            id = "btwtodo:cosmicflux",
+            name = L["Cosmic Flux"],
+            states = {
+                { type = "currency", id = 2009, },
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
             id = "btwtodo:cyphersofthefirstones",
             name = L["Cyphers of the First Ones"],
             states = {
@@ -1782,6 +1791,14 @@ if select(4, GetBuildInfo()) >= 90200 then
                     category = "btwtodo:weekly",
                 },
                 {
+                    id = "btwtodo:cosmicflux",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:cyphersofthefirstones",
+                    category = "btwtodo:currency",
+                },
+                {
                     id = "btwtodo:anima",
                     category = "btwtodo:currency",
                 },
@@ -1802,15 +1819,11 @@ if select(4, GetBuildInfo()) >= 90200 then
                     category = "btwtodo:currency",
                 },
                 {
-                    id = "btwtodo:cyphersofthefirstones",
-                    category = "btwtodo:currency",
-                },
-                {
-                    id = "btwtodo:automa",
+                    id = "btwtodo:theenlightened",
                     category = "btwtodo:reputation",
                 },
                 {
-                    id = "btwtodo:theenlightened",
+                    id = "btwtodo:automa",
                     category = "btwtodo:reputation",
                 },
             },
