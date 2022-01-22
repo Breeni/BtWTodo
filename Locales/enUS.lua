@@ -170,3 +170,4 @@ L["Cosmic Flux"] = "Cosmic Flux" -- db2.currencytypes[2009].Name
 L["Cyphers of the First Ones"] = "Cyphers of the First Ones" -- db2.currencytypes[1979].Name
 L["Automa"] = "Automa" -- db2.faction[2480].Name
 L["The Enlightened"] = "The Enlightened" -- db2.faction[2478].Name
+L["Antros"] = "Antros"

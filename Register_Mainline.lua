@@ -1398,9 +1398,9 @@ end
         },
         {
             id = "btwtodo:zerethmortisworldboss",
-            name = L["Zereth Mortis Boss"],
+            name = L["Antros"],
             states = {
-                { type = "quest", id = 64547, },
+                { type = "quest", id = 65143, }, -- This is the world quest id, not the tracking id
             },
             completed = "return states[1]:IsCompleted()",
             text = DEFAULT_TEXT_FUNCTION,
