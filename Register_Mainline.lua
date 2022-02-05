@@ -1814,10 +1814,6 @@ if select(4, GetBuildInfo()) >= 90200 then
                     id = "btwtodo:theenlightened",
                     category = "btwtodo:reputation",
                 },
-                {
-                    id = "btwtodo:automa",
-                    category = "btwtodo:reputation",
-                },
             },
         }
     })
