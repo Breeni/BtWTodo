@@ -15,27 +15,42 @@ local SECONDS_PER_HOUR = 60 * 60
 local SECONDS_PER_WEEK = 60 * 60 * 24 * 7
 local SECONDS_PER_HALF_WEEK = 60 * 60 * 24 * 3.5
 
-local SEASON_START_TIMESTAMP = {
+local SEASON_91_START_TIMESTAMP = {
     [1] = 1625583600, -- US
-    [2] = 1625698800, -- TW
-    [3] = 1625641200, -- EU
-    [4] = 1625698800, -- KR
-    [5] = 1625698800, -- CN
+    [2] = 1625698800, -- TW (+115200)
+    [3] = 1625641200, -- EU (+57600)
+    [4] = 1625698800, -- KR (+115200)
+    [5] = 1625698800, -- CN (+115200)
+}
+
+local SEASON_92_START_TIMESTAMP = {
+    [1] = 1645542000, -- US
+    [2] = 1645657200, -- TW (+115200)
+    [3] = 1645599600, -- EU (+57600)
+    [4] = 1645657200, -- KR (+115200)
+    [5] = 1645657200, -- CN (+115200)
 }
 
 -- Week 0 is preseason week
 -- Week 1 is Normal/Heroic week
 -- Week 2 is Mythic
-local function GetSeasonWeek()
-    -- Sometimes there is a 1 to 3 second difference, we need to make sure this doesnt mess with the result
-    -- hopefully rounding to the nearest hour will work
-
+-- Sometimes there is a 1 to 3 second difference, we need to make sure this doesnt mess with the result
+-- hopefully rounding to the nearest hour will work
+local function Get91SeasonWeek()
     local nextWeeklyReset = Internal.GetNextWeeklyResetTimestamp()
-    local secondsSinceSeasonStart = nextWeeklyReset - SEASON_START_TIMESTAMP[GetCurrentRegion()]
+    local secondsSinceSeasonStart = nextWeeklyReset - SEASON_91_START_TIMESTAMP[GetCurrentRegion()]
     return secondsSinceSeasonStart / SECONDS_PER_WEEK
 end
-Internal.GetSeasonWeek = GetSeasonWeek
-Internal.RegisterCustomStateFunction("GetSeasonWeek", GetSeasonWeek)
+Internal.Get91SeasonWeek = Get91SeasonWeek
+Internal.RegisterCustomStateFunction("Get91SeasonWeek", Get91SeasonWeek)
+Internal.RegisterCustomStateFunction("GetSeasonWeek", Get91SeasonWeek) -- Deprecated GetSeasonWeek, use the specific season ones
+local function Get92SeasonWeek()
+    local nextWeeklyReset = Internal.GetNextWeeklyResetTimestamp()
+    local secondsSinceSeasonStart = nextWeeklyReset - SEASON_92_START_TIMESTAMP[GetCurrentRegion()]
+    return secondsSinceSeasonStart / SECONDS_PER_WEEK
+end
+Internal.Get92SeasonWeek = Get92SeasonWeek
+Internal.RegisterCustomStateFunction("Get92SeasonWeek", Get92SeasonWeek)
 
 local MAX_RENOWN_FOR_WEEK = {
     [0] = 42,
@@ -54,8 +69,14 @@ local function GetMaxRenownForWeek(week)
 end
 Internal.RegisterCustomStateFunction("GetMaxRenownForWeek", GetMaxRenownForWeek)
 
+local function GetSeason91StartTimestamp()
+    return SEASON_91_START_TIMESTAMP[GetCurrentRegion()]
+end
+Internal.GetSeason91StartTimestamp = GetSeason91StartTimestamp
+Internal.RegisterCustomStateFunction("GetSeason91StartTimestamp", GetSeason91StartTimestamp)
+
 local function GetSeasonStartTimestamp()
-    return SEASON_START_TIMESTAMP[GetCurrentRegion()]
+    return SEASON_92_START_TIMESTAMP[GetCurrentRegion()]
 end
 Internal.GetSeasonStartTimestamp = GetSeasonStartTimestamp
 Internal.RegisterCustomStateFunction("GetSeasonStartTimestamp", GetSeasonStartTimestamp)
@@ -287,7 +308,7 @@ do
         [5] = 0, -- CN
     }
 	Internal.RegisterCustomStateFunction("GetTormentorsBoss", function ()
-		local seasonStartTimestamp = Internal.GetSeasonStartTimestamp()
+		local seasonStartTimestamp = Internal.GetSeason91StartTimestamp()
 		local previous = math.floor((GetServerTime() - seasonStartTimestamp) / (2 * 60 * 60)) + bossRegionOffset[GetCurrentRegion()]
         return bosses[previous % #bosses + 1], bosses[(previous + 1) % #bosses + 1], bosses[(previous + 2) % #bosses + 1], bosses[(previous + 3) % #bosses + 1], bosses[(previous + 4) % #bosses + 1]
     end)
@@ -320,7 +341,7 @@ do
 	end)
 
 	Internal.RegisterCustomStateFunction("GetTormentorCountdown", function ()
-		local seasonStartTimestamp = Internal.GetSeasonStartTimestamp()
+		local seasonStartTimestamp = Internal.GetSeason91StartTimestamp()
 		local previous = seasonStartTimestamp + math.floor((GetServerTime() - seasonStartTimestamp) / (2 * 60 * 60)) * (2 * 60 * 60)
 
 		local result = previous + (2 * 60 * 60) - GetServerTime()
@@ -387,7 +408,7 @@ do
 		}
 	}
 	local function GetActiveMawAssaultQuest()
-		local week = Internal.GetSeasonWeek() % 4
+		local week = Internal.Get91SeasonWeek() % 4
 		local index = week * 2 + (Internal.IsBeforeHalfWeeklyReset() and 0 or 1) + 1
 		return assaultOrder[index]
 	end
@@ -408,7 +429,7 @@ do
 	end)
 	-- Returns which assaults for the current week
 	Internal.RegisterCustomStateFunction("GetMawAssaults", function ()
-		local week = Internal.GetSeasonWeek() % 4
+		local week = Internal.Get91SeasonWeek() % 4
 		local index = week * 2 + 1
 		return unpack(assaultOrder, index, index + 1)
 	end)
@@ -495,11 +516,15 @@ end]]
     {
         id = "btwtodo:renown",
         name = L["Renown"],
+        version = 1,
+        changeLog = {
+            L["Updated for new season start"],
+        },
         states = {
             { type = "currency", id = 1822, },
         },
-        completed = [[return states[1]:GetQuantity() + 1 == Custom.GetMaxRenownForWeek(Custom.GetSeasonWeek())]],
-        text = [[return format("%d / %d", states[1]:GetQuantity() + 1, Custom.GetMaxRenownForWeek(Custom.GetSeasonWeek()))]],
+        completed = [[return states[1]:GetQuantity() + 1 == Custom.GetMaxRenownForWeek(Custom.Get91SeasonWeek())]],
+        text = [[return format("%d / %d", states[1]:GetQuantity() + 1, Custom.GetMaxRenownForWeek(Custom.Get91SeasonWeek()))]],
     },
     {
         id = "btwtodo:91campaign",

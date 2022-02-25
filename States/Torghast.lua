@@ -54,11 +54,11 @@ local soulCindersPerLayer = {
     0,  0,  0,  0,  0,  0,
     0, 50, 40, 30, 30, 30,
 }
-local function GetMaxTorghastLayerForWeek(week)
+local function GetMaxTorghastLayerFor91SeasonWeek(week)
     return math.min(9 + week, 12)
 end
-local function GetWeeklyMaxSoulCindersForSeasonWeek(character, week)
-    local layer = GetMaxTorghastLayerForWeek(week)
+local function GetWeeklyMaxSoulCindersFor91SeasonWeek(character, week)
+    local layer = GetMaxTorghastLayerFor91SeasonWeek(week)
     local fromTorghastWing = 0
     for i=8,layer do
         fromTorghastWing = fromTorghastWing + soulCindersPerLayer[i]
@@ -71,7 +71,8 @@ local function GetWeeklyMaxSoulCindersForSeasonWeek(character, week)
          + fromAssaults -- Covenant Assault
          + fromTorghastWing * 2 -- Torghast
 end
-Internal.RegisterCustomStateFunction("GetWeeklyMaxSoulCindersForSeasonWeek", GetWeeklyMaxSoulCindersForSeasonWeek)
+Internal.RegisterCustomStateFunction("GetWeeklyMaxSoulCindersFor91SeasonWeek", GetWeeklyMaxSoulCindersFor91SeasonWeek)
+Internal.RegisterCustomStateFunction("GetWeeklyMaxSoulCindersForSeasonWeek", GetWeeklyMaxSoulCindersFor91SeasonWeek) -- Deprecated in favour of season specific functions
 
 local function GetWeeklySoulCindersEarned(character)
     local count = 0
@@ -169,7 +170,7 @@ function TorghastMixin:GetCompletedLayer()
 	end
 end
 function TorghastMixin:IsCompleted()
-    return self:HasCompletedLayer(GetMaxTorghastLayerForWeek(Internal.GetSeasonWeek()))
+    return self:HasCompletedLayer(16)
 end
 function TorghastMixin:RegisterEventsFor(driver)
     driver:RegisterEvents("PLAYER_ENTERING_WORLD", "WEEKLY_RESET") -- @TODO Need a torghast end event
