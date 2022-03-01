@@ -949,6 +949,7 @@ if select(4, GetBuildInfo()) >= 90200 then
     tinsert(journalEncounterData, 2469)
     tinsert(journalEncounterData, 2457)
     tinsert(journalEncounterData, 2467)
+    tinsert(journalEncounterData, 2464)
 end
 local dungeonInstanceData = {}
 local dungeonEncounterData = {}
