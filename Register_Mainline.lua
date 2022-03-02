@@ -898,41 +898,47 @@ end
     {
         id = "btwtodo:valor",
         name = L["Valor"],
-        version = 1,
+        version = 2,
         changeLog = {
             L["Valor has been uncapped, switching to more standard currency display"],
+            L["Valor is now season capped for Shadowlands Season 3"],
         },
         states = {
             { type = "currency", id = 1191, },
         },
-        completed = "return false",
-        text = "return states[1]:GetQuantity()",
+        completed = "return states[1]:IsCapped()",
+        text = "return format(\"%s / %s / %s\", states[1]:GetQuantity(), states[1]:GetTotalEarned(), states[1]:GetMaxQuantity())",
         tooltip = [[
 local quantity = states[1]:GetQuantity()
 local earned = states[1]:GetTotalEarned()
+local total = states[1]:GetMaxQuantity()
 tooltip:AddLine(self:GetName())
 tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
 tooltip:AddLine(format(L["Earned this season: %d"], earned), 1, 1, 1)
+tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
 ]],
     },
     {
         id = "btwtodo:conquest",
         name = L["Conquest"],
-        version = 1,
+        version = 2,
         changeLog = {
             L["Conquest has been uncapped, switching to more standard currency display"],
+            L["Conquest is now season capped for Shadowlands Season 3"],
         },
         states = {
             { type = "currency", id = 1602, },
         },
-        completed = "return false",
-        text = "return states[1]:GetQuantity()",
+        completed = "return states[1]:IsCapped()",
+        text = "return format(\"%s / %s / %s\", states[1]:GetQuantity(), states[1]:GetTotalEarned(), states[1]:GetMaxQuantity())",
         tooltip = [[
 local quantity = states[1]:GetQuantity()
 local earned = states[1]:GetTotalEarned()
+local total = states[1]:GetMaxQuantity()
 tooltip:AddLine(self:GetName())
 tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
 tooltip:AddLine(format(L["Earned this season: %d"], earned), 1, 1, 1)
+tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
 ]],
     },
     {
