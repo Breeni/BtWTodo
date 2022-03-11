@@ -849,13 +849,13 @@ for index, _, name, level, completed in states[2]:IterateRuns() do
         text = format("%s- (%d)", name, level)
     end
 
-    if index == 1 or index == 4 or index == 10 then
+    if index == 1 or index == 4 or index == 8 then
         tooltip:AddLine(format("%s : %d ilvl", text, Custom.GetRewardLevelForDifficultyLevel(level)), 0, 1, 0)
     else
         tooltip:AddLine(text, 1, 1, 1)
     end
-    -- Only show max top 10
-    if index == 10 then
+    -- Only show max top 8
+    if index == 8 then
         break
     end
 end
