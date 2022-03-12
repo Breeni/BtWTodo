@@ -825,6 +825,10 @@ end
             { type = "vault", id = Enum.WeeklyRewardChestThresholdType.MythicPlus, },
             { type = "mythicplusruns", },
         },
+        version = 1,
+        changeLog = {
+            L["Fixed showing the tenth run as a gear item instead of 8th"],
+        },
         completed = "return states[1]:GetLevel(3) >= 15",
         text = [[
 local a, b, c = states[1]:GetLevel(1), states[1]:GetLevel(2), states[1]:GetLevel(3)
