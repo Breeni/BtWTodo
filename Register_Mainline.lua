@@ -1444,7 +1444,7 @@ end
             id = "btwtodo:patternswithinpatterns",
             name = L["Patterns Within Patterns"],
             states = {
-                { type = "quest", id = 65324, },
+                { type = "quest", id = 66042, },
             },
             completed = "return states[1]:IsCompleted()",
             text = DEFAULT_TEXT_FUNCTION,

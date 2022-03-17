@@ -171,4 +171,4 @@ L["Cyphers of the First Ones"] = "Cyphers of the First Ones" -- db2.currencytype
 L["Automa"] = "Automa" -- db2.faction[2480].Name
 L["The Enlightened"] = "The Enlightened" -- db2.faction[2478].Name
 L["Antros"] = "Antros" -- creature[182466].name
-L["Patterns Within Patterns"] = "Patterns Within Patterns" -- quest[65324].name
+L["Patterns Within Patterns"] = "Patterns Within Patterns" -- quest[66042].name
