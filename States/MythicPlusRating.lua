@@ -12,6 +12,8 @@ local challengeMapIDs = {
     380, -- sd
     381, -- soa
     382, -- top
+    391, -- streets
+    392, -- gambit
 }
 local sortedNames = {}
 local idToNameMap = {

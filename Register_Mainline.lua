@@ -501,6 +501,8 @@ External.RegisterTodos({
             { type = "mythicplusrating", id = 380, },
             { type = "mythicplusrating", id = 381, },
             { type = "mythicplusrating", id = 382, },
+            { type = "mythicplusrating", id = 391, },
+            { type = "mythicplusrating", id = 392, },
         },
         completed = [[return false]],
         text = [[return states[1]:GetRatingColor():WrapTextInColorCode(states[1]:GetRating())]],
