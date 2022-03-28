@@ -48,6 +48,7 @@ local function ADDON_LOADED(_, addon)
         if not BtWTodoDataBroker.rightClickAction then BtWTodoDataBroker.rightClickAction = "openConfig" end
 
         ldbi:Register(ADDON_NAME, dataBroker, BtWTodoDataBroker)
+        ldbi:Refresh(ADDON_NAME)
 
         Internal.UnregisterEvent("ADDON_LOADED", ADDON_LOADED)
     end
