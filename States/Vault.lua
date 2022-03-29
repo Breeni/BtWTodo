@@ -85,6 +85,8 @@ function VaultMixin:GetLevelInitial(index)
 			return 'H'
 		elseif result == 16 then
 			return 'M'
+		elseif result == 17 then
+			return 'L'
 		else
 			return '-'
 		end
