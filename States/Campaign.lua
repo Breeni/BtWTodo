@@ -171,6 +171,7 @@ local campaigns = {
     119, -- Kyrian Campaign
     124, -- The Groves of Ardenweald
     138, -- Chains of Domination
+    158, -- Secrets of the First Ones
 }
 -- Save Campaign Data for Player
 local function SaveCampaignData (event, questID)
