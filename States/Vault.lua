@@ -94,6 +94,19 @@ function VaultMixin:GetLevelInitial(index)
 		return result
 	end
 end
+function VaultMixin:GetEncounters()
+	local encounters = C_WeeklyRewards.GetActivityEncounterInfo(self:GetID(), 3)
+    table.sort(encounters, function(a, b)
+        return a.uiOrder < b.uiOrder
+    end)
+    for _,encounter in ipairs(encounters) do
+        encounter.name = (EJ_GetEncounterInfo(encounter.encounterID))
+        if encounter.bestDifficulty > 0 then
+            encounter.difficultyName = DifficultyUtil.GetDifficultyName(encounter.bestDifficulty);
+        end
+    end
+    return encounters
+end
 function VaultMixin:IsLevel(index, level)
 	return self:GetLevel(index) > level
 end

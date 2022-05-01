@@ -780,12 +780,12 @@ Custom.AddQuestToTooltip(states["quest:63949"], tooltip)
     {
         id = "btwtodo:raidvault",
         name = L["Raid Vault"],
+        version = 1,
+        changeLog = {
+            L["Fixed tooltip displaying entire lockout instead of only bosses the character has defeated."],
+        },
         states = {
             { type = "vault", id = Enum.WeeklyRewardChestThresholdType.Raid, },
-            { type = "lockout", id = 2450, values = { 17 }, }, -- LFR
-            { type = "lockout", id = 2450, values = { 14 }, }, -- Normal
-            { type = "lockout", id = 2450, values = { 15 }, }, -- Heroic
-            { type = "lockout", id = 2450, values = { 16 }, }, -- Mythic
         },
         completed = "return states[1]:IsThreshold(3)",
         text = [[
@@ -802,17 +802,16 @@ end
 ]],
         tooltip = [[
 tooltip:AddLine(self:GetName())
-local state = states[5]
-for i=1,state:GetBossCount() do
-    local name = state:GetBossName(i)
-    if states[5]:IsBossCompleted(i) then
-        tooltip:AddLine(format("%s (%s)", name, states[5]:GetDifficultyName()), Colors.LEGENDARY:GetRGB())
-    elseif states[4]:IsBossCompleted(i) then
-        tooltip:AddLine(format("%s (%s)", name, states[4]:GetDifficultyName()), Colors.EPIC:GetRGB())
-    elseif states[3]:IsBossCompleted(i) then
-        tooltip:AddLine(format("%s (%s)", name, states[3]:GetDifficultyName()), Colors.RARE:GetRGB())
-    elseif states[2]:IsBossCompleted(i) then
-        tooltip:AddLine(format("%s (%s)", name, states[2]:GetDifficultyName()), Colors.UNCOMMON:GetRGB())
+for _,encounter in ipairs(states[1]:GetEncounters()) do
+    local name = encounter.name
+    if encounter.bestDifficulty == 16 then
+        tooltip:AddLine(format("%s (%s)", name, encounter.difficultyName), Colors.LEGENDARY:GetRGB())
+    elseif encounter.bestDifficulty == 15 then
+        tooltip:AddLine(format("%s (%s)", name, encounter.difficultyName), Colors.EPIC:GetRGB())
+    elseif encounter.bestDifficulty == 14 then
+        tooltip:AddLine(format("%s (%s)", name, encounter.difficultyName), Colors.RARE:GetRGB())
+    elseif encounter.bestDifficulty == 17 then
+        tooltip:AddLine(format("%s (%s)", name, encounter.difficultyName), Colors.UNCOMMON:GetRGB())
     else
         tooltip:AddLine(name, 1, 1, 1)
     end
@@ -1491,17 +1490,6 @@ end
 ]],
         },
     })
-
-    local function ADDON_LOADED(event, addon)
-        if addon == ADDON_NAME then
-            local todo = Internal.GetTodo("btwtodo:raidvault")
-            for i=2,5 do
-                todo.states[i].id = 2481
-            end
-            Internal.UnregisterEvent("ADDON_LOADED", ADDON_LOADED)
-        end
-    end
-    Internal.RegisterEvent("ADDON_LOADED", ADDON_LOADED)
 end
 
 External.RegisterLists({
