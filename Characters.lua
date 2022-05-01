@@ -2,6 +2,7 @@
     Handles storing data for characters, this gets passed to State Providers before completion states are checked
 ]]
 local ADDON_NAME, Internal = ...
+local External = _G[ADDON_NAME]
 local CovenantsSupported = C_Covenants ~= nil
 
 local CharacterMixin = {}
@@ -56,6 +57,15 @@ function CharacterMixin:GetItemLevelPvP()
 end
 function CharacterMixin:GetMoney()
     return self.data.money
+end
+function CharacterMixin:GetCurrentCypherEquipmentLevel()
+    return self.data.cypherEquipment and self.data.cypherEquipment.current or 0
+end
+function CharacterMixin:GetMaxCypherEquipmentLevel()
+    return self.data.cypherEquipment and self.data.cypherEquipment.max or 0
+end
+function CharacterMixin:GetCyphersToNextEquipmentLevel()
+    return self.data.cypherEquipment and self.data.cypherEquipment.next or 0
 end
 if CovenantsSupported then
     function CharacterMixin:GetCovenant()
@@ -131,6 +141,15 @@ function PlayerMixin:GetMoney()
 end
 function PlayerMixin:IsQuestFlaggedCompleted(questID)
     return C_QuestLog.IsQuestFlaggedCompleted(questID)
+end
+function PlayerMixin:GetCurrentCypherEquipmentLevel()
+    return C_Garrison.GetCurrentCypherEquipmentLevel();
+end
+function PlayerMixin:GetMaxCypherEquipmentLevel()
+    return C_Garrison.GetMaxCypherEquipmentLevel();
+end
+function PlayerMixin:GetCyphersToNextEquipmentLevel()
+    return C_Garrison.GetCyphersToNextEquipmentLevel();
 end
 
 local characters = {}
@@ -243,3 +262,24 @@ end
 Internal.RegisterEvent("PLAYER_MONEY", function ()
     player.data.money = player:GetMoney()
 end)
+local function UpdateCypherEquipment()
+    local current = player:GetCurrentCypherEquipmentLevel()
+    local max = player:GetMaxCypherEquipmentLevel()
+    local next = player:GetCyphersToNextEquipmentLevel()
+    if player.data.cypherEquipment and next == 740 and current == 1 then
+        return
+    end
+    player.data.cypherEquipment = {
+        current = current,
+        max = max,
+        next = next,
+    }
+end
+Internal.RegisterEvent("PLAYER_ENTERING_WORLD", function ()
+    C_Timer.After(1, function ()
+        External.TriggerEvent("CYPHER_EQUIPMENT_UPDATE")
+    end)
+end)
+Internal.RegisterEvent("CYPHER_EQUIPMENT_UPDATE", UpdateCypherEquipment)
+Internal.RegisterEvent("GARRISON_TALENT_COMPLETE", UpdateCypherEquipment)
+Internal.RegisterEvent("GARRISON_TALENT_UPDATE", UpdateCypherEquipment)

@@ -1463,11 +1463,32 @@ end
         {
             id = "btwtodo:cyphersofthefirstones",
             name = L["Cyphers of the First Ones"],
+            version = 1,
+            changeLog = {
+                L["Added displaying Cypher Equipment upgrade progress"],
+            },
             states = {
                 { type = "currency", id = 1979, },
+                { type = "character", id = 11, },
+                { type = "character", id = 12, },
+                { type = "character", id = 13, },
             },
             completed = "return false",
-            text = [[return states[1]:GetQuantity()]],
+            text = [[
+                return format("%d (%d/%d)", states[1]:GetQuantity(), states[2]:GetValue(), states[3]:GetValue())
+            ]],
+            tooltip = [[
+tooltip:AddLine(self:GetName())
+tooltip:AddLine(format(L["CYPHER_EQUIPMENT_LEVEL_FORMAT"], states[2]:GetValue(), states[3]:GetValue()))
+local toNextLevel = states[4]:GetValue()
+if toNextLevel == nil then
+    tooltip:AddLine(L["CYPHER_EQUIPMENT_MAX_LEVEL_TOOLTIP"], 1, 0.82, 0, true)
+elseif toNextLevel <= states[1]:GetQuantity() then
+    tooltip:AddLine(L["CYPHER_EQUIPMENT_LEVEL_TOOLTIP_GREEN"]:format(toNextLevel), 1, 0.82, 0, true);
+else
+    tooltip:AddLine(L["CYPHER_EQUIPMENT_LEVEL_TOOLTIP_MATH"]:format(states[1]:GetQuantity(), (toNextLevel - states[1]:GetQuantity())), 1, 0.82, 0, true);
+end
+]],
         },
     })
 

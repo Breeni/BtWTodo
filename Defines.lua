@@ -4,8 +4,13 @@ local ADDON_NAME, Internal = ...
 local L = setmetatable({}, {
     __index = function (self, key)
         -- print("[" .. ADDON_NAME .. "] [warn]: Missing translation for \"" .. key .. "\"")
-        self[key] = key
-        return key
+        if type(_G[key]) == "string" then
+            self[key] = _G[key]
+            return _G[key]
+        else
+            self[key] = key
+            return key
+        end
     end,
 })
 Internal.L = L;

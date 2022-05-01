@@ -6,6 +6,9 @@ local ADDON_NAME, Internal = ...
 local External = _G[ADDON_NAME]
 local L = Internal.L
 
+L["CYPHER_EQUIPMENT_LEVEL_TOOLTIP_GREEN"] = CYPHER_EQUIPMENT_LEVEL_TOOLTIP:gsub("%%d", "|cFF00FF00%%d|r")
+L["CYPHER_EQUIPMENT_LEVEL_TOOLTIP_MATH"] = CYPHER_EQUIPMENT_LEVEL_TOOLTIP:gsub("%%d", "|cFFFFFFFF%%d + %%d|r")
+
 local CharacterDataEnum = {
     Level = 1,
     Class = 2,
@@ -16,6 +19,9 @@ local CharacterDataEnum = {
     ItemLevelEquipped = 7,
     ItemLevelPvP = 8,
     Money = 9,
+    CypherEquipmentCurrentLevel = 11,
+    CypherEquipmentMaxLevel = 12,
+    CypherEquipmentNextLevel = 13,
 }
 local characterDataMapIDToName = {
     [CharacterDataEnum.Level] = L["Level"],
@@ -27,6 +33,10 @@ local characterDataMapIDToName = {
     [CharacterDataEnum.ItemLevelEquipped] = L["Item Level (Equipped)"],
     [CharacterDataEnum.ItemLevelPvP] = L["Item Level (PvP)"],
     [CharacterDataEnum.Money] = L["Money"],
+    
+    [CharacterDataEnum.CypherEquipmentCurrentLevel] = L["Current Cypher Equipment Level"],
+    [CharacterDataEnum.CypherEquipmentMaxLevel] = L["Max Cypher Equipment Level"],
+    [CharacterDataEnum.CypherEquipmentNextLevel] = L["Cyphers to Next Equipment Level"],
 }
 local characterDataMapNameToID = {}
 for id,name in pairs(characterDataMapIDToName) do
@@ -110,6 +120,12 @@ function CharacterMixin:GetValue(raw)
         else
             return GetMoneyString(self:GetCharacter():GetMoney() or 0, true)
         end
+    elseif self.id == CharacterDataEnum.CypherEquipmentCurrentLevel then
+        return self:GetCharacter():GetCurrentCypherEquipmentLevel();
+    elseif self.id == CharacterDataEnum.CypherEquipmentMaxLevel then
+        return self:GetCharacter():GetMaxCypherEquipmentLevel();
+    elseif self.id == CharacterDataEnum.CypherEquipmentNextLevel then
+        return self:GetCharacter():GetCyphersToNextEquipmentLevel();
     end
 end
 function CharacterMixin:RegisterEventsFor(target)
@@ -118,6 +134,8 @@ function CharacterMixin:RegisterEventsFor(target)
         target:RegisterEvents("PLAYER_ENTERING_WORLD", "PLAYER_AVG_ITEM_LEVEL_UPDATE")
     elseif id == CharacterDataEnum.Money then
         target:RegisterEvents("PLAYER_ENTERING_WORLD", "PLAYER_MONEY")
+    elseif id == CharacterDataEnum.CypherEquipmentCurrentLevel or id == CharacterDataEnum.CypherEquipmentMaxLevel or id == CharacterDataEnum.CypherEquipmentNextLevel then
+        target:RegisterEvents("CYPHER_EQUIPMENT_UPDATE", "GARRISON_TALENT_COMPLETE", "GARRISON_TALENT_UPDATE")
     end
 end
 
