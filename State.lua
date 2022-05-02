@@ -181,6 +181,19 @@ local EnvironmentMixin = {
         end
         return result
     end,
+    tFirst = function (tbl, func, from, to, every, ...)
+        from = from or 1
+        to = to or #tbl
+        every = every or 1
+
+        for i=from,to,every do
+            local item = tbl[i]
+            if item[func](item, ...) then
+                return true, item
+            end
+        end
+        return false
+    end,
     Custom = CustomStateFunctions,
     Colors = Colors,
     Images = Images,

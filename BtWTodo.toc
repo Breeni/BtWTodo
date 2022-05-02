@@ -33,6 +33,7 @@ Sync.lua
 Register.lua
 Register_Mainline.lua
 
+States/BonusEvent.lua
 States/Callings.lua
 States/Campaign.lua
 States/Character.lua

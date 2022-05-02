@@ -1381,6 +1381,64 @@ end
         completed = [[return states[1]:IsCompleted()]],
         text = DEFAULT_TEXT_FUNCTION,
     },
+    {
+        id = "btwtodo:bonusevents",
+        name = L["Weekly Bonus Event"],
+        states = {
+            { type = "bonusevent", id = 186401, }, -- Skirmishes
+            { type = "bonusevent", id = 186403, }, -- Battlegrounds
+            { type = "bonusevent", id = 186406, }, -- Pet Battles
+            { type = "bonusevent", id = 225787, }, -- Shadowlands Dungeons
+            { type = "bonusevent", id = 225788, }, -- World Quests
+            { type = "bonusevent", id = 335148, }, -- Burning Crusade Timewalking
+            { type = "bonusevent", id = 335149, }, -- Wrath of the Lich King Timewalking
+            { type = "bonusevent", id = 335150, }, -- Cataclysm Timewalking
+            { type = "bonusevent", id = 335151, }, -- Mists of Pandaria Timewalking
+            { type = "bonusevent", id = 335152, }, -- Warlords of Draenor Timewalking
+            { type = "bonusevent", id = 359082, }, -- Legion Timewalking
+        },
+        completed = [[
+local _, state = tFirst(states, "IsActive")
+if state then
+    return state:IsCompleted()
+end
+        ]],
+        text = [[
+local _, state = tFirst(states, "IsActive")
+if state then
+    if state:IsCompleted() then
+        return Images.COMPLETE
+    elseif not state:IsAvailable() then
+        return "-"
+    else
+        local text = format("%d / %d", state:GetNumFulfilled(), state:GetNumRequired())
+        if not state:IsInProgress() then
+            return Colors.STALLED:WrapTextInColorCode(text)
+        else
+            return text
+        end
+    end
+end
+        ]],
+        tooltip = [[
+tooltip:SetText(self:GetName())
+local _, state = tFirst(states, "IsActive")
+if state then
+    if not state:IsAvailable() then
+        tooltip:AddLine(format(L["%s - %s"], state:GetName(), L["Unavailable"]), 1, 1, 1)
+    elseif state:IsCompleted() then
+        tooltip:AddLine(format(L["%s - %s"], state:GetName(), L["Completed"]), 1, 1, 1)
+    else
+        tooltip:AddLine(format(L["%s - %d / %d"], state:GetName(), state:GetNumFulfilled(), state:GetNumRequired()), 1, 1, 1)
+        if not state:IsInProgress() then
+            tooltip:AddLine(L["Check Adventure Journal for quest"])
+        end
+    end
+else
+    tooltip:AddLine(L["Unknown"], 1, 1, 1)
+end
+]]
+    },
 })
 
 if select(4, GetBuildInfo()) >= 90200 then --@TODO hard code change when 9.2 is released
@@ -1639,7 +1697,7 @@ if select(4, GetBuildInfo()) >= 90200 then
         {
             id = "btwtodo:default",
             name = L["Default"],
-            version = 6,
+            version = 7,
             todos = {
                 {
                     id = "btwtodo:itemlevel",
@@ -1774,6 +1832,11 @@ if select(4, GetBuildInfo()) >= 90200 then
                     version = 6,
                 },
                 {
+                    id = "btwtodo:bonusevents",
+                    category = "btwtodo:weekly",
+                    version = 7,
+                },
+                {
                     id = "btwtodo:cosmicflux",
                     category = "btwtodo:currency",
                     version = 6,
@@ -1830,6 +1893,7 @@ if select(4, GetBuildInfo()) >= 90200 then
         {
             id = "btwtodo:92",
             name = L["Eternity's End"],
+            version = 1,
             todos = {
                 {
                     id = "btwtodo:itemlevel",
@@ -1874,6 +1938,11 @@ if select(4, GetBuildInfo()) >= 90200 then
                 {
                     id = "btwtodo:patternswithinpatterns",
                     category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:bonusevents",
+                    category = "btwtodo:weekly",
+                    version = 1,
                 },
                 {
                     id = "btwtodo:cosmicflux",
