@@ -189,7 +189,7 @@ function BonusEventMixin:IsCompleted()
 	end
 end
 function BonusEventMixin:RegisterEventsFor(driver)
-    driver:RegisterEvents("PLAYER_ENTERING_WORLD", "UNIT_AURA", "WEEKLY_RESET", "QUEST_TURNED_IN", "QUEST_REMOVED", "QUEST_ACCEPTED")
+    driver:RegisterEvents("PLAYER_ENTERING_WORLD", "WEEKLY_RESET", "QUEST_TURNED_IN", "QUEST_REMOVED", "QUEST_ACCEPTED", "CALENDAR_UPDATE_EVENT_LIST")
 end
 
 local BonusEventProviderMixin = CreateFromMixins(External.StateProviderMixin)
@@ -239,3 +239,7 @@ function BonusEventProviderMixin:FillAutoComplete(tbl, text, offset, length)
     end
 end
 Internal.RegisterStateProvider(CreateFromMixins(BonusEventProviderMixin))
+
+Internal.RegisterEvent("PLAYER_LOGIN", function ()
+    C_Calendar.OpenCalendar() -- Doesnt actually open the calendar, but does load events
+end)

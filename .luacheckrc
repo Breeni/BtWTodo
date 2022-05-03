@@ -115,6 +115,7 @@ new_read_globals = {
     'C_AzeriteEssence.UnlockMilestone',
     'C_Calendar.GetEventIndexInfo',
     'C_Calendar.GetHolidayInfo',
+    'C_Calendar.OpenCalendar',
     'C_CampaignInfo.GetAvailableCampaigns',
     'C_CampaignInfo.GetCampaignChapterInfo',
     'C_CampaignInfo.GetCampaignID',
