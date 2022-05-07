@@ -38,12 +38,12 @@ function BtWTodoItemMixin:Update()
 		self.Text:SetText(self.category)
 	end
 
-	if self:IsMouseOver() and self:IsVisible() then
+	if GetMouseFocus() == self and self:IsVisible() then
 		self:OnEnter()
 	end
 end
 function BtWTodoItemMixin:RefreshTooltip()
-	if self:IsMouseOver() and self:IsVisible() then
+	if GetMouseFocus() == self and self:IsVisible() then
 		self:OnEnter()
 	end
 end
