@@ -95,10 +95,16 @@ function VaultMixin:GetLevelInitial(index)
 	end
 end
 function VaultMixin:GetEncounters()
-	local encounters = C_WeeklyRewards.GetActivityEncounterInfo(self:GetID(), 3)
-    table.sort(encounters, function(a, b)
-        return a.uiOrder < b.uiOrder
-    end)
+	local encounters
+	local character = self:GetCharacter()
+	if character:IsPlayer() then
+		encounters = C_WeeklyRewards.GetActivityEncounterInfo(self:GetID(), 3)
+		table.sort(encounters, function(a, b)
+			return a.uiOrder < b.uiOrder
+		end)
+	else
+		encounters = character:GetDataTable("vaultEncounters")
+	end
     for _,encounter in ipairs(encounters) do
         encounter.name = (EJ_GetEncounterInfo(encounter.encounterID))
         if encounter.bestDifficulty > 0 then
@@ -199,6 +205,12 @@ Internal.RegisterEvent("PLAYER_LOGOUT", function ()
 			levels[id] = nil
 		end
 	end
+	
+	local encounters = C_WeeklyRewards.GetActivityEncounterInfo(Enum.WeeklyRewardChestThresholdType.Raid, 3)
+    table.sort(encounters, function(a, b)
+        return a.uiOrder < b.uiOrder
+    end)
+    player:SetDataTable("vaultEncounters", encounters)
 end)
 
 Internal.RegisterCustomStateFunction("OpenVaultFrame", function ()
