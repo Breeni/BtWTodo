@@ -890,6 +890,7 @@ if states[1]:GetChallengeMapID() then
     tooltip:AddLine(format(L["Rewards item level %d"], ilvl), 1, 1, 1)
 end
 ]],
+        click = [[Custom.LinkKeystone(states[1]:GetChallengeMapID(), states[1]:GetLevel(), Custom.GetCurrentAffixes())]]
     },
     {
         id = "btwtodo:anima",

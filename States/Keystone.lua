@@ -108,3 +108,30 @@ Internal.RegisterEvent("WEEKLY_RESET", function ()
 		wipe(keystone)
 	end
 end, -1)
+
+local function GetCurrentAffixes()
+    local affixes = C_MythicPlus.GetCurrentAffixes()
+    for index,affix in ipairs(affixes) do
+        affixes[index] = affix.id
+    end
+    return unpack(affixes)
+end
+Internal.RegisterCustomStateFunction("GetCurrentAffixes", GetCurrentAffixes)
+local function LinkKeystone(keystoneId, level, ...)
+    local link = {'keystone', 180653, keystoneId, level, ...}
+    local name = C_ChallengeMode.GetMapUIInfo(keystoneId)
+    if level < 10 then
+        table.remove(link)
+    end
+    if level < 7 then
+        table.remove(link)
+    end
+    if level < 4 then
+        table.remove(link)
+    end
+    if level < 2 then
+        table.remove(link)
+    end
+    return ChatEdit_TryInsertChatLink(format("|cffa335ee|H%s|h[Keystone: %s (%d)]|h|r", table.concat(link, ":"), name, level))
+end
+Internal.RegisterCustomStateFunction("LinkKeystone", LinkKeystone)

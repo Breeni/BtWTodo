@@ -415,6 +415,7 @@ new_read_globals = {
     'C_AzeriteEssence.GetMilestoneSpell',
     'ChatFrame_AddMessageEventFilter',
     'ChatFrame_RemoveMessageEventFilter',
+    'ChatEdit_TryInsertChatLink',
     'CloseDropDownMenus',
     'CopyTable',
     'CreateAndInitFromMixin',
