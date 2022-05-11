@@ -903,16 +903,29 @@ end
     {
         id = "btwtodo:valor",
         name = L["Valor"],
-        version = 2,
+        version = 3,
         changeLog = {
             L["Valor has been uncapped, switching to more standard currency display"],
             L["Valor is now season capped for Shadowlands Season 3"],
+            L["Updated for change to uncapped"],
         },
         states = {
             { type = "currency", id = 1191, },
         },
-        completed = "return states[1]:IsCapped()",
-        text = "return format(\"%s / %s / %s\", states[1]:GetQuantity(), states[1]:GetTotalEarned(), states[1]:GetMaxQuantity())",
+        completed = [[
+if states[1]:GetMaxQuantity() ~= 0 then
+    return states[1]:IsCapped()
+else
+    return false
+end
+        ]],
+        text = [[
+if states[1]:GetMaxQuantity() ~= 0 then
+    return format("%s / %s / %s", states[1]:GetQuantity(), states[1]:GetTotalEarned(), states[1]:GetMaxQuantity())
+else
+    return format("%s", states[1]:GetQuantity())
+end
+]],
         tooltip = [[
 local quantity = states[1]:GetQuantity()
 local earned = states[1]:GetTotalEarned()
@@ -920,22 +933,37 @@ local total = states[1]:GetMaxQuantity()
 tooltip:AddLine(self:GetName())
 tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
 tooltip:AddLine(format(L["Earned this season: %d"], earned), 1, 1, 1)
-tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
+if total ~= 0 then
+    tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
+end
 ]],
     },
     {
         id = "btwtodo:conquest",
         name = L["Conquest"],
-        version = 2,
+        version = 3,
         changeLog = {
             L["Conquest has been uncapped, switching to more standard currency display"],
             L["Conquest is now season capped for Shadowlands Season 3"],
+            L["Updated for change to uncapped"],
         },
         states = {
             { type = "currency", id = 1602, },
         },
-        completed = "return states[1]:IsCapped()",
-        text = "return format(\"%s / %s / %s\", states[1]:GetQuantity(), states[1]:GetTotalEarned(), states[1]:GetMaxQuantity())",
+        completed = [[
+if states[1]:GetMaxQuantity() ~= 0 then
+    return states[1]:IsCapped()
+else
+    return false
+end
+        ]],
+        text = [[
+if states[1]:GetMaxQuantity() ~= 0 then
+    return format("%s / %s / %s", states[1]:GetQuantity(), states[1]:GetTotalEarned(), states[1]:GetMaxQuantity())
+else
+    return format("%s", states[1]:GetQuantity())
+end
+]],
         tooltip = [[
 local quantity = states[1]:GetQuantity()
 local earned = states[1]:GetTotalEarned()
@@ -943,7 +971,9 @@ local total = states[1]:GetMaxQuantity()
 tooltip:AddLine(self:GetName())
 tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
 tooltip:AddLine(format(L["Earned this season: %d"], earned), 1, 1, 1)
-tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
+if total ~= 0 then
+    tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
+end
 ]],
     },
     {
