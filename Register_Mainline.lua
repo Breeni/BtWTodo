@@ -870,6 +870,10 @@ end
     {
         id = "btwtodo:keystone",
         name = L["Keystone"],
+        version = 1,
+        changeLog = {
+            L["Added shift clicking keystone to chat"],
+        },
         states = {
             { type = "keystone", },
         },
