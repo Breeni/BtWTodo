@@ -48,6 +48,8 @@ local shortNames = {
     [380] = L["SD"],
     [381] = L["SoA"],
     [382] = L["ToP"],
+    [391] = L["Streets"],
+    [392] = L["Gambit"],
 }
 function KeystoneMixin:GetChallengeShortMapName()
     local mapID = self:GetChallengeMapID()
