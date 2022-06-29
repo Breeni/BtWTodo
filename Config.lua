@@ -66,6 +66,10 @@ BTWTODO_CHARACTERS = L["Characters"]
 BTWTODO_CHARACTERS_SUBTEXT = L["These options allow you to customize your characters, changing which are displayed, and removed old characters."]
 
 BTWTODO_CLONE = L["Clone"]
+BTWTODO_EXPORT = L["Export"]
+BTWTODO_IMPORT = L["Import"]
+BTWTODO_UPDATE = L["Update"]
+BTWTODO_IMPORT_TITLE = L["Import Todo"]
 
 BTWTODO_MINIMAP_ICON = L["Show Minimap Icon"]
 BTWTODO_MINIMAP_TOOLTIP = L["Show Minimap Tooltip"]
@@ -1592,48 +1596,48 @@ function BtWTodoConfigTodoPanelMixin:OnLoad()
         end
     end);
 
-    self.Name:SetScript("OnTextChanged", function (_)
+    self.Edit.Name:SetScript("OnTextChanged", function (_)
         if self.todo == nil then
             return
         end
 
-        self.todo.name = self.Name:GetText()
+        self.todo.name = self.Edit.Name:GetText()
         UIDropDownMenu_SetText(self.TodoDropDown, self.todo.name)
     end)
-    self.AddDropDown:SetScript("OnChange", function (_, key)
+    self.Edit.AddDropDown:SetScript("OnChange", function (_, key)
         if self.todo == nil then
             return
         end
 
-        self.States:Add(key)
+        self.Edit.States:Add(key)
     end)
-    self.States:SetScript("OnAdd", function (_, state)
+    self.Edit.States:SetScript("OnAdd", function (_, state)
         if self.todo == nil then
             return
         end
 
-        self.AddStateText:SetShown(self.States:GetCount() <= 2)
+        self.Edit.AddStateText:SetShown(self.Edit.States:GetCount() <= 2)
         self:ValidateScript()
 
         --@TODO add defaults to Basic completed/text/click
     end)
-    self.States:SetScript("OnRemove", function (_)
-        self.AddStateText:SetShown(self.States:GetCount() <= 2)
+    self.Edit.States:SetScript("OnRemove", function (_)
+        self.Edit.AddStateText:SetShown(self.Edit.States:GetCount() <= 2)
         self:ValidateScript()
     end)
-    self.Editor:SetScript("OnTextChanged", function (editor)
+    self.Edit.Editor:SetScript("OnTextChanged", function (editor)
         if self.todo == nil then
             return
         end
 
         if self.editor == FUNCTION_TAB_COMPLETED then
-            self.todo.completed = self.Editor:GetDisplayText()
+            self.todo.completed = self.Edit.Editor:GetDisplayText()
         elseif self.editor == FUNCTION_TAB_TEXT then
-            self.todo.text = self.Editor:GetDisplayText()
+            self.todo.text = self.Edit.Editor:GetDisplayText()
         elseif self.editor == FUNCTION_TAB_CLICK then
-            self.todo.click = self.Editor:GetDisplayText()
+            self.todo.click = self.Edit.Editor:GetDisplayText()
         elseif self.editor == FUNCTION_TAB_TOOLTIP then
-            self.todo.tooltip = self.Editor:GetDisplayText()
+            self.todo.tooltip = self.Edit.Editor:GetDisplayText()
         end
         self:ValidateScript()
     end)
@@ -1645,8 +1649,8 @@ function BtWTodoConfigTodoPanelMixin:OnLoad()
 
     InterfaceOptions_AddCategory(self)
 
-    PanelTemplates_UpdateTabs(self.FunctionTabHeader)
-    PanelTemplates_UpdateTabs(self.ModeTabHeader)
+    PanelTemplates_UpdateTabs(self.Edit.FunctionTabHeader)
+    PanelTemplates_UpdateTabs(self.Edit.ModeTabHeader)
 end
 function BtWTodoConfigTodoPanelMixin:ValidateScript()
     if not self.todo then
@@ -1670,8 +1674,8 @@ function BtWTodoConfigTodoPanelMixin:ValidateScript()
         func, err = Internal.CreateStateDriverFunction(driver, "Tooltip", source, false, 'L, tooltip')
     end
     if not func then
-        self.ErrorText:SetText(err)
-        self.ErrorText:Show()
+        self.Edit.ErrorText:SetText(err)
+        self.Edit.ErrorText:Show()
         return
     end
     if self.editor == FUNCTION_TAB_COMPLETED then
@@ -1737,12 +1741,12 @@ function BtWTodoConfigTodoPanelMixin:ValidateScript()
         end
     end)
     if not status then
-        self.ErrorText:SetText(err)
-        self.ErrorText:Show()
+        self.Edit.ErrorText:SetText(err)
+        self.Edit.ErrorText:Show()
         return
     end
 
-    self.ErrorText:Hide()
+    self.Edit.ErrorText:Hide()
 end
 function BtWTodoConfigTodoPanelMixin:IsEdited()
     local registered = Internal.GetRegisteredTodo(self.todo.id)
@@ -1754,67 +1758,67 @@ end
 function BtWTodoConfigTodoPanelMixin:IsUpdated()
     return Internal.CheckTodoForUpdate(self.todo.id, self.todo.version)
 end
+function BtWTodoConfigTodoPanelMixin:ParseTodo(id)
+    local tbl = Internal.GetTodo(id)
+    if not tbl then
+        error("Unknown todo " .. tostring(id))
+    end
+
+    local todo = {}
+    todo.uuid = tbl.uuid
+    todo.id = tbl.id
+    todo.name = tbl.name
+    todo.registered = tbl.registered
+
+    todo.driver, todo.states = Internal.CreateStateDriver(tbl.id, "Editor", tbl.states, "", "", "", "")
+    for index,state in ipairs(tbl.states) do
+        todo.states[index].source = state
+    end
+
+    todo.completed = tbl.completed
+    todo.text = tbl.text
+    todo.click = tbl.click
+    todo.tooltip = tbl.tooltip
+
+    if type(id) == "string" then
+        todo.version = tbl.version or 0
+    end
+
+    self.todos[id] = todo
+    return todo
+end
 function BtWTodoConfigTodoPanelMixin:SetTodo(id)
     if self.todos[id] then -- Already started editing
         self.todo = self.todos[id]
     else -- Read the saved todo and cache it locally for editing
-        local tbl = Internal.GetTodo(id)
-        if not tbl then
-            error("Unknown todo " .. tostring(id))
-        end
-
-        local todo = {}
-        todo.id = tbl.id
-        todo.name = tbl.name
-        todo.registered = tbl.registered
-
-        todo.driver, todo.states = Internal.CreateStateDriver(tbl.id, "Editor", tbl.states, "", "", "", "")
-        for index,state in ipairs(tbl.states) do
-            todo.states[index].source = state
-        end
-
-        todo.completed = tbl.completed
-        todo.text = tbl.text
-        todo.click = tbl.click
-        todo.tooltip = tbl.tooltip
-
-        if type(id) == "string" then
-            todo.version = tbl.version or 0
-        end
+        self.todo = self:ParseTodo(id)
 
         self.editor = self.editor or FUNCTION_TAB_COMPLETED
         self.mode = self.mode or MODE_TAB_ADVANCED
-
-        self.todos[id] = todo
-        self.todo = todo
     end
 
     UIDropDownMenu_SetText(self.TodoDropDown, self.todo.name)
-    self.Name:SetText(self.todo.name)
-    self.Name:SetCursorPosition(0)
-    self.States:Init(self.todo.states)
-    self.AddStateText:SetShown(self.States:GetCount() <= 2)
+    self.Edit.Name:SetText(self.todo.name)
+    self.Edit.Name:SetCursorPosition(0)
+    self.Edit.States:Init(self.todo.states)
+    self.Edit.AddStateText:SetShown(self.Edit.States:GetCount() <= 2)
 
-    self.Name:Show()
-    self.RevertButton:Show()
-    self.RevertButton:SetEnabled(self:IsEdited())
+    self.Edit.RevertButton:SetEnabled(self:IsEdited())
 
-    self.States:Show()
-    self.AddButton:Show()
-    self.FunctionTabHeader:Show()
-    self.ModeTabHeader:Show()
-    self.Inset:Show()
-    self.Editor:Show()
-    self.ErrorText:Show()
+    self.Edit:Show()
+    self.AddItem:Hide()
+    self.ActiveImport:Hide()
+    self.Import:Hide()
+    self.Export:Hide()
 
     self:Update()
 
     -- I dont know why, but if we dont reset the first tabs anchor they wont show, these anchors are in the xml already
-    self.ModeTabHeader.Tab1:ClearAllPoints()
-    self.ModeTabHeader.Tab1:SetPoint("TOPRIGHT", 0, 0)
+    self.Edit.ModeTabHeader.Tab1:ClearAllPoints()
+    self.Edit.ModeTabHeader.Tab1:SetPoint("TOPRIGHT", 0, 0)
 
-    self.FunctionTabHeader.Tab1:ClearAllPoints()
-    self.FunctionTabHeader.Tab1:SetPoint("TOPLEFT", 0, 0)
+    self.Edit.FunctionTabHeader.Tab1:ClearAllPoints()
+    self.Edit.FunctionTabHeader.Tab1:SetPoint("TOPLEFT", 0, 0)
 
     return self.todo.driver
 end
@@ -1838,7 +1842,7 @@ function BtWTodoConfigTodoPanelMixin:AddTodo()
 
     self.todos[count] = todo
     self:SetTodo(count)
-    self.Name:SetFocus()
+    self.Edit.Name:SetFocus()
 end
 function BtWTodoConfigTodoPanelMixin:CloneTodo()
     if not self.todo then
@@ -1869,6 +1873,171 @@ function BtWTodoConfigTodoPanelMixin:CloneTodo()
     self.todos[count] = todo
     self:SetTodo(count)
     self.Name:SetFocus()
+end
+function BtWTodoConfigTodoPanelMixin:ToggleExport()
+    if self.Export:IsShown() then
+        self:HideExport()
+    else
+        self:ExportTodo()
+    end
+end
+function BtWTodoConfigTodoPanelMixin:ExportTodo()
+    if not self.todo then
+        return
+    end
+
+    local data = self.todo
+    if not data.uuid then
+        if type(data.id) == "number" then
+            data.uuid = Internal.GenerateUUID()
+            local target = Internal.GetTodo(data.id)
+            if target then
+                target.uuid = data.uuid
+            end
+        else
+            data.uuid = data.id
+        end
+    end
+
+    local tbl = {}
+    tbl.id = data.id
+    tbl.uuid = data.uuid
+    tbl.name = data.name
+
+    tbl.states = {}
+    for _,state in ipairs(data.states) do
+        tbl.states[#tbl.states+1] = state.source
+    end
+
+    tbl.completed = data.completed
+    tbl.text = data.text
+    tbl.click = data.click
+    tbl.tooltip = data.tooltip
+    tbl.version = data.version
+
+    self.Export.Scroll.EditBox.text = Internal.Export("todo", tbl)
+    self.Export.Scroll.EditBox:SetText(self.Export.Scroll.EditBox.text)
+
+    self.Edit:Hide()
+    self.AddItem:Hide()
+    self.ActiveImport:Hide()
+    self.Import:Hide()
+    self.Export:Show()
+end
+function BtWTodoConfigTodoPanelMixin:HideExport()
+    self.Edit:SetShown(self.todo ~= nil)
+    self.AddItem:Hide()
+    self.ActiveImport:Hide()
+    self.Import:Hide()
+    self.Export:Hide()
+end
+function BtWTodoConfigTodoPanelMixin:ImportTodo(text)
+    local success, result
+    if text then
+        success, result = External.Import(text)
+    end
+    if success then
+        self.todo = nil
+    
+        UIDropDownMenu_SetText(self.TodoDropDown, L["Select a todo to edit"]);
+        
+        self.ActiveImport.todo = result
+        self.ActiveImport.update = nil
+        if result.uuid then
+            if self.todos[result.uuid] then
+                self.ActiveImport.update = self.todos[result.uuid]
+            end
+            if not self.ActiveImport.update then
+                for _,possible in pairs(self.todos) do
+                    if possible.uuid == result.uuid then
+                        self.ActiveImport.update = possible
+                        break
+                    end
+                end
+            end
+            if not self.ActiveImport.update then
+                local target = Internal.GetTodoByUUID(result.uuid)
+                if target then
+                    self.ActiveImport.update = self:ParseTodo(target.id)
+                end
+            end
+        end
+
+        self.ActiveImport.NameText:SetText(format(L["Importing todo \"%s\""], result.name))
+        
+        if self.ActiveImport.update then
+            self.ActiveImport.ImportButton:Hide()
+            self.ActiveImport.UpdateButton:Show()
+            self.ActiveImport.CopyButton:Show()
+        else
+            self.ActiveImport.ImportButton:Show()
+            self.ActiveImport.UpdateButton:Hide()
+            self.ActiveImport.CopyButton:Hide()
+        end
+        
+        self.Edit:Hide()
+        self.AddItem:Hide()
+        self.ActiveImport:Hide()
+        self.Import:Hide()
+        self.Export:Hide()
+        self.ActiveImport:Show()
+    elseif self.Import:IsShown() and result then
+        self.Import.ErrorText:SetText(result)
+        self.Import.ErrorText:Show()
+    else
+        self.todo = nil
+    
+        UIDropDownMenu_SetText(self.TodoDropDown, L["Select a todo to edit"]);
+        
+        self.Edit:Hide()
+        self.AddItem:Hide()
+        self.ActiveImport:Hide()
+        self.Import:Hide()
+        self.Export:Hide()
+        self.Import:Show()
+
+        if result then
+            self.Import.ErrorText:SetText(result)
+            self.Import.ErrorText:Show()
+        else
+            self.Import.ErrorText:Hide()
+        end
+    end
+end
+function BtWTodoConfigTodoPanelMixin:CompleteImportTodo(source, update)
+    print(source, update)
+    local id = update and update.id
+    if not id then
+        local count = #BtWTodoData+1
+        while self.todos[count] or BtWTodoData[count] do
+            count = count + 1
+        end
+        id = count
+    end
+    local todo = {
+        id = id,
+        uuid = update ~= false and source.uuid or nil,
+        name = source.name,
+        completed = source.completed,
+        text = source.text,
+        click = source.click,
+        tooltip = source.tooltip,
+    }
+    local states = {}
+    for _,state in ipairs(source.states) do
+        states[#states+1] = CopyTable(state)
+    end
+    todo.driver, todo.states = Internal.CreateStateDriver(todo.id, "Editor", states, "", "", "", "")
+
+    self.editor = self.editor or FUNCTION_TAB_COMPLETED
+    self.mode = self.mode or MODE_TAB_ADVANCED
+
+    self.todos[id] = todo
+    self:SetTodo(id)
+    self.Edit.Name:SetFocus()
+end
+function BtWTodoConfigTodoPanelMixin:HideImport()
+    self.Import:Hide()
 end
 function BtWTodoConfigTodoPanelMixin:RevertTodo()
     if not self.todo then
@@ -1919,23 +2088,23 @@ function BtWTodoConfigTodoPanelMixin:Update()
         return
     end
 
-    PanelTemplates_SetTab(self.ModeTabHeader, self.mode)
-    PanelTemplates_SetTab(self.FunctionTabHeader, self.editor)
+    PanelTemplates_SetTab(self.Edit.ModeTabHeader, self.mode)
+    PanelTemplates_SetTab(self.Edit.FunctionTabHeader, self.editor)
     if self.mode == MODE_TAB_ADVANCED then
         if self.editor == FUNCTION_TAB_COMPLETED then
-            self.Editor:SetText(self.todo.completed or "")
+            self.Edit.Editor:SetText(self.todo.completed or "")
         elseif self.editor == FUNCTION_TAB_TEXT then
-            self.Editor:SetText(self.todo.text or "")
+            self.Edit.Editor:SetText(self.todo.text or "")
         elseif self.editor == FUNCTION_TAB_CLICK then
-            self.Editor:SetText(self.todo.click or "")
+            self.Edit.Editor:SetText(self.todo.click or "")
         elseif self.editor == FUNCTION_TAB_TOOLTIP then
-            self.Editor:SetText(self.todo.tooltip or "")
+            self.Edit.Editor:SetText(self.todo.tooltip or "")
         else
             error("Unknown editor " .. tostring(self.editor))
         end
-        self.Editor:Show()
+        self.Edit.Editor:Show()
     elseif self.mode == MODE_TAB_BASIC then
-        self.Editor:Hide()
+        self.Edit.Editor:Hide()
         if self.editor == FUNCTION_TAB_COMPLETED then
         elseif self.editor == FUNCTION_TAB_TEXT then
         elseif self.editor == FUNCTION_TAB_CLICK then
@@ -2022,16 +2191,11 @@ function BtWTodoConfigTodoPanelMixin:refresh()
 
         UIDropDownMenu_SetText(self.TodoDropDown, L["Select a todo to edit"]);
 
-        self.Name:Hide()
-        self.RevertButton:Hide()
-        self.States:Hide()
-        self.AddButton:Hide()
-        self.FunctionTabHeader:Hide()
-        self.ModeTabHeader:Hide()
-        self.Inset:Hide()
-        self.Editor:Hide()
-        self.AddStateText:Hide()
-        self.ErrorText:Hide()
+        self.Edit:Hide()
+        self.AddItem:Hide()
+        self.ActiveImport:Hide()
+        self.Import:Hide()
+        self.Export:Hide()
     end, geterrorhandler())
 end
 

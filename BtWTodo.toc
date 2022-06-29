@@ -48,6 +48,7 @@ States/Quest.lua
 States/Torghast.lua
 States/Vault.lua
 
+Share.xml
 Config.xml
 Windows.xml
 DataBroker.lua

@@ -128,6 +128,18 @@ end
 function Internal.GetTodo(id)
     return BtWTodoData[id] or registeredTodos[id]
 end
+function Internal.GetTodoByUUID(uuid)
+    local todo = BtWTodoData[uuid] or registeredTodos[uuid]
+    if todo then
+        return todo
+    end
+    for i=1,#BtWTodoData do
+        local todo = BtWTodoData[i]
+        if todo and todo.uuid == uuid then
+            return todo
+        end
+    end
+end
 -- Used for reverting todos to their registered version
 function Internal.GetRegisteredTodo(id)
     return registeredTodos[id]

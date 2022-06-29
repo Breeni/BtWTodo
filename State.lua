@@ -72,6 +72,9 @@ end
 function StateProviderMixin:Acquire(...)
 	return CreateAndInitFromMixin(self.mixin, ...)
 end
+function StateProviderMixin:Supported(...)
+	return true
+end
 -- Returns data describing the possible basic functions
 function StateProviderMixin:GetFunctions()
 	return {}
