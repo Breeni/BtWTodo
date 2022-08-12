@@ -39,6 +39,28 @@ function KeystoneMixin:GetChallengeMapName()
     end
 end
 local shortNames = {
+    -- Warlords of Draenor
+    [166] = L["Grimrail"],
+    [169] = L["Iron Docks"],
+
+    -- Legion
+    [227] = L["Lower Kara"],
+    [234] = L["Upper Kara"],
+
+    -- Battle for Azeroth
+    [244] = L["AD"],
+    [245] = L["Freehold"],
+    [246] = L["TD"],
+    [247] = L["Motherloade"],
+    [248] = L["WM"],
+    [249] = L["KR"],
+    [250] = L["ToS"],
+    [251] = L["Underrot"],
+    [252] = L["SotS"],
+    [353] = L["SoB"],
+    [369] = L["Junkyard"],
+    [370] = L["Workshop"],
+
     -- Shadowlands
     [375] = L["Mists"],
     [376] = L["NW"],

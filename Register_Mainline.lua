@@ -493,16 +493,18 @@ External.RegisterTodos({
         name = L["M+ Rating"],
         states = {
             { type = "mythicplusrating", id = 0, },
-            { type = "mythicplusrating", id = 375, },
-            { type = "mythicplusrating", id = 376, },
-            { type = "mythicplusrating", id = 377, },
-            { type = "mythicplusrating", id = 378, },
-            { type = "mythicplusrating", id = 379, },
-            { type = "mythicplusrating", id = 380, },
-            { type = "mythicplusrating", id = 381, },
-            { type = "mythicplusrating", id = 382, },
+
             { type = "mythicplusrating", id = 391, },
             { type = "mythicplusrating", id = 392, },
+            
+            { type = "mythicplusrating", id = 234, },
+            { type = "mythicplusrating", id = 227, },
+            
+            { type = "mythicplusrating", id = 370, },
+            { type = "mythicplusrating", id = 369, },
+            
+            { type = "mythicplusrating", id = 169, },
+            { type = "mythicplusrating", id = 166, },
         },
         completed = [[return false]],
         text = [[return states[1]:GetRatingColor():WrapTextInColorCode(states[1]:GetRating())]],

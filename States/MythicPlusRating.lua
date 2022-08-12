@@ -3,6 +3,30 @@ local External = _G[ADDON_NAME]
 local L = Internal.L
 
 local challengeMapIDs = {
+    -- Warlords of Draenor
+    166, -- Grimrail
+    169, -- Iron Docks
+
+    -- Legion
+    227, -- Lower Kara
+    234, -- Upper Kara
+
+    -- Battle for Azeroth
+    244, -- AD
+    245, -- Freehold
+    246, -- TD
+    247, -- Motherloade
+    248, -- WM
+    249, -- KR
+    250, -- ToS
+    251, -- Underrot
+    252, -- SotS
+    353, -- SoB
+    369, -- Junkyard
+    370, -- Workshop
+
+    -- Shadowlands
+
     -- Shadowlands
     375, -- mists
     376, -- nw
