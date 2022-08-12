@@ -192,6 +192,7 @@ function BtWTodoAddFrameAutoCompleteListMixin:Update()
         button:Set(self.items[index], index == self:GetSelectedIndex())
 
         width = max(width, button:GetFontString():GetWidth() + 30)
+        button:SetWidth(width)
 		button:Enable();
         button:Show()
     end
