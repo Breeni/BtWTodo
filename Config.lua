@@ -122,6 +122,9 @@ end
 BtWTodoAddFrameAutoCompleteListMixin = {}
 function BtWTodoAddFrameAutoCompleteListMixin:OnLoad()
 	BackdropTemplateMixin.OnBackdropLoaded(self)
+    if self.TooltipBackdropOnLoad then
+        self:TooltipBackdropOnLoad()
+    end
     self.items = {}
     self.offset = 0
     self.maxButtons = 6
