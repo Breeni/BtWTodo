@@ -872,7 +872,7 @@ function BtWTodoConfigStatesInputMixin:Update()
     end
 end
 function BtWTodoConfigStatesInputMixin:Add(key)
-    local frame = self:GetParent()
+    local frame = self:GetParent():GetParent()
     local provider = Internal.GetStateProvider(key)
     if provider:RequiresID() then
         frame.AddItem:SetTitle(provider:GetAddTitle())
