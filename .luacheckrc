@@ -215,6 +215,7 @@ new_read_globals = {
     'date',
     'EditMacro',
     'EJ_GetEncounterInfo',
+    'EJ_GetInstanceInfo',
     'FindBaseSpellByID',
     'format',
     'GetAchievementCriteriaInfoByID',

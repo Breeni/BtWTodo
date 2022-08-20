@@ -100,12 +100,16 @@ function VaultMixin:GetEncounters()
 	if character:IsPlayer() then
 		encounters = C_WeeklyRewards.GetActivityEncounterInfo(self:GetID(), 3)
 		table.sort(encounters, function(a, b)
+			if a.instanceID ~= b.instanceID then
+				return a.instanceID < b.instanceID;
+			end
 			return a.uiOrder < b.uiOrder
 		end)
 	else
 		encounters = character:GetDataTable("vaultEncounters")
 	end
     for _,encounter in ipairs(encounters) do
+		encounter.instanceName = encounter.instanceID and EJ_GetInstanceInfo(encounter.instanceID) or nil;
         encounter.name = (EJ_GetEncounterInfo(encounter.encounterID))
         if encounter.bestDifficulty > 0 then
             encounter.difficultyName = DifficultyUtil.GetDifficultyName(encounter.bestDifficulty);

@@ -804,18 +804,23 @@ end
 ]],
         tooltip = [[
 tooltip:AddLine(self:GetName())
+local instanceName = nil
 for _,encounter in ipairs(states[1]:GetEncounters()) do
+    if instanceName ~= encounter.instanceName then
+        tooltip:AddLine(format("%s", encounter.instanceName), 1, 1, 1)
+        instanceName = encounter.instanceName
+    end
     local name = encounter.name
     if encounter.bestDifficulty == 16 then
-        tooltip:AddLine(format("%s (%s)", name, encounter.difficultyName), Colors.LEGENDARY:GetRGB())
+        tooltip:AddLine(format("- %s (%s)", name, encounter.difficultyName), Colors.LEGENDARY:GetRGB())
     elseif encounter.bestDifficulty == 15 then
-        tooltip:AddLine(format("%s (%s)", name, encounter.difficultyName), Colors.EPIC:GetRGB())
+        tooltip:AddLine(format("- %s (%s)", name, encounter.difficultyName), Colors.EPIC:GetRGB())
     elseif encounter.bestDifficulty == 14 then
-        tooltip:AddLine(format("%s (%s)", name, encounter.difficultyName), Colors.RARE:GetRGB())
+        tooltip:AddLine(format("- %s (%s)", name, encounter.difficultyName), Colors.RARE:GetRGB())
     elseif encounter.bestDifficulty == 17 then
-        tooltip:AddLine(format("%s (%s)", name, encounter.difficultyName), Colors.UNCOMMON:GetRGB())
+        tooltip:AddLine(format("- %s (%s)", name, encounter.difficultyName), Colors.UNCOMMON:GetRGB())
     else
-        tooltip:AddLine(name, 1, 1, 1)
+        tooltip:AddLine(format("- %s", name), 0.5, 0.5, 0.5)
     end
 end
 ]],
