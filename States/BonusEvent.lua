@@ -116,6 +116,7 @@ function BonusEventMixin:IsAvailable()
     return UnitLevel("player") == 60 --@TODO Is it only level 60s that can do these events?
 end
 function BonusEventMixin:IsActive()
+    local GetPlayerAuraBySpellID = C_UnitAuras and C_UnitAuras.GetPlayerAuraBySpellID or GetPlayerAuraBySpellID
     if GetPlayerAuraBySpellID(self:GetID()) ~= nil then
         return true
     end

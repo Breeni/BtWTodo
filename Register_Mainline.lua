@@ -489,35 +489,6 @@ end)
 
 External.RegisterTodos({
     {
-        id = "btwtodo:mythicplusrating",
-        name = L["M+ Rating"],
-        states = {
-            { type = "mythicplusrating", id = 0, },
-
-            { type = "mythicplusrating", id = 391, },
-            { type = "mythicplusrating", id = 392, },
-            
-            { type = "mythicplusrating", id = 234, },
-            { type = "mythicplusrating", id = 227, },
-            
-            { type = "mythicplusrating", id = 370, },
-            { type = "mythicplusrating", id = 369, },
-            
-            { type = "mythicplusrating", id = 169, },
-            { type = "mythicplusrating", id = 166, },
-        },
-        completed = [[return false]],
-        text = [[return states[1]:GetRatingColor():WrapTextInColorCode(states[1]:GetRating())]],
-        tooltip = [[
-tooltip:SetText(self:GetName())
-for _,state in ipairs(states) do
-    if state:GetID() ~= 0 then
-        tooltip:AddLine(format(L["%s (Rating: %s)"], state:GetName(), state:GetRatingColor():WrapTextInColorCode(state:GetRating())), 1, 1, 1)
-    end
-end]]
-    },
-
-    {
         id = "btwtodo:renown",
         name = L["Renown"],
         version = 1,
@@ -1483,7 +1454,86 @@ end
     },
 })
 
-if select(4, GetBuildInfo()) >= 90200 then --@TODO hard code change when 9.2 is released
+-- M+ Ratings
+local function MythicPlusRating(tbl)
+    if Internal.IsDragonflightFull() then
+        tbl.version = 2
+        tbl.changeLog = {
+            L["Updated for Eternity's End"],
+            L["Updated for Dragonflight"],
+        }
+        tbl.states = {
+            { type = "mythicplusrating", id = 0, },
+
+            { type = "mythicplusrating", id = 399, },
+            { type = "mythicplusrating", id = 400, },
+            
+            { type = "mythicplusrating", id = 401, },
+            { type = "mythicplusrating", id = 402, },
+            
+            { type = "mythicplusrating", id = 2, },
+            { type = "mythicplusrating", id = 210, },
+            
+            { type = "mythicplusrating", id = 200, },
+            { type = "mythicplusrating", id = 165, },
+        }
+    elseif Internal.IsEternitysEnd() then
+        tbl.version = 1
+        tbl.changeLog = {
+            L["Updated for Eternity's End"],
+        }
+        tbl.states = {
+            { type = "mythicplusrating", id = 0, },
+
+            { type = "mythicplusrating", id = 391, },
+            { type = "mythicplusrating", id = 392, },
+            
+            { type = "mythicplusrating", id = 234, },
+            { type = "mythicplusrating", id = 227, },
+            
+            { type = "mythicplusrating", id = 370, },
+            { type = "mythicplusrating", id = 369, },
+            
+            { type = "mythicplusrating", id = 169, },
+            { type = "mythicplusrating", id = 166, },
+        }
+    else
+        tbl.states = {
+            { type = "mythicplusrating", id = 0, },
+
+            { type = "mythicplusrating", id = 391, },
+            { type = "mythicplusrating", id = 392, },
+            
+            { type = "mythicplusrating", id = 234, },
+            { type = "mythicplusrating", id = 227, },
+            
+            { type = "mythicplusrating", id = 370, },
+            { type = "mythicplusrating", id = 369, },
+            
+            { type = "mythicplusrating", id = 169, },
+            { type = "mythicplusrating", id = 166, },
+        }
+    end
+
+    return tbl
+end
+External.RegisterTodos({
+    MythicPlusRating({
+        id = "btwtodo:mythicplusrating",
+        name = L["M+ Rating"],
+        completed = [[return false]],
+        text = [[return states[1]:GetRatingColor():WrapTextInColorCode(states[1]:GetRating())]],
+        tooltip = [[
+tooltip:SetText(self:GetName())
+for _,state in ipairs(states) do
+    if state:GetID() ~= 0 then
+        tooltip:AddLine(format(L["%s (Rating: %s)"], state:GetName(), state:GetRatingColor():WrapTextInColorCode(state:GetRating())), 1, 1, 1)
+    end
+end]]
+    }),
+})
+
+if Internal.IsEternitysEnd() then --@TODO hard code change when 9.2 is released
     External.RegisterTodos({
         {
             id = "btwtodo:92campaign",
@@ -1734,7 +1784,7 @@ External.RegisterLists({
     }
 })
 
-if select(4, GetBuildInfo()) >= 90200 then
+if Internal.IsEternitysEnd() then
     External.RegisterLists({
         {
             id = "btwtodo:default",
@@ -2166,3 +2216,505 @@ else
     })
 end
 
+if Internal.IsDragonflightFull() then
+    External.RegisterTodos({
+        {
+            id = "btwtodo:dragonflyingglyphs",
+            name = L["Dragonriding Talents"],
+            states = {
+                { type = "traitcurrency", id = 2563, },
+            },
+            completed = [[
+                return states[1]:GetSpent() == 48
+            ]],
+            text = [[
+                local quantity = states[1]:GetQuantity()
+                local text
+                if quantity == 0 then
+                    text = format("%d / %d", states[1]:GetSpent(), 48)
+                else
+                    text = format("%d + %d / %d", states[1]:GetSpent(), quantity, 48)
+                end
+                if states[1]:GetTotalEarned() == 48 then
+                    text = Colors.STALLED:WrapTextInColorCode(text)
+                end
+                return text
+            ]],
+            tooltip = [[
+                local quantity = states[1]:GetQuantity()
+                local spent = states[1]:GetSpent()
+                tooltip:AddLine(self:GetName())
+                tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
+                tooltip:AddLine(format(L["Spent: %d"], spent), 1, 1, 1)
+                tooltip:AddLine(format(L["Total: %d"], 48), 1, 1, 1)
+            ]]
+        },
+        {
+            id = "btwtodo:dragonislessupplies",
+            name = L["Dragon Isle Supplies"],
+            states = {
+                { type = "currency", id = 2003, },
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:elementaloverflow",
+            name = L["Elemental Overflow"],
+            states = {
+                { type = "currency", id = 2118, },
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:stormsigil",
+            name = L["Storm Sigil"],
+            states = {
+                { type = "currency", id = 2122, },
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:blacksmithingprofessionknowledge",
+            name = L["Blacksmithing Profession Knowledge"],
+            states = {
+                { type = "currency", id = 2023, }, -- Blacksmithing
+                -- { type = "currency", id = 2025, }, -- Leatherworking
+                -- { type = "currency", id = 2024, }, -- Alchemy
+                -- { type = "currency", id = 2034, }, -- Herbalism
+                -- { type = "currency", id = 2035, }, -- Mining
+                -- { type = "currency", id = 2026, }, -- Tailoring
+                -- { type = "currency", id = 2027, }, -- Engineering
+                -- { type = "currency", id = 2030, }, -- Enchanting
+                -- { type = "currency", id = 2033, }, -- Skinning
+                -- { type = "currency", id = 2029, }, -- Jewelcrafting
+                -- { type = "currency", id = 2028, }, -- Inscription
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:leatherworkingprofessionknowledge",
+            name = L["Leatherworking Profession Knowledge"],
+            states = {
+                { type = "currency", id = 2025, }, -- Leatherworking
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:alchemyprofessionknowledge",
+            name = L["Alchemy Profession Knowledge"],
+            states = {
+                { type = "currency", id = 2024, }, -- Alchemy
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:herbalismprofessionknowledge",
+            name = L["Herbalism Profession Knowledge"],
+            states = {
+                { type = "currency", id = 2034, }, -- Herbalism
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:miningprofessionknowledge",
+            name = L["Mining Profession Knowledge"],
+            states = {
+                { type = "currency", id = 2035, }, -- Mining
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:tailoringprofessionknowledge",
+            name = L["Tailoring Profession Knowledge"],
+            states = {
+                { type = "currency", id = 2026, }, -- Tailoring
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:engineeringprofessionknowledge",
+            name = L["Engineering Profession Knowledge"],
+            states = {
+                { type = "currency", id = 2027, }, -- Engineering
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:enchantingprofessionknowledge",
+            name = L["Enchanting Profession Knowledge"],
+            states = {
+                { type = "currency", id = 2030, }, -- Enchanting
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:skinningprofessionknowledge",
+            name = L["Skinning Profession Knowledge"],
+            states = {
+                { type = "currency", id = 2033, }, -- Skinning
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:jewelcraftingprofessionknowledge",
+            name = L["Jewelcrafting Profession Knowledge"],
+            states = {
+                { type = "currency", id = 2029, }, -- Jewelcrafting
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:inscriptionprofessionknowledge",
+            name = L["Inscription Profession Knowledge"],
+            states = {
+                { type = "currency", id = 2028, }, -- Inscription
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:dragonscaleexpedition",
+            name = L["Dragonscale Expedition"],
+            states = {
+                { type = "faction", id = 2507, },
+            },
+            completed = "return states[1]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+end
+]],
+        },
+        {
+            id = "btwtodo:iskaaratuskarr",
+            name = L["Iskaara Tuskarr"],
+            states = {
+                { type = "faction", id = 2511, },
+            },
+            completed = "return states[1]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+end
+]],
+        },
+        {
+            id = "btwtodo:maruukcentaur",
+            name = L["Maruuk Centaur"],
+            states = {
+                { type = "faction", id = 2503, },
+            },
+            completed = "return states[1]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+end
+]],
+        },
+        {
+            id = "btwtodo:valdrakkenaccord",
+            name = L["Valdrakken Accord"],
+            states = {
+                { type = "faction", id = 2510, },
+            },
+            completed = "return states[1]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+end
+]],
+        },
+        {
+            id = "btwtodo:winterpeltfurbolg",
+            name = L["Winterpelt Furbolg"],
+            states = {
+                { type = "faction", id = 2526, },
+            },
+            completed = "return states[1]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+end
+]],
+        },
+        { --@TODO
+            id = "btwtodo:artisansconsortium",
+            name = L["Artisan's Consortium"],
+            states = {
+                { type = "faction", id = 2544, },
+            },
+            completed = "return states[1]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+end
+]],
+        },
+        { --@TODO
+            id = "btwtodo:cobaltassembly",
+            name = L["Cobalt Assembly"],
+            states = {
+                { type = "faction", id = 2550, },
+            },
+            completed = "return states[1]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+end
+]],
+        },
+        {
+            id = "btwtodo:sabellian",
+            name = L["Sabellian"],
+            states = {
+                { type = "faction", id = 2518, },
+            },
+            completed = "return states[1]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+end
+]],
+        },
+        {
+            id = "btwtodo:wrathion",
+            name = L["Wrathion"],
+            states = {
+                { type = "faction", id = 2517, },
+            },
+            completed = "return states[1]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+end
+]],
+        },
+        {
+            id = "btwtodo:dragonflightworldboss",
+            name = L["World Boss"],
+            states = {
+                { type = "quest", id = 64547, }, --@TODO
+            },
+            completed = "return states[1]:IsCompleted()",
+            text = DEFAULT_TEXT_FUNCTION,
+        },
+    })
+
+    External.RegisterLists({
+        {
+            id = "btwtodo:100",
+            name = L["Dragonflight"],
+            version = 1,
+            todos = {
+                {
+                    id = "btwtodo:itemlevel",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:mythicplusrating",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:gold",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:dragonflyingglyphs",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:raidvault",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:dungeonvault",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:keystone",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:dragonflightworldboss",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:dragonislessupplies",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:valor",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:conquest",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:blacksmithingprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:leatherworkingprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:alchemyprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:herbalismprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:miningprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:tailoringprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:engineeringprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:enchantingprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:skinningprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:jewelcraftingprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:inscriptionprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:elementaloverflow",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:stormsigil",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:dragonscaleexpedition",
+                    category = "btwtodo:reputation",
+                },
+                {
+                    id = "btwtodo:iskaaratuskarr",
+                    category = "btwtodo:reputation",
+                },
+                {
+                    id = "btwtodo:maruukcentaur",
+                    category = "btwtodo:reputation",
+                },
+                {
+                    id = "btwtodo:valdrakkenaccord",
+                    category = "btwtodo:reputation",
+                },
+                {
+                    id = "btwtodo:winterpeltfurbolg",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:artisansconsortium",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:cobaltassembly",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:sabellian",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:wrathion",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                },
+            },
+        }
+    })
+
+    Internal.RegisterCustomStateFunction("GetFirstProfession", function ()
+        local index = GetProfessions();
+        local skillLineID = select(7, GetProfessionInfo(index));
+        return skillLineID;
+    end)
+    Internal.RegisterCustomStateFunction("GetSecondProfession", function ()
+        local _, index = GetProfessions();
+        local skillLineID = select(7, GetProfessionInfo(index));
+        return skillLineID;
+    end)
+    local skillLineToKnowledgeCurrency = {
+        [164] = 2023, -- Blacksmithing
+        [165] = 2025, -- Leatherworking
+        [171] = 2024, -- Alchemy
+        [182] = 2034, -- Herbalism
+        -- [185] = TEMP, -- Cooking
+        [186] = 2035, -- Mining
+        [197] = 2026, -- Tailoring
+        [202] = 2027, -- Engineering
+        [333] = 2030, -- Enchanting
+        -- [356] = TEMP, -- Fishing
+        [393] = 2033, -- Skinning
+        [755] = 2029, -- Jewelcrafting
+        [773] = 2028, -- Inscription
+    }
+    Internal.RegisterCustomStateFunction("GetProfessionKnowledgeCurrency", function (skillLineID)
+        return skillLineToKnowledgeCurrency[skillLineID];
+    end)
+end

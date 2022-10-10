@@ -22,7 +22,9 @@ local dataBroker = ldb:NewDataObject(ADDON_NAME, {
     end,
     OnEnter = function(button)
         local show = not BtWTodoDataBroker.hideTooltip
-        if InterfaceOptionsFrame:IsShown() then
+        if InterfaceOptionsFrame and InterfaceOptionsFrame:IsShown() then
+            show = BtWTodoConfigPanel.MinimapTooltipButton:GetChecked()
+        elseif SettingsPanel and SettingsPanel:IsShown() then
             show = BtWTodoConfigPanel.MinimapTooltipButton:GetChecked()
         end
         if show then

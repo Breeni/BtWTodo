@@ -57,3 +57,13 @@ function ScriptHandlerMixin:SetScript(scriptType, handler)
     end
 end
 Internal.ScriptHandlerMixin = ScriptHandlerMixin
+
+local INTERFACE_NUMBER = select(4, GetBuildInfo());
+local function IsAtleastInterfaceClosure(interface)
+    return (INTERFACE_NUMBER >= interface) and function () return true end or function () return false end
+end
+Internal.IsDragonflight = IsAtleastInterfaceClosure(100000)
+Internal.IsDragonflightFull = IsAtleastInterfaceClosure(100002)
+Internal.IsEternitysEnd = IsAtleastInterfaceClosure(90200)
+Internal.IsChainsOfDomination = IsAtleastInterfaceClosure(90100)
+Internal.IsShadowlands = IsAtleastInterfaceClosure(90000)

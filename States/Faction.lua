@@ -10,10 +10,11 @@ local factionMapNameToID = {}
 
 local FactionMixin = CreateFromMixins(External.StateMixin)
 function FactionMixin:Init(factionID)
+    local GetFriendshipReputation = C_GossipInfo and C_GossipInfo.GetFriendshipReputation or GetFriendshipReputation
 	External.StateMixin.Init(self, factionID)
 
     if Internal.data and Internal.data.factions and Internal.data.factions[factionID] then
-		Mixin(self, Internal.data.currencies[factionID]);
+		Mixin(self, Internal.data.factions[factionID]);
     end
     if BtWTodoCache.factions[factionID] then
 		Mixin(self, BtWTodoCache.factions[factionID]);
@@ -23,6 +24,7 @@ function FactionMixin:Init(factionID)
     self.name, self.description, _, _, _, _, self.canToggleAtWar = GetFactionInfoByID(self:GetID())
     self.max = (select(3, GetFriendshipReputation(self:GetID()))) or 42000
     self.paragonMax = select(2, C_Reputation.GetFactionParagonInfo(self:GetID())) or 0
+    self.isMajorFaction = (C_MajorFactions and C_MajorFactions.GetMajorFactionData and C_MajorFactions.GetMajorFactionData(factionID)) ~= nil
 end
 function FactionMixin:GetDisplayName()
     return string.format(L["Faction: %s"], self:GetName())
@@ -46,9 +48,17 @@ function FactionMixin:HasParagonAvailable()
 		return self:GetCharacter():GetData("factionParagonAvailable", self:GetID())
     end
 end
+function FactionMixin:IsMajorFaction()
+    return self.isMajorFaction
+end
 function FactionMixin:GetStanding()
 	if self:GetCharacter():IsPlayer() then
-		return select(3, GetFactionInfoByID(self:GetID())) or 0
+        if self.isMajorFaction then
+            local majorFactionData = C_MajorFactions.GetMajorFactionData(self:GetID())
+            return majorFactionData.renownLevel or 0
+        end
+
+        return (select(3, GetFactionInfoByID(self:GetID())) or 0)
 	else
 		return self:GetCharacter():GetData("factionStanding", self:GetID()) or 0
 	end
@@ -61,6 +71,11 @@ function FactionMixin:GetMaxQuantity()
 end
 function FactionMixin:GetQuantity()
 	if self:GetCharacter():IsPlayer() then
+        if self.isMajorFaction then
+            local majorFactionData = C_MajorFactions.GetMajorFactionData(self:GetID())
+            return (majorFactionData.renownLevelThreshold or 0) * ((majorFactionData.renownLevel or 1) - 1) + (majorFactionData.renownReputationEarned or 0)
+        end
+
         return (select(6, GetFactionInfoByID(self:GetID())) or 0)
 	else
 		return self:GetCharacter():GetData("factionQuantity", self:GetID()) or 0
@@ -74,6 +89,11 @@ function FactionMixin:GetTotalMaxQuantity()
 end
 function FactionMixin:GetTotalQuantity()
 	if self:GetCharacter():IsPlayer() then
+        if self.isMajorFaction then
+            local majorFactionData = C_MajorFactions.GetMajorFactionData(self:GetID())
+            return (majorFactionData.renownLevelThreshold or 0) * ((majorFactionData.renownLevel or 1) - 1) + (majorFactionData.renownReputationEarned or 0)
+        end
+
         local currentValue, _, _, hasRewardPending = C_Reputation.GetFactionParagonInfo(self:GetID())
         if currentValue ~= nil then
             currentValue = currentValue % 10000
@@ -81,6 +101,7 @@ function FactionMixin:GetTotalQuantity()
                 currentValue = currentValue + 10000
             end
         end
+
         local standingMin, _, standingValue = select(4, GetFactionInfoByID(self:GetID()))
         return (standingMin or 0) + (standingValue or 0) + (currentValue or 0)
 	else
@@ -92,10 +113,16 @@ function FactionMixin:IsTotalCapped()
 end
 function FactionMixin:GetStandingMaxQuantity()
 	if self:GetCharacter():IsPlayer() then
+        if self.isMajorFaction then
+            local majorFactionData = C_MajorFactions.GetMajorFactionData(self:GetID())
+            return majorFactionData.renownLevelThreshold or 0
+        end
+
         local currentValue, threshold = C_Reputation.GetFactionParagonInfo(self:GetID())
         if currentValue ~= nil and currentValue ~= 0 then
             return threshold
         end
+
         local standingMin, standingMax = select(4, GetFactionInfoByID(self:GetID()))
         return standingMax - standingMin
 	else
@@ -104,6 +131,11 @@ function FactionMixin:GetStandingMaxQuantity()
 end
 function FactionMixin:GetStandingQuantity()
 	if self:GetCharacter():IsPlayer() then
+        if self.isMajorFaction then
+            local majorFactionData = C_MajorFactions.GetMajorFactionData(self:GetID())
+            return majorFactionData.renownReputationEarned or 0
+        end
+
         local currentValue, _, _, hasRewardPending = C_Reputation.GetFactionParagonInfo(self:GetID())
         if currentValue ~= nil and currentValue ~= 0 then
             currentValue = currentValue % 10000
@@ -112,6 +144,7 @@ function FactionMixin:GetStandingQuantity()
             end
             return currentValue
         end
+
         local standingMin, _, standingValue = select(4, GetFactionInfoByID(self:GetID()))
         return standingValue - standingMin
 	else

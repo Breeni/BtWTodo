@@ -46,6 +46,7 @@ States/MythicPlusRuns.lua
 States/PvPRating.lua
 States/Quest.lua
 States/Torghast.lua
+States/TraitCurrency.lua
 States/Vault.lua
 
 Share.xml

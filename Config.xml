@@ -792,6 +792,7 @@
 						<KeyValues>
 							<KeyValue key="hideCharCount" value="true" type="boolean"/>
 							<KeyValue key="cursorOffset" value="0" type="number"/>
+							<KeyValue key="maxLetters" value="0" type="number"/>
 						</KeyValues>
 						<Layers>
 							<Layer level="OVERLAY">
@@ -877,6 +878,7 @@
 						<KeyValues>
 							<KeyValue key="hideCharCount" value="true" type="boolean"/>
 							<KeyValue key="cursorOffset" value="0" type="number"/>
+							<KeyValue key="maxLetters" value="0" type="number"/>
 						</KeyValues>
 						<Layers>
 							<Layer level="OVERLAY">

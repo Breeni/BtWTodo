@@ -2214,9 +2214,9 @@ function BtWTodoConfigTodoItemMixin:Init(data)
     self.VisibilityButton.texture:SetTexture(data.hidden and 136315 or 136293)
     if data.type == "todo" then
         if BtWTodoConfigTodoPanel.todos[data.todo] then
-            self:SetText(BtWTodoConfigTodoPanel.todos[data.todo].name)
+            self:SetText(BtWTodoConfigTodoPanel.todos[data.todo].name or L["Unnamed"])
         else
-            self:SetText(External.GetTodoName(data.todo))
+            self:SetText(External.GetTodoName(data.todo, true) or format("|cFF990000%s|r (%s)", L["Missing Todo"], data.todo))
         end
         self.Text:SetTextColor(1, 1, 1, 1)
     elseif data.type == "category" then
@@ -2352,11 +2352,19 @@ function BtWTodoConfigListsPanelMixin:OnLoad()
     do -- Todos
         local view = CreateScrollBoxListLinearView();
         view:SetElementExtent(30);
-        view:SetElementInitializer("Button", "BtWTodoConfigTodoItemTemplate", function(button, elementData)
-            button:Init(elementData);
-            local startIndex, endIndex = self.TodoScrollBox:GetDragRange()
-            button.Drag:SetShown(startIndex and elementData.orderIndex >= startIndex and elementData.orderIndex <= endIndex)
-        end);
+        if Internal.IsDragonflight() then
+            view:SetElementInitializer("BtWTodoConfigTodoItemTemplate", function(button, elementData)
+                button:Init(elementData);
+                local startIndex, endIndex = self.TodoScrollBox:GetDragRange()
+                button.Drag:SetShown(startIndex and elementData.orderIndex >= startIndex and elementData.orderIndex <= endIndex)
+            end);
+        else
+            view:SetElementInitializer("Button", "BtWTodoConfigTodoItemTemplate", function(button, elementData)
+                button:Init(elementData);
+                local startIndex, endIndex = self.TodoScrollBox:GetDragRange()
+                button.Drag:SetShown(startIndex and elementData.orderIndex >= startIndex and elementData.orderIndex <= endIndex)
+            end);
+        end
         ScrollUtil.InitScrollBoxListWithScrollBar(self.TodoScrollBox, self.TodoScrollBar, view);
     end
 
@@ -2655,11 +2663,19 @@ function BtWTodoConfigWindowsPanelMixin:OnLoad()
     do -- Characters
         local view = CreateScrollBoxListLinearView();
         view:SetElementExtent(30);
-        view:SetElementInitializer("Button", "BtWTodoConfigCharacterItemTemplate", function(button, elementData)
-            button:Init(elementData);
-            local startIndex, endIndex = self.CharacterScrollBox:GetDragRange()
-            button.Drag:SetShown(startIndex and elementData.orderIndex >= startIndex and elementData.orderIndex <= endIndex)
-        end);
+        if Internal.IsDragonflight() then
+            view:SetElementInitializer("BtWTodoConfigCharacterItemTemplate", function(button, elementData)
+                button:Init(elementData);
+                local startIndex, endIndex = self.CharacterScrollBox:GetDragRange()
+                button.Drag:SetShown(startIndex and elementData.orderIndex >= startIndex and elementData.orderIndex <= endIndex)
+            end);
+        else
+            view:SetElementInitializer("Button", "BtWTodoConfigCharacterItemTemplate", function(button, elementData)
+                button:Init(elementData);
+                local startIndex, endIndex = self.CharacterScrollBox:GetDragRange()
+                button.Drag:SetShown(startIndex and elementData.orderIndex >= startIndex and elementData.orderIndex <= endIndex)
+            end);
+        end
         ScrollUtil.InitScrollBoxListWithScrollBar(self.CharacterScrollBox, self.CharacterScrollBar, view);
     end
 

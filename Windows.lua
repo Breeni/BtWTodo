@@ -230,9 +230,15 @@ BtWTodoViewMixin = {}
 function BtWTodoViewMixin:OnLoad()
 	local view = CreateScrollBoxListLinearView();
 	view:SetElementExtent(self:GetItemHeight())
-	view:SetElementInitializer(self.rowType or "Frame", self.rowTemplate or "BtWTodoScrollRowTemplate", function(list, elementData)
-		list:Init(elementData, self:GetItemWidth(), self:GetItemHeight());
-	end);
+	if Internal.IsDragonflight() then
+		view:SetElementInitializer(self.rowTemplate or "BtWTodoScrollRowTemplate", function(list, elementData)
+			list:Init(elementData, self:GetItemWidth(), self:GetItemHeight());
+		end);
+	else
+		view:SetElementInitializer(self.rowType or "Frame", self.rowTemplate or "BtWTodoScrollRowTemplate", function(list, elementData)
+			list:Init(elementData, self:GetItemWidth(), self:GetItemHeight());
+		end);
+	end
 
 	ScrollUtil.InitScrollBoxListWithScrollBar(self.ScrollBox, self.ScrollBar, view);
 end
@@ -369,9 +375,11 @@ function BtWTodoFrameMixin:SetList(id)
 	local todos = {}
 	for _,item in ipairs(list.todos) do
 		if not item.hidden then
-			local todo = External.CreateTodoByID(item.id)
-			todo.category = item.category
-			todos[#todos+1] = todo
+			xpcall(function ()
+				local todo = External.CreateTodoByID(item.id)
+				todo.category = item.category
+				todos[#todos+1] = todo
+			end, geterrorhandler())
 		end
 	end
 	self:SetTodos(todos)

@@ -98,7 +98,7 @@ function VaultMixin:GetEncounters()
 	local encounters
 	local character = self:GetCharacter()
 	if character:IsPlayer() then
-		encounters = C_WeeklyRewards.GetActivityEncounterInfo(self:GetID(), 3)
+		encounters = C_WeeklyRewards.GetActivityEncounterInfo(self:GetID(), 3) or {}
 		table.sort(encounters, function(a, b)
 			if a.instanceID ~= b.instanceID then
 				return a.instanceID < b.instanceID;

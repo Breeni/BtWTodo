@@ -265,7 +265,7 @@ function External.GetCategoryByName(name)
     end
 end
 
-function External.GetTodoName(id)
+function External.GetTodoName(id, dontError)
     local tbl
     if BtWTodoData[id] then
         tbl = BtWTodoData[id]
@@ -273,7 +273,11 @@ function External.GetTodoName(id)
         tbl = registeredTodos[id]
     end
     if tbl == nil then
-        error("External.GetTodoName(id): unknown todo " .. tostring(id))
+        if not dontError then
+            error("External.GetTodoName(id): unknown todo " .. tostring(id))
+        else
+            return
+        end
     end
 
     return tbl.name

@@ -3,11 +3,17 @@ local External = _G[ADDON_NAME]
 local L = Internal.L
 
 local challengeMapIDs = {
+    -- Mists of Pandaria
+      2, -- Temple of the Jade Serpent
+
     -- Warlords of Draenor
+    165, -- Shadowmoon Burial Grounds
     166, -- Grimrail
     169, -- Iron Docks
 
     -- Legion
+    200, -- Halls of Valor
+    210, -- Court of Stars
     227, -- Lower Kara
     234, -- Upper Kara
 
@@ -26,8 +32,6 @@ local challengeMapIDs = {
     370, -- Workshop
 
     -- Shadowlands
-
-    -- Shadowlands
     375, -- mists
     376, -- nw
     377, -- dos
@@ -38,6 +42,16 @@ local challengeMapIDs = {
     382, -- top
     391, -- streets
     392, -- gambit
+
+    -- Dragonflight
+    399, -- Ruby Life Pools
+    400, -- The Nokhud Offensive
+    401, -- The Azure Vault
+    402, -- Algeth'ar Academy
+    403, -- Uldaman: Legacy of Tyr
+    404, -- Neltharus
+    405, -- Brackenhide Hollow
+    406, -- Halls of Infusion
 }
 local sortedNames = {}
 local idToNameMap = {
@@ -47,9 +61,12 @@ local nameToIDMap = {
     [L["Overall"]] = 0,
 }
 for _,id in ipairs(challengeMapIDs) do
-    sortedNames[#sortedNames+1] = C_ChallengeMode.GetMapUIInfo(id)
-    idToNameMap[id] = C_ChallengeMode.GetMapUIInfo(id)
-    nameToIDMap[C_ChallengeMode.GetMapUIInfo(id)] = id
+    local info = C_ChallengeMode.GetMapUIInfo(id)
+    if info then
+        sortedNames[#sortedNames+1] = info
+        idToNameMap[id] = info
+        nameToIDMap[info] = id
+    end
 end
 table.sort(sortedNames)
 
