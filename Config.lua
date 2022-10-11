@@ -2826,7 +2826,7 @@ function BtWTodoConfigWindowsPanelMixin:refresh()
 end
 
 function External.OpenConfiguration()
-	if not InterfaceOptionsFrame:IsShown() then
+	if InterfaceOptionsFrame and not InterfaceOptionsFrame:IsShown() then
         InterfaceOptionsFrame_Show()
     end
     InterfaceOptionsFrame_OpenToCategory(ADDON_NAME)
