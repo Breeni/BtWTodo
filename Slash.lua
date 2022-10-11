@@ -7,7 +7,7 @@ local ldbi = LibStub("LibDBIcon-1.0")
 SLASH_BTWTODO1 = "/btwtodo"
 SlashCmdList["BTWTODO"] = function(msg)
     if msg == "minimap" then
-        if InterfaceOptionsFrame:IsShown() then
+        if (InterfaceOptionsFrame and InterfaceOptionsFrame:IsShown()) or (SettingsPanel and SettingsPanel:IsShown()) then
             BtWTodoConfigPanel.MinimapIconButton:Click()
         else
             local icon = ldbi:GetMinimapButton(ADDON_NAME)
