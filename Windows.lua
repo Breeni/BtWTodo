@@ -412,9 +412,8 @@ end
 BtWTodoMainFrameMixin = {}
 function BtWTodoMainFrameMixin:OnLoad()
 	BtWTodoFrameMixin.OnLoad(self)
-	self.TitleText:SetText(ADDON_NAME)
-	self.TitleText:SetHeight(24)
-	
+	self:SetTitle(ADDON_NAME)
+
     tinsert(UISpecialFrames, self:GetName());
 end
 
