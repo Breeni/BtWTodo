@@ -10,7 +10,6 @@ local factionMapNameToID = {}
 
 local FactionMixin = CreateFromMixins(External.StateMixin)
 function FactionMixin:Init(factionID)
-    local GetFriendshipReputation = C_GossipInfo and C_GossipInfo.GetFriendshipReputation or GetFriendshipReputation
 	External.StateMixin.Init(self, factionID)
 
     if Internal.data and Internal.data.factions and Internal.data.factions[factionID] then
@@ -22,7 +21,13 @@ function FactionMixin:Init(factionID)
 
     local _
     self.name, self.description, _, _, _, _, self.canToggleAtWar = GetFactionInfoByID(self:GetID())
-    self.max = (select(3, GetFriendshipReputation(self:GetID()))) or 42000
+
+    local friendshipInfo = C_GossipInfo and C_GossipInfo.GetFriendshipReputation and C_GossipInfo.GetFriendshipReputation(self:GetID()) or nil
+    if friendshipInfo then
+        self.max = friendshipInfo.maxRep > 0 and friendshipInfo.maxRep or 42000
+    else
+        self.max = (select(3, GetFriendshipReputation(self:GetID()))) or 42000
+    end
     self.paragonMax = select(2, C_Reputation.GetFactionParagonInfo(self:GetID())) or 0
     self.isMajorFaction = (C_MajorFactions and C_MajorFactions.GetMajorFactionData and C_MajorFactions.GetMajorFactionData(factionID)) ~= nil
 end
@@ -118,6 +123,13 @@ function FactionMixin:GetStandingMaxQuantity()
             return majorFactionData.renownLevelThreshold or 0
         end
 
+        if C_GossipInfo and C_GossipInfo.GetFriendshipReputation then
+            local info = C_GossipInfo.GetFriendshipReputation(self:GetID())
+            if info and info.friendshipFactionID == self:GetID() then
+                return info.nextThreshold
+            end
+        end
+
         local currentValue, threshold = C_Reputation.GetFactionParagonInfo(self:GetID())
         if currentValue ~= nil and currentValue ~= 0 then
             return threshold
@@ -134,6 +146,13 @@ function FactionMixin:GetStandingQuantity()
         if self.isMajorFaction then
             local majorFactionData = C_MajorFactions.GetMajorFactionData(self:GetID())
             return majorFactionData.renownReputationEarned or 0
+        end
+
+        if C_GossipInfo and C_GossipInfo.GetFriendshipReputation then
+            local info = C_GossipInfo.GetFriendshipReputation(self:GetID())
+            if info and info.friendshipFactionID == self:GetID() then
+                return info.standing
+            end
         end
 
         local currentValue, _, _, hasRewardPending = C_Reputation.GetFactionParagonInfo(self:GetID())
