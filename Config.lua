@@ -310,12 +310,12 @@ function BtWTodoAddFrameEditBoxMixin:OnEnterPressed()
 end
 function BtWTodoAddFrameEditBoxMixin:OnTextChanged(userInput)
     if userInput then
-		if self.disallowAutoComplete then
+        if self.disallowAutoComplete then
             self:HideAutoCompleteFrame()
         elseif self:HasAutoCompleteList() then
             self:UpdateAutoCompleteList()
             self.autoCompleteListFrame:Update()
-		end
+        end
     end
 end
 function BtWTodoAddFrameEditBoxMixin:OnKeyDown(key)
@@ -1201,7 +1201,9 @@ function BtWTodoConfigEditorMixin:SetText(text)
     self.EditBox:SetFocus()
 end
 function BtWTodoConfigEditorMixin:GetDisplayText()
-    return self.EditBox:GetDisplayText()
+    local text = self.EditBox:GetText()
+    return text:gsub("|r", ""):gsub("|c[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]","")
+    -- return self.EditBox:GetDisplayText()
 end
 function BtWTodoConfigEditorMixin:GetText()
     return self.EditBox:GetText()
@@ -1653,8 +1655,59 @@ function BtWTodoConfigTodoPanelMixin:OnLoad()
 
     InterfaceOptions_AddCategory(self)
 
-    PanelTemplates_UpdateTabs(self.Edit.FunctionTabHeader)
-    PanelTemplates_UpdateTabs(self.Edit.ModeTabHeader)
+    do
+        self.FunctionTabPool = CreateFramePool("Button", self.Edit.FunctionTabHeader, Internal.IsDragonflight() and "PanelTopTabButtonTemplate" or "TabButtonTemplate");
+        self.Edit.FunctionTabHeader.Tabs = {};
+        local FunctionTabs = {BTWTODO_COMPLETED, BTWTODO_TEXT, BTWTODO_CLICK, BTWTODO_TOOLTIP};
+        local previous
+        for i=1,#FunctionTabs do
+            local tab = self.FunctionTabPool:Acquire();
+            tab:SetID(i);
+            if previous then
+                tab:SetPoint("LEFT", previous, "RIGHT", 0, 0);
+            else
+                tab:SetPoint("TOPLEFT", 0, 0);
+            end
+            tab:SetText(FunctionTabs[i]);
+            tab:SetScript("OnClick", function (self)
+                self:GetParent():GetParent():GetParent():SetEditor(self:GetID())
+                PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+            end)
+            self.Edit.FunctionTabHeader.Tabs[tab:GetID()] = tab;
+            PanelTemplates_TabResize(tab);
+            tab:Show();
+            previous = tab;
+        end
+        PanelTemplates_UpdateTabs(self.Edit.FunctionTabHeader)
+    end
+
+    do
+        self.ModeTabPool = CreateFramePool("Button", self.Edit.ModeTabHeader, Internal.IsDragonflight() and "PanelTopTabButtonTemplate" or "TabButtonTemplate");
+        self.Edit.ModeTabHeader.Tabs = {};
+        local ModeTabs = {BTWTODO_ADVANCED, BTWTODO_BASIC};
+        local previous
+        for i=1,#ModeTabs do
+            local tab = self.ModeTabPool:Acquire();
+            tab:SetID(i);
+            if previous then
+                tab:SetPoint("RIGHT", previous, "LEFT", 0, 0);
+            else
+                tab:SetPoint("TOPRIGHT", 0, 0);
+            end
+            tab.isDisabled = i ~= 1;
+            tab:SetEnabled(i == 1); -- Only Advanced is enabled atm
+            tab:SetText(ModeTabs[i]);
+            tab:SetScript("OnClick", function (self)
+                self:GetParent():GetParent():GetParent():SetMode(self:GetID())
+                PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+            end)
+            self.Edit.ModeTabHeader.Tabs[tab:GetID()] = tab;
+            PanelTemplates_TabResize(tab);
+            tab:Show();
+            previous = tab;
+        end
+        PanelTemplates_UpdateTabs(self.Edit.ModeTabHeader)
+    end
 end
 function BtWTodoConfigTodoPanelMixin:ValidateScript()
     if not self.todo then
@@ -1818,11 +1871,11 @@ function BtWTodoConfigTodoPanelMixin:SetTodo(id)
     self:Update()
 
     -- I dont know why, but if we dont reset the first tabs anchor they wont show, these anchors are in the xml already
-    self.Edit.ModeTabHeader.Tab1:ClearAllPoints()
-    self.Edit.ModeTabHeader.Tab1:SetPoint("TOPRIGHT", 0, 0)
+    -- self.Edit.ModeTabHeader.Tabs[1]:ClearAllPoints()
+    -- self.Edit.ModeTabHeader.Tabs[1]:SetPoint("TOPRIGHT", 0, 0)
 
-    self.Edit.FunctionTabHeader.Tab1:ClearAllPoints()
-    self.Edit.FunctionTabHeader.Tab1:SetPoint("TOPLEFT", 0, 0)
+    -- self.Edit.FunctionTabHeader.Tabs[1]:ClearAllPoints()
+    -- self.Edit.FunctionTabHeader.Tabs[1]:SetPoint("TOPLEFT", 0, 0)
 
     return self.todo.driver
 end

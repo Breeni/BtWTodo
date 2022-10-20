@@ -461,6 +461,7 @@ new_read_globals = {
     'PanelTemplates_GetSelectedTab',
     'PanelTemplates_SetNumTabs',
     'PanelTemplates_SetTab',
+    'PanelTemplates_TabResize',
     'PanelTemplates_UpdateTabs',
     'PixelUtil.SetHeight',
     'PixelUtil.SetPoint',

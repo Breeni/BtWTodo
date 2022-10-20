@@ -563,55 +563,6 @@
 							<KeyValue key="numTabs" value="4" type="number"/>
 							<KeyValue key="selectedTab" value="1" type="number"/>
 						</KeyValues>
-						<Frames>
-							<Button name="$parentTab1" parentKey="Tab1" inherits="TabButtonTemplate" text="BTWTODO_COMPLETED" id="1" parentArray="Tabs">
-								<Anchors>
-									<Anchor point="TOPLEFT" x="0" y="0"/>
-								</Anchors>
-								<Scripts>
-									<OnClick>
-										self:GetParent():GetParent():GetParent():SetEditor(self:GetID())
-										PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
-									</OnClick>
-								</Scripts>
-							</Button>
-							<Button name="$parentTab2" parentKey="Tab2" inherits="TabButtonTemplate" text="BTWTODO_TEXT" id="2" parentArray="Tabs">
-								<Anchors>
-									<Anchor point="LEFT" relativeKey="$parent.Tab1" relativePoint="RIGHT"/>
-								</Anchors>
-								<Scripts>
-									<OnClick>
-										self:GetParent():GetParent():GetParent():SetEditor(self:GetID())
-										PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
-									</OnClick>
-								</Scripts>
-							</Button>
-							<Button name="$parentTab3" parentKey="Tab3" inherits="TabButtonTemplate" text="BTWTODO_CLICK" id="3" parentArray="Tabs">
-								<Anchors>
-									<Anchor point="LEFT" relativeKey="$parent.Tab2" relativePoint="RIGHT"/>
-								</Anchors>
-								<Scripts>
-									<OnClick>
-										self:GetParent():GetParent():GetParent():SetEditor(self:GetID())
-										PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
-									</OnClick>
-								</Scripts>
-							</Button>
-							<Button name="$parentTab4" parentKey="Tab4" inherits="TabButtonTemplate" text="BTWTODO_TOOLTIP" id="4" parentArray="Tabs">
-								<Anchors>
-									<Anchor point="LEFT" relativeKey="$parent.Tab3" relativePoint="RIGHT"/>
-								</Anchors>
-								<Scripts>
-									<OnClick>
-										self:GetParent():GetParent():GetParent():SetEditor(self:GetID())
-										PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
-									</OnClick>
-								</Scripts>
-							</Button>
-						</Frames>
-						<Scripts>
-							<OnLoad function="PanelTemplates_UpdateTabs"/>
-						</Scripts>
 					</Frame>
 					<Frame name="$parentModeTabHeader" parentKey="ModeTabHeader">
 						<Size x="192" y="32"/>
@@ -623,36 +574,6 @@
 							<KeyValue key="numTabs" value="2" type="number"/>
 							<KeyValue key="selectedTab" value="2" type="number"/>
 						</KeyValues>
-						<Frames>
-							<Button name="$parentTab1" parentKey="Tab1" inherits="TabButtonTemplate" text="BTWTODO_ADVANCED" id="1" parentArray="Tabs">
-								<Anchors>
-									<Anchor point="TOPRIGHT" x="0" y="0"/>
-								</Anchors>
-								<Scripts>
-									<OnClick>
-										self:GetParent():GetParent():GetParent():SetMode(self:GetID())
-										PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
-									</OnClick>
-								</Scripts>
-							</Button>
-							<Button name="$parentTab2" parentKey="Tab2" inherits="TabButtonTemplate" text="BTWTODO_BASIC" id="2" parentArray="Tabs">
-								<Anchors>
-									<Anchor point="RIGHT" relativeKey="$parent.Tab1" relativePoint="LEFT"/>
-								</Anchors>
-								<KeyValues>
-									<KeyValue key="isDisabled" value="true" type="boolean"/>
-								</KeyValues>
-								<Scripts>
-									<OnClick>
-										self:GetParent():GetParent():GetParent():SetMode(self:GetID())
-										PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
-									</OnClick>
-								</Scripts>
-							</Button>
-						</Frames>
-						<Scripts>
-							<OnLoad function="PanelTemplates_UpdateTabs"/>
-						</Scripts>
 					</Frame>
 					<Frame parentKey="Inset" useParentLevel="true" inherits="InsetFrameTemplate">
 						<Anchors>
