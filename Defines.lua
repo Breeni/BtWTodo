@@ -67,3 +67,7 @@ Internal.IsDragonflightFull = IsAtleastInterfaceClosure(100002)
 Internal.IsEternitysEnd = IsAtleastInterfaceClosure(90200)
 Internal.IsChainsOfDomination = IsAtleastInterfaceClosure(90100)
 Internal.IsShadowlands = IsAtleastInterfaceClosure(90000)
+
+Internal.IsDragonflightExpansion = function ()
+    return GetExpansionLevel() == LE_EXPANSION_DRAGONFLIGHT
+end
