@@ -2390,13 +2390,14 @@ if Internal.IsDragonflightFull() then
             name = L["Dragonscale Expedition"],
             states = {
                 { type = "faction", id = 2507, },
+                { type = "currency", id = 2021, },
             },
             completed = "return states[1]:IsCapped()",
             text = [[
 if self:IsCompleted() then
     return Images.COMPLETE
 else
-    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+    return format("%s / %s (%d / %d)", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity(), states[2]:GetQuantity(), states[2]:GetMaxQuantity())
 end
 ]],
         },
@@ -2405,13 +2406,14 @@ end
             name = L["Iskaara Tuskarr"],
             states = {
                 { type = "faction", id = 2511, },
+                { type = "currency", id = 2087, },
             },
             completed = "return states[1]:IsCapped()",
             text = [[
 if self:IsCompleted() then
     return Images.COMPLETE
 else
-    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+    return format("%s / %s (%d / %d)", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity(), states[2]:GetQuantity(), states[2]:GetMaxQuantity())
 end
 ]],
         },
@@ -2420,13 +2422,14 @@ end
             name = L["Maruuk Centaur"],
             states = {
                 { type = "faction", id = 2503, },
+                { type = "currency", id = 2002, },
             },
             completed = "return states[1]:IsCapped()",
             text = [[
 if self:IsCompleted() then
     return Images.COMPLETE
 else
-    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+    return format("%s / %s (%d / %d)", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity(), states[2]:GetQuantity(), states[2]:GetMaxQuantity())
 end
 ]],
         },
@@ -2435,13 +2438,14 @@ end
             name = L["Valdrakken Accord"],
             states = {
                 { type = "faction", id = 2510, },
+                { type = "currency", id = 2088, },
             },
             completed = "return states[1]:IsCapped()",
             text = [[
 if self:IsCompleted() then
     return Images.COMPLETE
 else
-    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+    return format("%s / %s (%d / %d)", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity(), states[2]:GetQuantity(), states[2]:GetMaxQuantity())
 end
 ]],
         },
@@ -2524,9 +2528,10 @@ end
             id = "btwtodo:dragonflightworldboss",
             name = L["World Boss"],
             states = {
-                { type = "quest", id = 64547, }, --@TODO
+                { type = "quest", id = 69929, }, -- World Quest for Strunraan
+                { type = "quest", id = 72055, }, -- Possible tracking quest for Strunraan
             },
-            completed = "return states[1]:IsCompleted()",
+            completed = [[return tCount(states, "IsCompleted") > 0]],
             text = DEFAULT_TEXT_FUNCTION,
         },
     })
@@ -2661,11 +2666,6 @@ end
                     category = "btwtodo:reputation",
                 },
                 {
-                    id = "btwtodo:winterpeltfurbolg",
-                    category = "btwtodo:reputation",
-                    hidden = true,
-                },
-                {
                     id = "btwtodo:artisansconsortium",
                     category = "btwtodo:reputation",
                     hidden = true,
@@ -2682,6 +2682,11 @@ end
                 },
                 {
                     id = "btwtodo:wrathion",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:winterpeltfurbolg",
                     category = "btwtodo:reputation",
                     hidden = true,
                 },
