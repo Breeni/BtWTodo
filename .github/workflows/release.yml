@@ -22,4 +22,4 @@ jobs:
           CF_SOURCE: Locales/enUS.lua
 
       - name: Package and release
-        uses: BigWigsMods/packager@v1
+        uses: BigWigsMods/packager@v2
