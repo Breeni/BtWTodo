@@ -63,6 +63,11 @@ function FactionMixin:GetStanding()
             return majorFactionData.renownLevel or 0
         end
 
+        local friendshipInfo = C_GossipInfo and C_GossipInfo.GetFriendshipReputation and C_GossipInfo.GetFriendshipReputation(self:GetID()) or nil
+        if friendshipInfo then
+            return friendshipInfo.standing
+        end
+
         return (select(3, GetFactionInfoByID(self:GetID())) or 0)
 	else
 		return self:GetCharacter():GetData("factionStanding", self:GetID()) or 0
@@ -79,6 +84,11 @@ function FactionMixin:GetQuantity()
         if self.isMajorFaction then
             local majorFactionData = C_MajorFactions.GetMajorFactionData(self:GetID())
             return (majorFactionData.renownLevelThreshold or 0) * ((majorFactionData.renownLevel or 1) - 1) + (majorFactionData.renownReputationEarned or 0)
+        end
+
+        local friendshipInfo = C_GossipInfo and C_GossipInfo.GetFriendshipReputation and C_GossipInfo.GetFriendshipReputation(self:GetID()) or nil
+        if friendshipInfo then
+            return friendshipInfo.standing
         end
 
         return (select(6, GetFactionInfoByID(self:GetID())) or 0)
@@ -125,8 +135,9 @@ function FactionMixin:GetStandingMaxQuantity()
 
         if C_GossipInfo and C_GossipInfo.GetFriendshipReputation then
             local info = C_GossipInfo.GetFriendshipReputation(self:GetID())
+
             if info and info.friendshipFactionID == self:GetID() then
-                return info.nextThreshold
+                return info.nextThreshold - info.reactionThreshold
             end
         end
 
@@ -151,7 +162,7 @@ function FactionMixin:GetStandingQuantity()
         if C_GossipInfo and C_GossipInfo.GetFriendshipReputation then
             local info = C_GossipInfo.GetFriendshipReputation(self:GetID())
             if info and info.friendshipFactionID == self:GetID() then
-                return info.standing
+                return info.standing - info.reactionThreshold
             end
         end
 
