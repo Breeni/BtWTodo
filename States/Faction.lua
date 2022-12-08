@@ -330,3 +330,15 @@ Internal.RegisterEvent("PLAYER_ENTERING_WORLD", function ()
         end
     end
 end)
+
+Internal.RegisterCustomStateFunction("GetFactionRank", function (quantity, ranks)
+    if quantity == 0 then
+        return 0
+    end
+    for i,amount in ipairs(ranks) do
+        if quantity <= amount then
+            return i - (ranks[1] == 0 and 1 or 0)
+        end
+    end
+    return #ranks + (ranks[1] == 0 and 1 or 0)
+end)

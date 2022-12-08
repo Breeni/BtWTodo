@@ -53,6 +53,12 @@ local specialEventQuests = {
 
 	-- Death-Bound Shard
 	[64347] = "CHAT_MSG_LOOT",
+
+	-- Grand Hunts
+	[70906] = "ITEM_PUSH",
+
+	-- Dragonbane Keep
+	[70866] = "ITEM_PUSH",
 }
 
 local QuestMixin = CreateFromMixins(External.StateMixin)
@@ -182,12 +188,18 @@ end
 function QuestMixin:GetObjective(index)
 	return self:GetObjectives()[index];
 end
-function QuestMixin:GetObjectiveFulfilled(index)
-	if self:GetCharacter():IsPlayer() then
-		return (select(4, GetQuestObjectiveInfo(self:GetID(), index, false)))
-	else
-		return 0
-	end
+function QuestMixin:GetObjectiveType(index)
+    local objective = self:GetObjective()
+	return objective and objective.type or nil;
+end
+function QuestMixin:GetObjectiveProgress(index)
+    if self:GetCharacter():IsPlayer() then
+        local objectives = C_QuestLog.GetQuestObjectives(self:GetID())
+	    return objectives[index].numFulfilled, objectives[index].numRequired;
+    else
+		local objectives = self:GetCharacter():GetData("questLog", self:GetID())
+        return objectives and objectives[index] and objectives[index].numFulfilled or 0, self:GetObjectives()[index].numRequired;
+    end
 end
 function QuestMixin:RegisterEventsFor(driver)
 	if self:GetCharacter():IsRemote() then

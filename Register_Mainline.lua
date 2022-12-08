@@ -52,6 +52,19 @@ end
 Internal.Get92SeasonWeek = Get92SeasonWeek
 Internal.RegisterCustomStateFunction("Get92SeasonWeek", Get92SeasonWeek)
 
+
+local function GetDFPreSeasonTimestamp(region)
+    local timestamps = {
+        [1] = 1669734000, -- US
+        [2] = 1669849200, -- TW (+115200)
+        [3] = 1669780800, -- EU (+46800)
+        [4] = 1669849200, -- KR (+115200)
+        [5] = 1669849200, -- CN (+115200)
+    }
+    return timestamps[region or GetCurrentRegion()];
+end
+Internal.RegisterCustomStateFunction("GetDFPreSeasonTimestamp", GetDFPreSeasonTimestamp)
+
 local MAX_RENOWN_FOR_WEEK = {
     [0] = 42,
     [1] = 45,
@@ -80,6 +93,80 @@ local function GetSeasonStartTimestamp()
 end
 Internal.GetSeasonStartTimestamp = GetSeasonStartTimestamp
 Internal.RegisterCustomStateFunction("GetSeasonStartTimestamp", GetSeasonStartTimestamp)
+
+local function FormatDuration(duration, format)
+    if not format then
+        format = {hours = true, minutes = true, seconds = true}
+    end
+    if type(format) == "number" then
+        format = {hours = true, minutes = true, seconds = true, count = format}
+    end
+    local count = format.count or 10
+
+    local result = {}
+
+    if format.hours then
+        local amount = (format.minutes and math.floor or math.ceil)(duration / 3600)
+        if amount ~= 0 then
+            result[#result+1] = amount .. " h"
+            duration = duration - amount * 3600
+            count = count - 1
+        end
+    end
+    if format.minutes and count > 0 then
+        local amount = (format.seconds and math.floor or math.ceil)(duration / 60)
+        if amount ~= 0 then
+            result[#result+1] = amount .. " m"
+            duration = duration - amount * 60
+            count = count - 1
+        end
+    end
+    if format.seconds and count > 0 then
+        if duration ~= 0 then
+            result[#result+1] = duration .. " s"
+        end
+    end
+
+    return table.concat(result, " ")
+end
+Internal.RegisterCustomStateFunction("FormatDuration", FormatDuration)
+
+-- Verified for NA and EU
+local function GetDragonbaneKeepCountdown()
+    local start = GetDFPreSeasonTimestamp()
+    local current = GetServerTime()
+    local seconds = (current - start) % 7200
+    if seconds < 3600 then
+        return true, 3600 - seconds
+    else
+        return false, 7200 - seconds
+    end
+end
+Internal.RegisterCustomStateFunction("GetDragonbaneKeepCountdown", GetDragonbaneKeepCountdown)
+
+-- Verified for NA and EU
+local function GetGrandHuntCountdown()
+    local start = GetDFPreSeasonTimestamp()
+    local current = GetServerTime()
+    local seconds = (current - start) % 7200
+    return 7200 - seconds
+end
+Internal.RegisterCustomStateFunction("GetGrandHuntCountdown", GetGrandHuntCountdown)
+
+local function GetCommunityFeastCountdown()
+    local start = GetDFPreSeasonTimestamp() - 1800
+    if GetCurrentRegion() == 1 then
+        start = start - 1800
+    end
+    local current = GetServerTime()
+    local seconds = (current - start) % 12600
+    if seconds < 900 then
+        return true, 900 - seconds
+    else
+        return false, 12600 - seconds
+    end
+end
+Internal.RegisterCustomStateFunction("GetCommunityFeastCountdown", GetCommunityFeastCountdown)
 
 local function tMap(tbl, func)
 	local result = {}
@@ -299,7 +386,6 @@ do
         (GetAchievementCriteriaInfoByID(15054, 51654)), -- L["Gralebboih"],
         (GetAchievementCriteriaInfoByID(15054, 51639)), -- L["The Mass of Souls"],
     }
-    _G['bosses'] = bosses
     local bossRegionOffset = {
         [1] = 3, -- US
         [2] = 0, -- TW
@@ -1878,7 +1964,7 @@ if Internal.IsEternitysEnd() then
     })
 end
 
-if Internal.IsDragonflightExpansion() then
+if Internal.IsDragonflight() then
     External.RegisterTodos({
         {
             id = "btwtodo:dragonflyingglyphs",
@@ -2126,9 +2212,13 @@ else
 end
 ]],
         },
-        { --@TODO
+        {
             id = "btwtodo:artisansconsortium",
             name = L["Artisan's Consortium"],
+            version = 1,
+            changeLog = {
+                L["Updated to show faction rank"],
+            },
             states = {
                 { type = "faction", id = 2544, },
             },
@@ -2137,13 +2227,19 @@ end
 if self:IsCompleted() then
     return Images.COMPLETE
 else
-    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+    local ranks = {0, 500, 2500, 5500, 12500}
+    local rank = Custom.GetFactionRank(states[1]:GetQuantity(), ranks)
+    return format("%d / %d (%d / %d)", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity(), rank, #ranks)
 end
 ]],
         },
-        { --@TODO
+        {
             id = "btwtodo:cobaltassembly",
             name = L["Cobalt Assembly"],
+            version = 1,
+            changeLog = {
+                L["Updated to show faction rank"],
+            },
             states = {
                 { type = "faction", id = 2550, },
             },
@@ -2152,13 +2248,19 @@ end
 if self:IsCompleted() then
     return Images.COMPLETE
 else
-    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+    local ranks = {0, 300, 1200, 1360, 10000}
+    local rank = Custom.GetFactionRank(states[1]:GetQuantity(), ranks)
+    return format("%d / %d (%d / %d)", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity(), rank, #ranks)
 end
 ]],
         },
         {
             id = "btwtodo:sabellian",
             name = L["Sabellian"],
+            version = 1,
+            changeLog = {
+                L["Updated to show faction rank"],
+            },
             states = {
                 { type = "faction", id = 2518, },
             },
@@ -2167,13 +2269,18 @@ end
 if self:IsCompleted() then
     return Images.COMPLETE
 else
-    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+    local quantity, max = states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity()
+    return format("%d / %d (%d / %d)", quantity, max, math.ceil(states[1]:GetQuantity() / 8400), math.ceil(states[1]:GetMaxQuantity() / 8400) + 1)
 end
 ]],
         },
         {
             id = "btwtodo:wrathion",
             name = L["Wrathion"],
+            version = 1,
+            changeLog = {
+                L["Updated to show faction rank"],
+            },
             states = {
                 { type = "faction", id = 2517, },
             },
@@ -2182,7 +2289,8 @@ end
 if self:IsCompleted() then
     return Images.COMPLETE
 else
-    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+    local quantity, max = states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity()
+    return format("%d / %d (%d / %d)", quantity, max, math.ceil(states[1]:GetQuantity() / 8400), math.ceil(states[1]:GetMaxQuantity() / 8400) + 1)
 end
 ]],
         },
@@ -2196,13 +2304,123 @@ end
             completed = [[return tCount(states, "IsCompleted") > 0]],
             text = DEFAULT_TEXT_FUNCTION,
         },
+        {
+            id = "btwtodo:aidingtheaccord",
+            name = L["Aiding the Accord"],
+            states = {
+                { type = "quest", id = 70750, },
+                { type = "quest", id = 72068, },
+                { type = "quest", id = 72373, },
+                { type = "quest", id = 72374, },
+                { type = "quest", id = 72375, },
+            },
+            completed = [[return tCount(states, "IsCompleted") > 0]],
+            text = DEFAULT_TEXT_FUNCTION,
+        },
+        {
+            id = "btwtodo:dragonbanekeep",
+            name = L["Siege of Dragonbane Keep"],
+            states = {
+                { type = "quest", id = 70866, },
+            },
+            completed = [[return tCount(states, "IsCompleted") > 0]],
+            text = DEFAULT_TEXT_FUNCTION,
+            tooltip = [[
+tooltip:AddLine(self:GetName())
+
+local active, duration = Custom.GetDragonbaneKeepCountdown()
+if active then
+    tooltip:AddLine(L["Active for"] .. " " .. Custom.FormatDuration(duration, 2), 1, 1, 1)
+else
+    tooltip:AddLine(L["Next event in"] .. " " .. Custom.FormatDuration(duration, 2), 1, 1, 1)
+end
+return 1
+]],
+        },
+        {
+            id = "btwtodo:grandhunts",
+            name = L["Grand Hunts"],
+            states = {
+                { type = "quest", id = 70906, },
+                { type = "quest", id = 73908, },
+                { type = "quest", id = 70906, },
+                { type = "quest", id = 70906, },
+            },
+            completed = [[return tCount(states, "IsCompleted") > 0]],
+            text = DEFAULT_TEXT_FUNCTION,
+            tooltip = [[
+tooltip:AddLine(self:GetName())
+
+local duration = Custom.GetGrandHuntCountdown()
+tooltip:AddLine(L["Moves in"] .. " " .. Custom.FormatDuration(duration, 2), 1, 1, 1)
+return 1
+]],
+        },
+        {
+            id = "btwtodo:communityfeast",
+            name = L["Community Feast"],
+            states = {
+                { type = "quest", id = 70893, },
+                -- { type = "quest", id = 74097, }, -- Boss tracking quest
+            },
+            completed = [[return tCount(states, "IsCompleted") > 0]],
+            text = [[
+local state = states[1];
+if state:IsCompleted() then
+    return Images.COMPLETE
+elseif state:IsComplete() then
+    return Images.QUEST_TURN_IN
+elseif state:IsActive() then
+    local objectiveType = state:GetObjectiveType(1)
+    local fulfilled, required = state:GetObjectiveProgress(1)
+    local text
+    if objectiveType == "progressbar" then
+        text = format("%d%%", math.ceil(fulfilled / required * 100))
+    else
+        text = format("%d / %d", fulfilled, required)
+    end
+    return Colors.STALLED:WrapTextInColorCode(text)
+else
+    return "-"
+end
+]],
+            tooltip = [[
+tooltip:AddLine(self:GetName())
+
+local active, duration = Custom.GetCommunityFeastCountdown()
+if active then
+    tooltip:AddLine(L["Active for"] .. " " .. Custom.FormatDuration(duration, 2), 1, 1, 1)
+else
+    tooltip:AddLine(L["Next event in"] .. " " .. Custom.FormatDuration(duration, 2), 1, 1, 1)
+end
+return 1
+]],
+        },
+        {
+            id = "btwtodo:trialoflements",
+            name = L["Trial of Elements"],
+            states = {
+                { type = "quest", id = 71995, },
+            },
+            completed = [[return tCount(states, "IsCompleted") > 0]],
+            text = DEFAULT_TEXT_FUNCTION,
+        },
+        {
+            id = "btwtodo:trialoftides",
+            name = L["Trial of Tides"],
+            states = {
+                { type = "quest", id = 71033, },
+            },
+            completed = [[return tCount(states, "IsCompleted") > 0]],
+            text = DEFAULT_TEXT_FUNCTION,
+        },
     })
 
     External.RegisterLists({
         {
             id = "btwtodo:100",
             name = L["Dragonflight"],
-            version = 1,
+            version = 2,
             todos = {
                 {
                     id = "btwtodo:itemlevel",
@@ -2235,6 +2453,36 @@ end
                 {
                     id = "btwtodo:dragonflightworldboss",
                     category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:aidingtheaccord",
+                    category = "btwtodo:weekly",
+                    version = 2,
+                },
+                {
+                    id = "btwtodo:dragonbanekeep",
+                    category = "btwtodo:weekly",
+                    version = 2,
+                },
+                {
+                    id = "btwtodo:grandhunts",
+                    category = "btwtodo:weekly",
+                    version = 2,
+                },
+                {
+                    id = "btwtodo:communityfeast",
+                    category = "btwtodo:weekly",
+                    version = 2,
+                },
+                {
+                    id = "btwtodo:trialoflements",
+                    category = "btwtodo:weekly",
+                    version = 2,
+                },
+                {
+                    id = "btwtodo:trialoftides",
+                    category = "btwtodo:weekly",
+                    version = 2,
                 },
                 {
                     id = "btwtodo:dragonislessupplies",
@@ -2386,12 +2634,13 @@ end
     end)
 end
 
+-- Update default list based on patch/season
 if Internal.IsDragonflightExpansion() then
     External.RegisterLists({
         {
             id = "btwtodo:default",
             name = L["Default"],
-            version = 8,
+            version = 9,
             todos = {
                 {
                     id = "btwtodo:itemlevel",
@@ -2506,6 +2755,36 @@ if Internal.IsDragonflightExpansion() then
                     id = "btwtodo:dragonflightworldboss",
                     category = "btwtodo:weekly",
                     version = 8,
+                },
+                {
+                    id = "btwtodo:aidingtheaccord",
+                    category = "btwtodo:weekly",
+                    version = 9,
+                },
+                {
+                    id = "btwtodo:dragonbanekeep",
+                    category = "btwtodo:weekly",
+                    version = 9,
+                },
+                {
+                    id = "btwtodo:grandhunts",
+                    category = "btwtodo:weekly",
+                    version = 9,
+                },
+                {
+                    id = "btwtodo:communityfeast",
+                    category = "btwtodo:weekly",
+                    version = 9,
+                },
+                {
+                    id = "btwtodo:trialoflements",
+                    category = "btwtodo:weekly",
+                    version = 9,
+                },
+                {
+                    id = "btwtodo:trialoftides",
+                    category = "btwtodo:weekly",
+                    version = 9,
                 },
                 {
                     id = "btwtodo:torghast",
