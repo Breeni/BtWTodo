@@ -44,7 +44,7 @@ local function UpdateListVersion(id)
                                 local result = CopyTable(todo)
                                 -- If the previous item has had its category changed then change the new items category too
                                 if registered.todos[i].category == todo.category and list.todos[offset].category ~= registered.todos[i].category then
-                                    result.category = list.todos[i].category
+                                    result.category = list.todos[offset].category
                                 end
                                 table.insert(list.todos, offset + 1, result)
                                 inserted = true
