@@ -59,6 +59,12 @@ local specialEventQuests = {
 
 	-- Dragonbane Keep
 	[70866] = "ITEM_PUSH",
+
+	-- Trial of Elements
+	[71995] = "LOOT_READY",
+
+	-- Trial of Tides
+	[71033] = "LOOT_READY",
 }
 
 local QuestMixin = CreateFromMixins(External.StateMixin)
