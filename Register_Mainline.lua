@@ -2140,7 +2140,7 @@ if Internal.IsDragonflight() then
                 { type = "faction", id = 2507, },
                 { type = "currency", id = 2021, },
             },
-            completed = "return states[1]:IsCapped()",
+            completed = "return states[2]:IsCapped()",
             text = [[
 if self:IsCompleted() then
     return Images.COMPLETE
@@ -2156,7 +2156,7 @@ end
                 { type = "faction", id = 2511, },
                 { type = "currency", id = 2087, },
             },
-            completed = "return states[1]:IsCapped()",
+            completed = "return states[2]:IsCapped()",
             text = [[
 if self:IsCompleted() then
     return Images.COMPLETE
@@ -2172,7 +2172,7 @@ end
                 { type = "faction", id = 2503, },
                 { type = "currency", id = 2002, },
             },
-            completed = "return states[1]:IsCapped()",
+            completed = "return states[2]:IsCapped()",
             text = [[
 if self:IsCompleted() then
     return Images.COMPLETE
@@ -2188,7 +2188,7 @@ end
                 { type = "faction", id = 2510, },
                 { type = "currency", id = 2088, },
             },
-            completed = "return states[1]:IsCapped()",
+            completed = "return states[2]:IsCapped()",
             text = [[
 if self:IsCompleted() then
     return Images.COMPLETE
