@@ -210,7 +210,7 @@ Internal.RegisterEvent("PLAYER_LOGOUT", function ()
 		end
 	end
 	
-	local encounters = C_WeeklyRewards.GetActivityEncounterInfo(Enum.WeeklyRewardChestThresholdType.Raid, 3)
+	local encounters = C_WeeklyRewards.GetActivityEncounterInfo(Enum.WeeklyRewardChestThresholdType.Raid, 3) or {}
     table.sort(encounters, function(a, b)
         return a.uiOrder < b.uiOrder
     end)
