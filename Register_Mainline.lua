@@ -2297,9 +2297,16 @@ end
         {
             id = "btwtodo:dragonflightworldboss",
             name = L["World Boss"],
+            version = 1,
+            changeLog = {
+                L["Added support for Basrikron"],
+            },
             states = {
                 { type = "quest", id = 69929, }, -- World Quest for Strunraan
                 { type = "quest", id = 72055, }, -- Possible tracking quest for Strunraan
+                
+                { type = "quest", id = 69930, }, -- World Quest for Basrikron
+                { type = "quest", id = 72056, }, -- Possible tracking quest for Basrikron -- 72055 ???
             },
             completed = [[return tCount(states, "IsCompleted") > 0]],
             text = DEFAULT_TEXT_FUNCTION,
