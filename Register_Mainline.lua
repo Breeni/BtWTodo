@@ -168,6 +168,18 @@ local function GetCommunityFeastCountdown()
 end
 Internal.RegisterCustomStateFunction("GetCommunityFeastCountdown", GetCommunityFeastCountdown)
 
+local function GetPrimalStormCountdown()
+    local start = GetDFPreSeasonTimestamp()
+    local current = GetServerTime()
+    local seconds = (current - start) % 10800
+    if seconds < 7200 then
+        return true, 7200 - seconds
+    else
+        return false, 10800 - seconds
+    end
+end
+Internal.RegisterCustomStateFunction("GetPrimalStormCountdown", GetPrimalStormCountdown)
+
 local function tMap(tbl, func)
 	local result = {}
 	for k,v in pairs(tbl) do
@@ -2025,6 +2037,29 @@ if Internal.IsDragonflight() then
             text = [[return states[1]:GetQuantity()]],
         },
         {
+            id = "btwtodo:primalstorms",
+            name = L["Primal Storms"],
+            states = {
+                { type = "quest", id = 70753, }, -- Air Invasions -  Primal Air Core -  Dissipating the Air Primalists
+                { type = "quest", id = 70723, }, -- Earth Invasions -  Primal Earth Core -  Shattering the Earth Primalists
+                { type = "quest", id = 70754, }, -- Fire Invasions -  Primal Fire Core -  Extinguishing the Fire Primalists
+                { type = "quest", id = 70752, }, -- Water Invasions -  Primal Water Core -  Vaporizing the Water Primalists
+            },
+            completed = [[return tCount(states, "IsCompleted") == 4]],
+            text = [[
+                local items = {};
+                for index,letter in ipairs({"A", "E", "F", "W"}) do
+                    if states[index]:IsCompleted() then
+                        letter = Colors.COMPLETE:WrapTextInColorCode(letter);
+                    elseif states[index]:IsActive() then
+                        letter = Colors.STALLED:WrapTextInColorCode(letter);
+                    end
+                    items[#items+1] = letter;
+                end
+                return table.concat(items, " / ");
+            ]],
+        },
+        {
             id = "btwtodo:blacksmithingprofessionknowledge",
             name = L["Blacksmithing Profession Knowledge"],
             states = {
@@ -2427,7 +2462,7 @@ return 1
         {
             id = "btwtodo:100",
             name = L["Dragonflight"],
-            version = 2,
+            version = 3,
             todos = {
                 {
                     id = "btwtodo:itemlevel",
@@ -2490,6 +2525,11 @@ return 1
                     id = "btwtodo:trialoftides",
                     category = "btwtodo:weekly",
                     version = 2,
+                },
+                {
+                    id = "btwtodo:primalstorms",
+                    category = "btwtodo:weekly",
+                    version = 3,
                 },
                 {
                     id = "btwtodo:dragonislessupplies",
@@ -2647,7 +2687,7 @@ if Internal.IsDragonflightExpansion() then
         {
             id = "btwtodo:default",
             name = L["Default"],
-            version = 9,
+            version = 10,
             todos = {
                 {
                     id = "btwtodo:itemlevel",
@@ -2792,6 +2832,11 @@ if Internal.IsDragonflightExpansion() then
                     id = "btwtodo:trialoftides",
                     category = "btwtodo:weekly",
                     version = 9,
+                },
+                {
+                    id = "btwtodo:primalstorms",
+                    category = "btwtodo:weekly",
+                    version = 10,
                 },
                 {
                     id = "btwtodo:torghast",
