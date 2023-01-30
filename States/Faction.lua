@@ -137,7 +137,7 @@ function FactionMixin:GetStandingMaxQuantity()
             local info = C_GossipInfo.GetFriendshipReputation(self:GetID())
 
             if info and info.friendshipFactionID == self:GetID() then
-                return info.nextThreshold - info.reactionThreshold
+                return (info.nextThreshold or info.reactionThreshold) - info.reactionThreshold
             end
         end
 
