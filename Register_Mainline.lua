@@ -2387,12 +2387,15 @@ return 1
             name = L["Grand Hunts"],
             states = {
                 { type = "quest", id = 70906, },
-                { type = "quest", id = 73908, },
-                { type = "quest", id = 70906, },
-                { type = "quest", id = 70906, },
+                { type = "quest", id = 71136, }, -- 70002??
+                { type = "quest", id = 71137, },
             },
-            completed = [[return tCount(states, "IsCompleted") > 0]],
-            text = DEFAULT_TEXT_FUNCTION,
+            completed = [[return tCount(states, "IsCompleted") == 3]],
+            text = [[
+return table.concat(tMap(states, function (_, state)
+    return state:IsCompleted() and Images.COMPLETE or "-"
+end), " / ")
+]],
             tooltip = [[
 tooltip:AddLine(self:GetName())
 
