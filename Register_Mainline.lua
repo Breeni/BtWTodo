@@ -9,6 +9,31 @@ local L = Internal.L
 local DEFAULT_COMPLETED_FUNCTION = "return self:IsFlaggedCompleted()"
 local DEFAULT_TEXT_FUNCTION = [[return self:IsCompleted() and Images.COMPLETE or "-"]]
 local DEFAULT_CLICK_FUNCTION = [[self:SetFlaggedCompleted(not self:IsFlaggedCompleted())]]
+local DEFAULT_QUEST_TOOLTIP = [[
+tooltip:AddLine(self:GetName())
+for i=1,#states do
+    local state = states[i]
+    local name = state:GetTitle()
+    if name == "" then
+        name = L["Unknown"]
+    end
+    if state:IsCompleted() then
+        tooltip:AddLine(Images.COMPLETE .. name, 0, 1, 0)
+    elseif state:IsComplete() then
+        tooltip:AddLine(Images.QUEST_TURN_IN .. name, 1, 1, 0)
+    elseif state:IsActive() then
+        local objectiveType = state:GetObjectiveType(1)
+        local fulfilled, required = state:GetObjectiveProgress(1)
+        if objectiveType == "progressbar" then
+            tooltip:AddLine(Images.PADDING .. format("%s (%d%%)", name, math.ceil(fulfilled / required * 100)), 1, 1, 1)
+        else
+            tooltip:AddLine(Images.PADDING .. format("%s (%d/%d)", name, fulfilled, required), 1, 1, 1)
+        end
+    else
+        tooltip:AddLine(Images.QUEST_PICKUP .. name, 1, 1, 1)
+    end
+end
+]]
 
 -- DST doesnt effect daily/weekly/halfweekly resets so these should always be accurate
 local SECONDS_PER_HOUR = 60 * 60
@@ -2468,6 +2493,80 @@ return 1
             },
             completed = [[return tCount(states, "IsCompleted") > 0]],
             text = DEFAULT_TEXT_FUNCTION,
+        },
+        {
+            id = "btwtodo:fishinghole",
+            name = L["Fishing Hole Dailies"],
+            states = {
+                { type = "quest", id = 70438, },
+
+                { type = "quest", id = 70450, },
+
+                { type = "quest", id = 71194, },
+
+                { type = "quest", id = 72072, },
+                { type = "quest", id = 72074, },
+                { type = "quest", id = 72075, },
+            },
+            completed = [[return tCount(states, "IsCompleted") == 3]],
+            text = DEFAULT_TEXT_FUNCTION,
+            tooltip = DEFAULT_QUEST_TOOLTIP,
+        },
+        {
+            id = "btwtodo:rivermouthfishingweeklies",
+            name = L["River Mouth Fishing Weeklies"],
+            states = {
+                -- Catch and Release: Scalebelly Mackerel
+                { type = "quest", id = 70199, },
+                { type = "quest", id = 72828, },
+
+                -- Catch and Release: Thousandbite Piranha
+                { type = "quest", id = 70200, },
+                { type = "quest", id = 72827, },
+
+                -- Catch and Release: Aileron Seamoth
+                { type = "quest", id = 70201, },
+                { type = "quest", id = 72826, },
+
+                -- Catch and Release: Cerulean Spinefish
+                { type = "quest", id = 70202, },
+                { type = "quest", id = 72825, },
+
+                -- Catch and Release: Temporal Dragonhead
+                { type = "quest", id = 70203, },
+                { type = "quest", id = 72824, },
+
+                -- Catch and Release: Islefin Dorado
+                { type = "quest", id = 70935, },
+                { type = "quest", id = 72823, },
+            },
+            completed = [[return tCount(states, "IsCompleted") == 6]],
+            text = DEFAULT_TEXT_FUNCTION,
+            tooltip = [[
+tooltip:AddLine(self:GetName())
+for i=1,#states,2 do
+    local state = states[i+1]
+    local name = states[i]:GetTitle()
+    if name == "" then
+        name = L["Unknown"]
+    end
+    if state:IsCompleted() then
+        tooltip:AddLine(Images.COMPLETE .. name, 0, 1, 0)
+    elseif state:IsComplete() then
+        tooltip:AddLine(Images.QUEST_TURN_IN .. name, 1, 1, 0)
+    elseif state:IsActive() then
+        local objectiveType = state:GetObjectiveType(1)
+        local fulfilled, required = state:GetObjectiveProgress(1)
+        if objectiveType == "progressbar" then
+            tooltip:AddLine(Images.PADDING .. format("%s (%d%%)", name, math.ceil(fulfilled / required * 100)), 1, 1, 1)
+        else
+            tooltip:AddLine(Images.PADDING .. format("%s (%d/%d)", name, fulfilled, required), 1, 1, 1)
+        end
+    else
+        tooltip:AddLine(Images.QUEST_PICKUP .. name, 1, 1, 1)
+    end
+end
+]],
         },
     })
 
