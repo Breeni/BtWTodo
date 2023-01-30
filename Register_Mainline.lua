@@ -2344,7 +2344,14 @@ end
                 { type = "quest", id = 72055, }, -- Possible tracking quest for Strunraan
                 
                 { type = "quest", id = 69930, }, -- World Quest for Basrikron
-                { type = "quest", id = 72056, }, -- Possible tracking quest for Basrikron -- 72055 ???
+                { type = "quest", id = 72056, }, -- Possible tracking quest for Basrikron
+                
+                { type = "quest", id = 69927, }, -- World Quest for Bazual
+                { type = "quest", id = 72054, }, -- Possible tracking quest for Bazual
+                
+                { type = "quest", id = 69928, }, -- World Quest for Liskanoth
+                { type = "quest", id = 72053, }, -- Possible tracking quest for Liskanoth
+                { type = "quest", id = 72057, }, -- Possible tracking quest for Liskanoth
             },
             completed = [[return tCount(states, "IsCompleted") > 0]],
             text = DEFAULT_TEXT_FUNCTION,
