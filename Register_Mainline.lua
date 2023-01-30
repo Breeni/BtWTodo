@@ -2257,7 +2257,10 @@ end
             states = {
                 { type = "faction", id = 2544, },
             },
-            completed = "return states[1]:IsCapped()",
+            completed = [[
+local ranks = {0, 500, 2500, 5500, 12500}
+return Custom.GetFactionRank(states[1]:GetQuantity(), ranks) > 5
+]],
             text = [[
 if self:IsCompleted() then
     return Images.COMPLETE
