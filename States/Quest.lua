@@ -56,6 +56,8 @@ local specialEventQuests = {
 
 	-- Grand Hunts
 	[70906] = "ITEM_PUSH",
+	[71136] = "ITEM_PUSH",
+	[71137] = "ITEM_PUSH",
 
 	-- Dragonbane Keep
 	[70866] = "ITEM_PUSH",
