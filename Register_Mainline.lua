@@ -179,16 +179,16 @@ end
 Internal.RegisterCustomStateFunction("GetGrandHuntCountdown", GetGrandHuntCountdown)
 
 local function GetCommunityFeastCountdown()
-    local start = GetDFPreSeasonTimestamp() - 1800
+    local start = GetDFPreSeasonTimestamp()
     if GetCurrentRegion() == 1 then
         start = start - 1800
     end
     local current = GetServerTime()
-    local seconds = (current - start) % 12600
+    local seconds = (current - start) % 5400
     if seconds < 900 then
         return true, 900 - seconds
     else
-        return false, 12600 - seconds
+        return false, 5400 - seconds
     end
 end
 Internal.RegisterCustomStateFunction("GetCommunityFeastCountdown", GetCommunityFeastCountdown)
