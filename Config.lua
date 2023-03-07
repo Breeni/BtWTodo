@@ -1561,6 +1561,23 @@ local FUNCTION_TAB_TOOLTIP = 4
 local MODE_TAB_ADVANCED = 1
 local MODE_TAB_BASIC = 2
 
+local function GetLetter(todo)
+    for c in todo.name:gmatch("[%z\1-\127\194-\244][\128-\191]*") do
+        local byte = string.byte(c, 1, 1)
+        if byte >= 48 and byte <= 57 then
+            return "#"
+        elseif byte >= 65 and byte <= 90 then
+            return c
+        elseif byte >= 97 and byte <= 122 then
+            return c:upper()
+        elseif byte >= 128 then
+            return c
+        end
+    end
+
+    return "-"
+end
+
 BtWTodoConfigTodoPanelMixin = {}
 function BtWTodoConfigTodoPanelMixin:OnLoad()
     self.todos = {} -- All todos currently being edited
@@ -1574,11 +1591,6 @@ function BtWTodoConfigTodoPanelMixin:OnLoad()
             return
         end
 
-        local info = UIDropDownMenu_CreateInfo();
-        info.func = function (_, arg1, arg2, checked)
-            self:SetTodo(arg1)
-        end
-
         local tbl = {}
         for _,todo in pairs(self.todos) do
             tbl[#tbl+1] = todo
@@ -1588,17 +1600,49 @@ function BtWTodoConfigTodoPanelMixin:OnLoad()
                 tbl[#tbl+1] = todo
             end
         end
-        table.sort(tbl, function (a, b)
-            if a.name == b.name then
-                return tostring(a.id) < tostring(b.id)
+
+        local info = UIDropDownMenu_CreateInfo();
+
+        if menuList or #tbl < 40 then
+            table.sort(tbl, function (a, b)
+                if a.name == b.name then
+                    return tostring(a.id) < tostring(b.id)
+                end
+                return a.name < b.name
+            end)
+
+            info.func = function (_, arg1, arg2, checked)
+                self:SetTodo(arg1)
             end
-            return a.name < b.name
-        end)
-        for _,todo in ipairs(tbl) do
-            info.text = todo.registered and format("%s *", todo.name) or todo.name
-            info.arg1 = todo.id
-            info.checked = self.todo and self.todo.id == todo.id or false
-            UIDropDownMenu_AddButton(info, level)
+
+            for _,todo in ipairs(tbl) do
+                if not menuList or menuList == GetLetter(todo) then
+                    info.text = todo.registered and format("%s *", todo.name) or todo.name
+                    info.arg1 = todo.id
+                    info.checked = self.todo and self.todo.id == todo.id or false
+                    UIDropDownMenu_AddButton(info, level)
+                end
+            end
+        else
+            local usedLetters = {}
+            for _,todo in ipairs(tbl) do
+                local l = GetLetter(todo)
+                usedLetters[l] = true
+            end
+
+            local letters = {}
+            for l in pairs(usedLetters) do
+                letters[#letters+1] = l
+            end
+            table.sort(letters)
+
+            for _,l in ipairs(letters) do
+                if usedLetters[l] then
+                    info.text = l
+                    info.menuList, info.hasArrow = l, true
+                    UIDropDownMenu_AddButton(info, level)
+                end
+            end
         end
     end);
 
