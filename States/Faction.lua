@@ -6,6 +6,36 @@ local ADDON_NAME, Internal = ...
 local External = _G[ADDON_NAME]
 local L = Internal.L
 
+local function GetFactionBy(func)
+    return function (...)
+        local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild, factionID, hasBonusRepGain, canBeLFGBonus = func(...);
+        if not name then
+            return nil
+        end
+        return {
+            name = name,
+            description = description,
+            reaction = standingID,
+            currentReactionThreshold = barMin,
+            nextReactionThreshold = barMax,
+            currentStanding = barValue,
+            atWarWith = atWarWith,
+            canToggleAtWar = canToggleAtWar,
+            isChild = isChild,
+            isHeader = isHeader,
+            isHeaderWithRep = hasRep,
+            isCollapsed = isCollapsed,
+            isWatched = isWatched,
+            hasBonusRepGain = hasBonusRepGain,
+            factionID = factionID,
+        };
+    end
+end
+
+local GetNumFactions = C_Reputation and C_Reputation.GetNumFactions or GetNumFactions;
+local GetFactionDataByIndex = C_Reputation and C_Reputation.GetFactionDataByIndex or GetFactionBy(GetFactionInfo);
+local GetFactionDataByID = C_Reputation and C_Reputation.GetFactionDataByID or GetFactionBy(GetFactionInfoByID);
+
 local factionMapNameToID = {}
 
 local FactionMixin = CreateFromMixins(External.StateMixin)
@@ -20,7 +50,8 @@ function FactionMixin:Init(factionID)
     end
 
     local _
-    self.name, self.description, _, _, _, _, self.canToggleAtWar = GetFactionInfoByID(self:GetID())
+    local factionData = GetFactionDataByID(self:GetID())
+    self.name, self.description, self.canToggleAtWar = factionData.name, factionData.description, factionData.canToggleAtWar
 
     local friendshipInfo = C_GossipInfo and C_GossipInfo.GetFriendshipReputation and C_GossipInfo.GetFriendshipReputation(self:GetID()) or nil
     if friendshipInfo then
@@ -68,7 +99,8 @@ function FactionMixin:GetStanding()
             return friendshipInfo.standing
         end
 
-        return (select(3, GetFactionInfoByID(self:GetID())) or 0)
+        local factionData = GetFactionDataByID(self:GetID())
+        return factionData.reaction or 0
 	else
 		return self:GetCharacter():GetData("factionStanding", self:GetID()) or 0
 	end
@@ -91,7 +123,8 @@ function FactionMixin:GetQuantity()
             return friendshipInfo.standing
         end
 
-        return (select(6, GetFactionInfoByID(self:GetID())) or 0)
+        local factionData = GetFactionDataByID(self:GetID())
+        return factionData.currentStanding
 	else
 		return self:GetCharacter():GetData("factionQuantity", self:GetID()) or 0
 	end
@@ -117,8 +150,8 @@ function FactionMixin:GetTotalQuantity()
             end
         end
 
-        local standingMin, _, standingValue = select(4, GetFactionInfoByID(self:GetID()))
-        return (standingMin or 0) + (standingValue or 0) + (currentValue or 0)
+        local factionData = GetFactionDataByID(self:GetID())
+        return factionData.currentReactionThreshold + factionData.currentStanding + (currentValue or 0)
 	else
 		return self:GetCharacter():GetData("factionTotalQuantity", self:GetID()) or 0
 	end
@@ -146,8 +179,8 @@ function FactionMixin:GetStandingMaxQuantity()
             return threshold
         end
 
-        local standingMin, standingMax = select(4, GetFactionInfoByID(self:GetID()))
-        return standingMax - standingMin
+        local factionData = GetFactionDataByID(self:GetID())
+        return factionData.nextReactionThreshold - factionData.currentReactionThreshold
 	else
 		return self:GetCharacter():GetData("factionStandingMax", self:GetID()) or 0
     end
@@ -175,8 +208,8 @@ function FactionMixin:GetStandingQuantity()
             return currentValue
         end
 
-        local standingMin, _, standingValue = select(4, GetFactionInfoByID(self:GetID()))
-        return standingValue - standingMin
+        local factionData = GetFactionDataByID(self:GetID())
+        return factionData.currentStanding - factionData.currentReactionThreshold
 	else
 		return self:GetCharacter():GetData("factionStandingQuantity", self:GetID()) or 0
 	end
@@ -247,20 +280,21 @@ function FactionProviderMixin:FillAutoComplete(tbl, text, offset, length)
 end
 Internal.RegisterStateProvider(CreateFromMixins(FactionProviderMixin))
 
--- Update our list of currencies to save for players
+-- Update our list of factions to save for players
 Internal.RegisterEvent("PLAYER_LOGIN", function()
     for index=1,GetNumFactions() do
-        local name, isHeader, id = GetFactionInfo(index), select(9, GetFactionInfo(index)), select(14, GetFactionInfo(index))
-        if not isHeader then
-            local data = BtWTodoCache.factions[id] or {}
-            data.name = name
-            BtWTodoCache.factions[id] = data
+        local factionData = GetFactionDataByIndex(index)
+        if not factionData.isHeader then
+            local data = BtWTodoCache.factions[factionData.factionID] or {}
+            data.name = factionData.name
+            BtWTodoCache.factions[factionData.factionID] = data
         end
     end
 
     -- Update the faction map store
     for id in pairs(BtWTodoCache.factions) do
-        local name =  GetFactionInfo(id)
+        local factionData = GetFactionDataByID(id)
+        local name = factionData and factionData.name
         if not name then
             local data = BtWTodoCache.factions[id]
             name = data and data.name
@@ -290,8 +324,9 @@ Internal.RegisterEvent("PLAYER_ENTERING_WORLD", function ()
     wipe(paragonLooted)
 
     for id in pairs(BtWTodoCache.factions) do
-        local standingID, standingMin, standingMaxValue, standingValue = select(3, GetFactionInfoByID(id))
-        if standingValue then
+        local factionData = GetFactionDataByID(id)
+
+        if factionData and factionData.currentStanding then
             local paragonValue, threshold, _, hasRewardPending = C_Reputation.GetFactionParagonInfo(id)
             local currentValue, numLooted
             if paragonValue ~= nil and paragonValue ~= 0 then
@@ -306,20 +341,20 @@ Internal.RegisterEvent("PLAYER_ENTERING_WORLD", function ()
                 numLooted = math.floor(numLooted * 0.0001)
             end
 
-            standing[id] = standingID
-            if standingValue ~= 0 then
-                quantity[id] = standingValue
+            standing[id] = factionData.reaction
+            if factionData.currentStanding ~= 0 then
+                quantity[id] = factionData.currentStanding
             end
-            if standingMin + standingValue + (currentValue or 0) ~= 0 then
-                totalQuantity[id] = standingMin + standingValue + (currentValue or 0)
+            if factionData.currentReactionThreshold + factionData.currentStanding + (currentValue or 0) ~= 0 then
+                totalQuantity[id] = factionData.currentReactionThreshold + factionData.currentStanding + (currentValue or 0)
             end
             if currentValue ~= nil and currentValue ~= 0 then
                 standingMax[id] = threshold
-            elseif standingMaxValue - standingMin ~= 0 then
-                standingMax[id] = standingMaxValue - standingMin
+            elseif factionData.nextReactionThreshold - factionData.currentReactionThreshold ~= 0 then
+                standingMax[id] = factionData.nextReactionThreshold - factionData.currentReactionThreshold
             end
-            if currentValue or (standingValue - standingMin) ~= 0 then
-                standingQuantity[id] = currentValue or (standingValue - standingMin)
+            if currentValue or (factionData.currentStanding - factionData.currentReactionThreshold) ~= 0 then
+                standingQuantity[id] = currentValue or (factionData.currentStanding - factionData.currentReactionThreshold)
             end
             if hasRewardPending then
                 paragonAvailable[id] = true
