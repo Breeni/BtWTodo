@@ -2394,6 +2394,7 @@ end
                 { type = "quest", id = 72373, },
                 { type = "quest", id = 72374, },
                 { type = "quest", id = 72375, },
+                { type = "quest", id = 75259, },
             },
             completed = [[return tCount(states, "IsCompleted") > 0]],
             text = DEFAULT_TEXT_FUNCTION,
