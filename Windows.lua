@@ -2,6 +2,13 @@ local ADDON_NAME, Internal = ...
 local External = _G[ADDON_NAME]
 local L = Internal.L
 
+local GetMouseFocus = GetMouseFocus
+if not GetMouseFocus then
+	function GetMouseFocus()
+		return GetMouseFoci()[1]
+	end
+end
+
 BtWTodoItemMixin = {}
 function BtWTodoItemMixin:OnLoad()
     self:RegisterForDrag("LeftButton");

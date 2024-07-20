@@ -264,6 +264,7 @@ new_read_globals = {
     'GetMacroIndexByName',
     'GetMacroInfo',
     'GetMoney',
+    'GetMouseFoci',
     'GetMouseFocus',
     'GetNumClasses',
     'GetNumFactions',
