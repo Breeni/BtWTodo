@@ -46,6 +46,7 @@ local SEASON_91_START_TIMESTAMP = {
     [3] = 1625641200, -- EU (+57600)
     [4] = 1625698800, -- KR (+115200)
     [5] = 1625698800, -- CN (+115200)
+    [72] = 1625583600, -- US
 }
 
 local SEASON_92_START_TIMESTAMP = {
@@ -54,6 +55,7 @@ local SEASON_92_START_TIMESTAMP = {
     [3] = 1645599600, -- EU (+57600)
     [4] = 1645657200, -- KR (+115200)
     [5] = 1645657200, -- CN (+115200)
+    [72] = 1645542000, -- US
 }
 
 -- Week 0 is preseason week
@@ -85,6 +87,7 @@ local function GetDFPreSeasonTimestamp(region)
         [3] = 1669780800, -- EU (+46800)
         [4] = 1669849200, -- KR (+115200)
         [5] = 1669849200, -- CN (+115200)
+        [72] = 1669734000, -- PTR
     }
     return timestamps[region or GetCurrentRegion()];
 end
@@ -429,6 +432,7 @@ do
         [3] = 0, -- EU
         [4] = 0, -- KR
         [5] = 0, -- CN
+        [72] = 3, -- PTR
     }
 	Internal.RegisterCustomStateFunction("GetTormentorsBoss", function ()
 		local seasonStartTimestamp = Internal.GetSeason91StartTimestamp()
