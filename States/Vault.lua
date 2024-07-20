@@ -8,7 +8,7 @@ local L = Internal.L
 
 local autoCompleteList = {
 	[Enum.WeeklyRewardChestThresholdType.Raid] = RAIDS,
-	[Enum.WeeklyRewardChestThresholdType.MythicPlus] = MYTHIC_DUNGEONS,
+	[Enum.WeeklyRewardChestThresholdType.Activities] = MYTHIC_DUNGEONS,
 	[Enum.WeeklyRewardChestThresholdType.RankedPvP] = PVP,
 }
 
