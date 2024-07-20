@@ -24,7 +24,7 @@ then
 else
 	metadata="{language: \"enUS\", format: \"TableAdditions\", namespace: \"$namespace\", \"missing-phrase-handling\": \"DeletePhrase\"}"
 fi
-http_code=$(curl -sS -X POST -w "%{http_code}" -o "$tempfile" "https://www.curseforge.com/api/projects/$cf_project_id/localization/import" -H "X-Api-Token: $cf_api_key" \
+http_code=$(curl -sSL -X POST -w "%{http_code}" -o "$tempfile" "https://wow.curseforge.com/api/projects/$cf_project_id/localization/import" -H "X-Api-Token: $cf_api_key" \
 			  -F "metadata=$metadata" -F "localizations=<$cf_source") || exit 1
 case $http_code in
 	200)

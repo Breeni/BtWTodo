@@ -15,11 +15,5 @@ jobs:
       - name: Clone project
         uses: actions/checkout@v1
 
-      - name: Push Translations to CurseForge
-        run: ./push-translations.sh
-        env:
-          CF_PROJECT_ID: "515611"
-          CF_SOURCE: Locales/enUS.lua
-
       - name: Package and release
         uses: BigWigsMods/packager@v2
