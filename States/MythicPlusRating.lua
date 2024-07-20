@@ -99,9 +99,9 @@ function MythicPlusRatingMixin:GetRating()
 end
 function MythicPlusRatingMixin:GetRatingColor()
     if self:GetID() == 0 then
-        return C_ChallengeMode.GetDungeonScoreRarityColor(self:GetRating())
+        return C_ChallengeMode.GetDungeonScoreRarityColor(self:GetRating()) or WHITE_FONT_COLOR
     else
-        return C_ChallengeMode.GetSpecificDungeonOverallScoreRarityColor(self:GetRating())
+        return C_ChallengeMode.GetSpecificDungeonOverallScoreRarityColor(self:GetRating()) or WHITE_FONT_COLOR
     end
 end
 function MythicPlusRatingMixin:RegisterEventsFor(driver)

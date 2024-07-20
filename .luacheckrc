@@ -543,6 +543,7 @@ new_read_globals = {
     'ScrollBoxConstants.AlignNearest',
     'SOUNDKIT',
     'STATICPOPUP_NUMDIALOGS',
+    'WHITE_FONT_COLOR',
 
     -- FrameXML Mixins
     'ScrollBoxListMixin',
