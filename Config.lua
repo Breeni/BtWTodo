@@ -606,7 +606,9 @@ end
 
 BtWTodoConfigPanelMixin = {}
 function BtWTodoConfigPanelMixin:OnLoad()
-    InterfaceOptions_AddCategory(self)
+    local category, layout = Settings.RegisterCanvasLayoutCategory(self, "BtWTodo");
+    category.ID = "BTWTODO";
+    Settings.RegisterAddOnCategory(category);
 
     UIDropDownMenu_SetWidth(self.MinimapLeftClickDropDown, 175);
     UIDropDownMenu_JustifyText(self.MinimapLeftClickDropDown, "LEFT");
@@ -697,7 +699,7 @@ function BtWTodoConfigPanelMixin:SetMinimapRightClickAction(actionStr)
     self.minimapRightClickAction = actionStr;
     UIDropDownMenu_SetText(self.MinimapRightClickDropDown, Internal.ActionName(Internal.SplitAction(actionStr)))
 end
-function BtWTodoConfigPanelMixin:okay()
+function BtWTodoConfigPanelMixin:OnCommit()
     xpcall(function()
         local icon = ldbi:GetMinimapButton(ADDON_NAME)
 
@@ -714,23 +716,13 @@ function BtWTodoConfigPanelMixin:okay()
         BtWTodoDataBroker.rightClickAction = self:GetMinimapRightClickAction()
     end, geterrorhandler())
 end
-function BtWTodoConfigPanelMixin:cancel()
-    xpcall(function()
-        local icon = ldbi:GetMinimapButton(ADDON_NAME)
-        if BtWTodoDataBroker.hide then
-            icon:Hide()
-        else
-            icon:Show()
-        end
-    end, geterrorhandler())
-end
-function BtWTodoConfigPanelMixin:default()
+function BtWTodoConfigPanelMixin:OnDefault()
     xpcall(function()
         self.MinimapIconButton:SetChecked(true)
         ldbi:GetMinimapButton(ADDON_NAME):Show()
     end, geterrorhandler())
 end
-function BtWTodoConfigPanelMixin:refresh()
+function BtWTodoConfigPanelMixin:OnRefresh()
     xpcall(function()
         self.MinimapIconButton:SetChecked(not BtWTodoDataBroker.hide)
         self.MinimapTooltipButton:SetChecked(not BtWTodoDataBroker.hideTooltip)
@@ -1440,31 +1432,31 @@ function BtWTodoConfigEditorMixin:UpdateFromLine(index, endIndex)
     self.updating = true
 
     --@alpha@
-    xpcall(function()
-        index = index or 1
-        local offset = 1
-        for i=1,index-1 do
-            offset = offset + self.lineBytes[i]
-        end
+    -- xpcall(function()
+    --     index = index or 1
+    --     local offset = 1
+    --     for i=1,index-1 do
+    --         offset = offset + self.lineBytes[i]
+    --     end
 
-        local _, lastLine, contextChanged
-        repeat
-            debug("UpdateFromLine", index, offset, self.EditBox:GetCursorPosition())
-            _, offset, lastLine, contextChanged = UpdateLine(self, index, offset)
-            debug("UpdateFromLine", index, offset, self.EditBox:GetCursorPosition(), lastLine, contextChanged)
+    --     local _, lastLine, contextChanged
+    --     repeat
+    --         debug("UpdateFromLine", index, offset, self.EditBox:GetCursorPosition())
+    --         _, offset, lastLine, contextChanged = UpdateLine(self, index, offset)
+    --         debug("UpdateFromLine", index, offset, self.EditBox:GetCursorPosition(), lastLine, contextChanged)
 
-            index = index + 1
-        until lastLine or (not contextChanged and index > endIndex)
+    --         index = index + 1
+    --     until lastLine or (not contextChanged and index > endIndex)
 
-        if lastLine then
-            while self.lineBytes[index] do
-                table.remove(self.lineBytes, index)
-                table.remove(self.lineContexts, index)
-            end
-        end
-    end, geterrorhandler())
+    --     if lastLine then
+    --         while self.lineBytes[index] do
+    --             table.remove(self.lineBytes, index)
+    --             table.remove(self.lineContexts, index)
+    --         end
+    --     end
+    -- end, geterrorhandler())
 
-    debug("----------")
+    -- debug("----------")
     --@end-alpha@
 
     self.updating = nil
@@ -1697,7 +1689,9 @@ function BtWTodoConfigTodoPanelMixin:OnLoad()
         self.AddItem:Hide()
     end)
 
-    InterfaceOptions_AddCategory(self)
+    local category = Settings.GetCategory("BTWTODO");
+    local subcategory, layout = Settings.RegisterCanvasLayoutSubcategory(category, self, L["Todos"]);
+    subcategory.ID = "BTWTODO_TODOS";
 
     do
         self.FunctionTabPool = CreateFramePool("Button", self.Edit.FunctionTabHeader, Internal.IsDragonflight() and "PanelTopTabButtonTemplate" or "TabButtonTemplate");
@@ -2252,7 +2246,7 @@ function BtWTodoConfigTodoPanelMixin:IterateTodos()
         end
     end, tbl, 0
 end
-function BtWTodoConfigTodoPanelMixin:okay()
+function BtWTodoConfigTodoPanelMixin:OnCommit()
     xpcall(function()
         for id,data in pairs(self.todos) do
             local tbl = {}
@@ -2276,16 +2270,11 @@ function BtWTodoConfigTodoPanelMixin:okay()
         External.TriggerEvent("TODOS_CHANGED")
     end, geterrorhandler())
 end
-function BtWTodoConfigTodoPanelMixin:cancel()
-    xpcall(function()
-        self.AddItem:Hide()
-    end, geterrorhandler())
-end
-function BtWTodoConfigTodoPanelMixin:default()
+function BtWTodoConfigTodoPanelMixin:OnDefault()
     xpcall(function()
     end, geterrorhandler())
 end
-function BtWTodoConfigTodoPanelMixin:refresh()
+function BtWTodoConfigTodoPanelMixin:OnRefresh()
     xpcall(function()
         wipe(self.todos)
         self.todo = nil
@@ -2378,7 +2367,7 @@ function BtWTodoConfigTodoItemMixin:ToggleVisibility()
 end
 function BtWTodoConfigTodoItemMixin:Edit()
     if self.data.type == "todo" then
-        InterfaceOptionsFrame_OpenToCategory(BTWTODO_TODOS)
+        Settings.OpenToCategory("BTWTODO_TODOS");
         BtWTodoConfigTodoPanel:SetTodo(self.data.todo)
     elseif self.data.type == "category" then
         local source = self.data.source
@@ -2470,7 +2459,9 @@ function BtWTodoConfigListsPanelMixin:OnLoad()
         self.AddItem:Hide()
     end)
 
-    InterfaceOptions_AddCategory(self)
+    local category = Settings.GetCategory("BTWTODO");
+    local subcategory, layout = Settings.RegisterCanvasLayoutSubcategory(category, self, L["Lists"]);
+    subcategory.ID = "BTWTODO_LISTS";
 end
 function BtWTodoConfigListsPanelMixin:GetList()
     return self.list
@@ -2597,7 +2588,7 @@ function BtWTodoConfigListsPanelMixin:OnAddCategoryClicked()
     end)
     self.AddItem:Show()
 end
-function BtWTodoConfigListsPanelMixin:okay()
+function BtWTodoConfigListsPanelMixin:OnCommit()
     xpcall(function()
         do
             for id,category in pairs(self.categories) do
@@ -2652,17 +2643,7 @@ function BtWTodoConfigListsPanelMixin:okay()
         end
     end, geterrorhandler())
 end
-function BtWTodoConfigListsPanelMixin:cancel()
-    xpcall(function()
-        self.AddItem:Hide()
-        -- If we live update lists we should reset them here
-    end, geterrorhandler())
-end
--- function BtWTodoConfigListsPanelMixin:default()
---     xpcall(function()
---     end, geterrorhandler())
--- end
-function BtWTodoConfigListsPanelMixin:refresh()
+function BtWTodoConfigListsPanelMixin:OnRefresh()
     xpcall(function()
         do
             local categories = {}
@@ -2781,7 +2762,9 @@ function BtWTodoConfigWindowsPanelMixin:OnLoad()
         self.AddItem:Hide()
     end)
 
-    InterfaceOptions_AddCategory(self)
+    local category = Settings.GetCategory("BTWTODO");
+    local subcategory, layout = Settings.RegisterCanvasLayoutSubcategory(category, self, L["Windows"]);
+    subcategory.ID = "BTWTODO_WINDOWS";
 end
 function BtWTodoConfigWindowsPanelMixin:GetFrame()
     return self.frame
@@ -2864,7 +2847,7 @@ function BtWTodoConfigWindowsPanelMixin:SetItemHeight(value)
         frame.itemHeight = value
     end
 end
-function BtWTodoConfigWindowsPanelMixin:okay()
+function BtWTodoConfigWindowsPanelMixin:OnCommit()
     xpcall(function()
         for id,frame in pairs(self.frames) do
             BtWTodoWindows[id].list = frame.list
@@ -2883,16 +2866,7 @@ function BtWTodoConfigWindowsPanelMixin:okay()
         end
     end, geterrorhandler())
 end
-function BtWTodoConfigWindowsPanelMixin:cancel()
-    xpcall(function()
-        self.AddItem:Hide()
-    end, geterrorhandler())
-end
--- function BtWTodoConfigWindowsPanelMixin:default()
---     xpcall(function()
---     end, geterrorhandler())
--- end
-function BtWTodoConfigWindowsPanelMixin:refresh()
+function BtWTodoConfigWindowsPanelMixin:OnRefresh()
     xpcall(function()
         for id,settings in pairs(BtWTodoWindows) do
             local result = {}
@@ -2923,8 +2897,5 @@ function BtWTodoConfigWindowsPanelMixin:refresh()
 end
 
 function External.OpenConfiguration()
-	if InterfaceOptionsFrame and not InterfaceOptionsFrame:IsShown() then
-        InterfaceOptionsFrame_Show()
-    end
-    InterfaceOptionsFrame_OpenToCategory(ADDON_NAME)
+    Settings.OpenToCategory("BTWTODO");
 end
