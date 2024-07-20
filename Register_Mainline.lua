@@ -928,7 +928,7 @@ end
         id = "btwtodo:dungeonvault",
         name = L["Dungeon Vault"],
         states = {
-            { type = "vault", id = Enum.WeeklyRewardChestThresholdType.MythicPlus, },
+            { type = "vault", id = Enum.WeeklyRewardChestThresholdType.Activities, },
             { type = "mythicplusruns", },
         },
         version = 1,
