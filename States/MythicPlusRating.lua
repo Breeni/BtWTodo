@@ -3,6 +3,11 @@ local External = _G[ADDON_NAME]
 local L = Internal.L
 
 local challengeMapIDs = {
+    -- Cataclysm
+    438, -- The Vortex Pinnacle
+    456, -- Throne of the Tides
+    507, -- Grim Batol
+
     -- Mists of Pandaria
       2, -- Temple of the Jade Serpent
 
@@ -52,6 +57,17 @@ local challengeMapIDs = {
     404, -- Neltharus
     405, -- Brackenhide Hollow
     406, -- Halls of Infusion
+    463, -- Dawn of the Infinite: Galakrond's Fall
+    464, -- Dawn of the Infinite: Murozond's Rise
+
+    409, -- Priory of the Sacred Flame
+    500, -- The Rookery
+    501, -- The Stonevault
+    502, -- City of Threads
+    503, -- Ara-Kara, City of Echoes
+    504, -- Darkflame Cleft
+    505, -- The Dawnbreaker
+    506, -- Cinderbrew Meadery
 }
 local sortedNames = {}
 local idToNameMap = {

@@ -1658,11 +1658,11 @@ local function MythicPlusRating(tbl)
         tbl.states = {
             { type = "mythicplusrating", id = 0, },
 
-            { type = "mythicplusrating", id = 503, },
-            { type = "mythicplusrating", id = 502, },
+            { type = "mythicplusrating", id = 503, }, -- Ara-Kara, City of Echoes
+            { type = "mythicplusrating", id = 502, }, -- City of Threads
             
-            { type = "mythicplusrating", id = 501, },
-            { type = "mythicplusrating", id = 505, },
+            { type = "mythicplusrating", id = 501, }, -- The Stonevault
+            { type = "mythicplusrating", id = 505, }, -- The Dawnbreaker
             
             { type = "mythicplusrating", id = 375, }, -- Mists of Tirna Scithe
             { type = "mythicplusrating", id = 376, }, -- Nacrotic Wake
@@ -2036,22 +2036,26 @@ if Internal.Is100000OrBeyond then
     External.RegisterTodos({
         {
             id = "btwtodo:dragonflyingglyphs",
-            name = L["Dragonriding Talents"],
+            name = L["Skyriding Talents"],
+            version = 2,
+            changeLog = {
+                L["Updated for The War Within"],
+            },
             states = {
                 { type = "traitcurrency", id = 2563, },
             },
             completed = [[
-                return states[1]:GetSpent() == 48
+                return states[1]:GetSpent() == 11
             ]],
             text = [[
                 local quantity = states[1]:GetQuantity()
                 local text
                 if quantity == 0 then
-                    text = format("%d / %d", states[1]:GetSpent(), 48)
+                    text = format("%d / %d", states[1]:GetSpent(), 11)
                 else
-                    text = format("%d + %d / %d", states[1]:GetSpent(), quantity, 48)
+                    text = format("%d + %d / %d", states[1]:GetSpent(), quantity, 11)
                 end
-                if states[1]:GetTotalEarned() == 48 then
+                if states[1]:GetTotalEarned() == 11 and quantity ~= 0 then
                     text = Colors.STALLED:WrapTextInColorCode(text)
                 end
                 return text
@@ -2062,7 +2066,7 @@ if Internal.Is100000OrBeyond then
                 tooltip:AddLine(self:GetName())
                 tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
                 tooltip:AddLine(format(L["Spent: %d"], spent), 1, 1, 1)
-                tooltip:AddLine(format(L["Total: %d"], 48), 1, 1, 1)
+                tooltip:AddLine(format(L["Total: %d"], 11), 1, 1, 1)
             ]]
         },
         {
@@ -2604,7 +2608,7 @@ end
 
     External.RegisterLists({
         {
-            id = "btwtodo:100",
+            id = "btwtodo:10",
             name = L["Dragonflight"],
             version = 3,
             todos = {
@@ -2824,23 +2828,163 @@ end
         return skillLineToKnowledgeCurrency[skillLineID];
     end)
 end
+
 if Internal.Is110000OrBeyond then
     External.RegisterTodos({
         {
-            id = "btwtodo:dragonislessupplies",
-            name = L["Dragon Isle Supplies"],
+            id = "btwtodo:kej",
+            name = L["Kej"],
             states = {
-                { type = "currency", id = 2003, },
+                { type = "currency", id = 3750, },
             },
             completed = "return false",
             text = [[return states[1]:GetQuantity()]],
         },
         {
-            id = "btwtodo:dragonscaleexpedition",
-            name = L["Dragonscale Expedition"],
+            id = "btwtodo:resonancecrystals",
+            name = L["Resonance Crystals"],
             states = {
-                { type = "faction", id = 2507, },
-                { type = "currency", id = 2021, },
+                { type = "currency", id = 2815, },
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:undercoin",
+            name = L["Undercoin"],
+            states = {
+                { type = "currency", id = 2803, },
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:valorstones",
+            name = L["Valorstones"],
+            states = {
+                { type = "currency", id = 3008, },
+            },
+            completed = "return false",
+            text = [[
+if states[1]:GetMaxQuantity() ~= 0 then
+    return format("%s / %s", states[1]:GetQuantity(), states[1]:GetMaxQuantity())
+else
+    return format("%s", states[1]:GetQuantity())
+end
+]],
+        },
+        {
+            id = "btwtodo:weatheredharbingercrest",
+            name = L["Weathered Harbinger Crest"],
+            states = {
+                { type = "currency", id = 2914, },
+            },
+            completed = "return false",
+            text = [[
+    if states[1]:GetMaxQuantity() ~= 0 then
+        return format("%s / %s / %s", states[1]:GetQuantity(), states[1]:GetTotalEarned(), states[1]:GetMaxQuantity())
+    else
+        return format("%s", states[1]:GetQuantity())
+    end
+    ]],
+            tooltip = [[
+    local quantity = states[1]:GetQuantity()
+    local earned = states[1]:GetTotalEarned()
+    local total = states[1]:GetMaxQuantity()
+    tooltip:AddLine(self:GetName())
+    tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
+    tooltip:AddLine(format(L["Earned this season: %d"], earned), 1, 1, 1)
+    if total ~= 0 then
+        tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
+    end
+    ]],
+        },
+        {
+            id = "btwtodo:carvedharbingercrest",
+            name = L["Carved  Harbinger Crest"],
+            states = {
+                { type = "currency", id = 2915, },
+            },
+            completed = "return false",
+            text = [[
+    if states[1]:GetMaxQuantity() ~= 0 then
+        return format("%s / %s / %s", states[1]:GetQuantity(), states[1]:GetTotalEarned(), states[1]:GetMaxQuantity())
+    else
+        return format("%s", states[1]:GetQuantity())
+    end
+    ]],
+            tooltip = [[
+    local quantity = states[1]:GetQuantity()
+    local earned = states[1]:GetTotalEarned()
+    local total = states[1]:GetMaxQuantity()
+    tooltip:AddLine(self:GetName())
+    tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
+    tooltip:AddLine(format(L["Earned this season: %d"], earned), 1, 1, 1)
+    if total ~= 0 then
+        tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
+    end
+    ]],
+        },
+        {
+            id = "btwtodo:runedharbingercrest",
+            name = L["Runed Harbinger Crest"],
+            states = {
+                { type = "currency", id = 2916, },
+            },
+            completed = "return false",
+            text = [[
+    if states[1]:GetMaxQuantity() ~= 0 then
+        return format("%s / %s / %s", states[1]:GetQuantity(), states[1]:GetTotalEarned(), states[1]:GetMaxQuantity())
+    else
+        return format("%s", states[1]:GetQuantity())
+    end
+    ]],
+            tooltip = [[
+    local quantity = states[1]:GetQuantity()
+    local earned = states[1]:GetTotalEarned()
+    local total = states[1]:GetMaxQuantity()
+    tooltip:AddLine(self:GetName())
+    tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
+    tooltip:AddLine(format(L["Earned this season: %d"], earned), 1, 1, 1)
+    if total ~= 0 then
+        tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
+    end
+    ]],
+        },
+        {
+            id = "btwtodo:gildedharbingercrest",
+            name = L["Gilded Harbinger Crest"],
+            states = {
+                { type = "currency", id = 2917, },
+            },
+            completed = "return false",
+            text = [[
+    if states[1]:GetMaxQuantity() ~= 0 then
+        return format("%s / %s / %s", states[1]:GetQuantity(), states[1]:GetTotalEarned(), states[1]:GetMaxQuantity())
+    else
+        return format("%s", states[1]:GetQuantity())
+    end
+    ]],
+            tooltip = [[
+    local quantity = states[1]:GetQuantity()
+    local earned = states[1]:GetTotalEarned()
+    local total = states[1]:GetMaxQuantity()
+    tooltip:AddLine(self:GetName())
+    tooltip:AddLine(format(L["Quantity: %d"], quantity), 1, 1, 1)
+    tooltip:AddLine(format(L["Earned this season: %d"], earned), 1, 1, 1)
+    if total ~= 0 then
+        tooltip:AddLine(format(L["Max this season: %d"], total), 1, 1, 1)
+    end
+    ]],
+        },
+
+
+        {
+            id = "btwtodo:councilofdornogal",
+            name = L["Council of Dornogal"],
+            states = {
+                { type = "faction", id = 2590, },
+                { type = "currency", id = 2900, },
             },
             completed = "return states[2]:IsCapped()",
             text = [[
@@ -2852,10 +2996,70 @@ end
 ]],
         },
         {
-            id = "btwtodo:winterpeltfurbolg",
-            name = L["Winterpelt Furbolg"],
+            id = "btwtodo:theassemblyofthedeeps",
+            name = L["The Assembly of the Deeps"],
             states = {
-                { type = "faction", id = 2526, },
+                { type = "faction", id = 2594, },
+                { type = "currency", id = 2898, },
+            },
+            completed = "return states[2]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    return format("%s / %s (%d / %d)", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity(), states[2]:GetQuantity(), states[2]:GetMaxQuantity())
+end
+]],
+        },
+        {
+            id = "btwtodo:hallowfallarathi",
+            name = L["Hallowfall Arathi"],
+            states = {
+                { type = "faction", id = 2570, },
+                { type = "currency", id = 2901, },
+            },
+            completed = "return states[2]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    return format("%s / %s (%d / %d)", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity(), states[2]:GetQuantity(), states[2]:GetMaxQuantity())
+end
+]],
+        },
+        {
+            id = "btwtodo:theseveredthreads",
+            name = L["The Severed Threads"],
+            states = {
+                { type = "faction", id = 2600, },
+                { type = "currency", id = 2904, },
+                { type = "faction", id = 2605, },
+                { type = "faction", id = 2607, },
+                { type = "faction", id = 2601, },
+            },
+            completed = "return states[2]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    return format("%d / %d", states[2]:GetQuantity(), states[2]:GetMaxQuantity())
+end
+]],
+tooltip = [[
+tooltip:AddLine(self:GetName())
+tooltip:AddLine(format(L["%s: %d / %d"], states[3]:GetName(),  states[3]:GetStandingQuantity(), states[3]:GetStandingMaxQuantity()), 1, 1, 1)
+tooltip:AddLine(format(L["%s: %d / %d"], states[4]:GetName(),  states[4]:GetStandingQuantity(), states[4]:GetStandingMaxQuantity()), 1, 1, 1)
+tooltip:AddLine(format(L["%s: %d / %d"], states[5]:GetName(),  states[5]:GetStandingQuantity(), states[5]:GetStandingMaxQuantity()), 1, 1, 1)
+]],
+        },
+
+
+
+        {
+            id = "btwtodo:brannbronzebeard",
+            name = L["Brann Bronzebeard"],
+            states = {
+                { type = "faction", id = 2640, },
             },
             completed = "return states[1]:IsCapped()",
             text = [[
@@ -2866,135 +3070,33 @@ else
 end
 ]],
         },
-        {
-            id = "btwtodo:artisansconsortium",
-            name = L["Artisan's Consortium"],
-            version = 1,
-            changeLog = {
-                L["Updated to show faction rank"],
-            },
-            states = {
-                { type = "faction", id = 2544, },
-            },
-            completed = [[
-local ranks = {0, 500, 2500, 5500, 12500}
-return Custom.GetFactionRank(states[1]:GetQuantity(), ranks) > 5
-]],
-            text = [[
-if self:IsCompleted() then
-    return Images.COMPLETE
-else
-    local ranks = {0, 500, 2500, 5500, 12500}
-    local rank = Custom.GetFactionRank(states[1]:GetQuantity(), ranks)
-    return format("%d / %d (%d / %d)", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity(), rank, #ranks)
-end
-]],
-        },
-        {
-            id = "btwtodo:cobaltassembly",
-            name = L["Cobalt Assembly"],
-            version = 1,
-            changeLog = {
-                L["Updated to show faction rank"],
-            },
-            states = {
-                { type = "faction", id = 2550, },
-            },
-            completed = "return states[1]:IsCapped()",
-            text = [[
-if self:IsCompleted() then
-    return Images.COMPLETE
-else
-    local ranks = {0, 300, 1200, 1360, 10000}
-    local rank = Custom.GetFactionRank(states[1]:GetQuantity(), ranks)
-    return format("%d / %d (%d / %d)", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity(), rank, #ranks)
-end
-]],
-        },
-        {
-            id = "btwtodo:sabellian",
-            name = L["Sabellian"],
-            version = 1,
-            changeLog = {
-                L["Updated to show faction rank"],
-            },
-            states = {
-                { type = "faction", id = 2518, },
-            },
-            completed = "return states[1]:IsCapped()",
-            text = [[
-if self:IsCompleted() then
-    return Images.COMPLETE
-else
-    local quantity, max = states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity()
-    return format("%d / %d (%d / %d)", quantity, max, math.ceil(states[1]:GetQuantity() / 8400), math.ceil(states[1]:GetMaxQuantity() / 8400) + 1)
-end
-]],
-        },
-        {
-            id = "btwtodo:wrathion",
-            name = L["Wrathion"],
-            version = 1,
-            changeLog = {
-                L["Updated to show faction rank"],
-            },
-            states = {
-                { type = "faction", id = 2517, },
-            },
-            completed = "return states[1]:IsCapped()",
-            text = [[
-if self:IsCompleted() then
-    return Images.COMPLETE
-else
-    local quantity, max = states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity()
-    return format("%d / %d (%d / %d)", quantity, max, math.ceil(states[1]:GetQuantity() / 8400), math.ceil(states[1]:GetMaxQuantity() / 8400) + 1)
-end
-]],
-        },
-        {
-            id = "btwtodo:dragonflightworldboss",
-            name = L["World Boss"],
-            version = 1,
-            changeLog = {
-                L["Added support for Basrikron"],
-            },
-            states = {
-                { type = "quest", id = 69929, }, -- World Quest for Strunraan
-                { type = "quest", id = 72055, }, -- Possible tracking quest for Strunraan
+
+
+        -- {
+        --     id = "btwtodo:thewarwithinworldboss",
+        --     name = L["World Boss"],
+        --     states = {
+        --         { type = "quest", id = , }, -- World Quest for Kordac, the Dormant Protector
+        --         { type = "quest", id = , }, -- Possible tracking quest for Kordac, the Dormant Protector
                 
-                { type = "quest", id = 69930, }, -- World Quest for Basrikron
-                { type = "quest", id = 72056, }, -- Possible tracking quest for Basrikron
+        --         { type = "quest", id = , }, -- World Quest for Aggregation of Horrors
+        --         { type = "quest", id = , }, -- Possible tracking quest for Aggregation of Horrors
                 
-                { type = "quest", id = 69927, }, -- World Quest for Bazual
-                { type = "quest", id = 72054, }, -- Possible tracking quest for Bazual
+        --         { type = "quest", id = , }, -- World Quest for Shurrai, Atrocity of the Undersea
+        --         { type = "quest", id = , }, -- Possible tracking quest for Shurrai, Atrocity of the Undersea
                 
-                { type = "quest", id = 69928, }, -- World Quest for Liskanoth
-                { type = "quest", id = 72053, }, -- Possible tracking quest for Liskanoth
-                { type = "quest", id = 72057, }, -- Possible tracking quest for Liskanoth
-            },
-            completed = [[return tCount(states, "IsCompleted") > 0]],
-            text = DEFAULT_TEXT_FUNCTION,
-        },
-        {
-            id = "btwtodo:aidingtheaccord",
-            name = L["Aiding the Accord"],
-            states = {
-                { type = "quest", id = 70750, },
-                { type = "quest", id = 72068, },
-                { type = "quest", id = 72373, },
-                { type = "quest", id = 72374, },
-                { type = "quest", id = 72375, },
-                { type = "quest", id = 75259, },
-            },
-            completed = [[return tCount(states, "IsCompleted") > 0]],
-            text = DEFAULT_TEXT_FUNCTION,
-        },
+        --         { type = "quest", id = , }, -- World Quest for Orta, the Broken Mountain
+        --         { type = "quest", id = , }, -- Possible tracking quest for Orta, the Broken Mountain
+        --     },
+        --     completed = [[return tCount(states, "IsCompleted") > 0]],
+        --     text = DEFAULT_TEXT_FUNCTION,
+        -- },
     })
 
     External.RegisterLists({
         {
             id = "btwtodo:110",
-            name = L["Dragonflight"],
+            name = L["The War Within"],
             version = 1,
             todos = {
                 {
@@ -3013,6 +3115,7 @@ end
                     id = "btwtodo:dragonflyingglyphs",
                     category = "btwtodo:character",
                 },
+
                 {
                     id = "btwtodo:raidvault",
                     category = "btwtodo:weekly",
@@ -3025,51 +3128,28 @@ end
                     id = "btwtodo:keystone",
                     category = "btwtodo:weekly",
                 },
+                -- {
+                --     id = "btwtodo:thewarwithinworldboss",
+                --     category = "btwtodo:weekly",
+                -- },
                 {
-                    id = "btwtodo:dragonflightworldboss",
-                    category = "btwtodo:weekly",
-                },
-                {
-                    id = "btwtodo:aidingtheaccord",
-                    category = "btwtodo:weekly",
-                    version = 2,
-                },
-                {
-                    id = "btwtodo:dragonbanekeep",
-                    category = "btwtodo:weekly",
-                    version = 2,
-                },
-                {
-                    id = "btwtodo:grandhunts",
-                    category = "btwtodo:weekly",
-                    version = 2,
-                },
-                {
-                    id = "btwtodo:communityfeast",
-                    category = "btwtodo:weekly",
-                    version = 2,
-                },
-                {
-                    id = "btwtodo:trialoflements",
-                    category = "btwtodo:weekly",
-                    version = 2,
-                },
-                {
-                    id = "btwtodo:trialoftides",
-                    category = "btwtodo:weekly",
-                    version = 2,
-                },
-                {
-                    id = "btwtodo:primalstorms",
-                    category = "btwtodo:weekly",
-                    version = 3,
-                },
-                {
-                    id = "btwtodo:dragonislessupplies",
+                    id = "btwtodo:weatheredharbingercrest",
                     category = "btwtodo:currency",
                 },
                 {
-                    id = "btwtodo:valor",
+                    id = "btwtodo:carvedharbingercrest",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:runedharbingercrest",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:gildedharbingercrest",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:valorstones",
                     category = "btwtodo:currency",
                 },
                 {
@@ -3132,51 +3212,39 @@ end
                     hidden = true,
                 },
                 {
-                    id = "btwtodo:elementaloverflow",
+                    id = "btwtodo:kej",
                     category = "btwtodo:currency",
+                    hidden = true,
                 },
                 {
-                    id = "btwtodo:stormsigil",
+                    id = "btwtodo:resonancecrystals",
                     category = "btwtodo:currency",
-                },
-                {
-                    id = "btwtodo:dragonscaleexpedition",
-                    category = "btwtodo:reputation",
-                },
-                {
-                    id = "btwtodo:iskaaratuskarr",
-                    category = "btwtodo:reputation",
-                },
-                {
-                    id = "btwtodo:maruukcentaur",
-                    category = "btwtodo:reputation",
-                },
-                {
-                    id = "btwtodo:valdrakkenaccord",
-                    category = "btwtodo:reputation",
-                },
-                {
-                    id = "btwtodo:artisansconsortium",
-                    category = "btwtodo:reputation",
                     hidden = true,
                 },
                 {
-                    id = "btwtodo:cobaltassembly",
-                    category = "btwtodo:reputation",
+                    id = "btwtodo:undercoin",
+                    category = "btwtodo:currency",
                     hidden = true,
                 },
+
                 {
-                    id = "btwtodo:sabellian",
+                    id = "btwtodo:councilofdornogal",
                     category = "btwtodo:reputation",
-                    hidden = true,
                 },
                 {
-                    id = "btwtodo:wrathion",
+                    id = "btwtodo:theassemblyofthedeeps",
                     category = "btwtodo:reputation",
-                    hidden = true,
                 },
                 {
-                    id = "btwtodo:winterpeltfurbolg",
+                    id = "btwtodo:hallowfallarathi",
+                    category = "btwtodo:reputation",
+                },
+                {
+                    id = "btwtodo:theseveredthreads",
+                    category = "btwtodo:reputation",
+                },
+                {
+                    id = "btwtodo:brannbronzebeard",
                     category = "btwtodo:reputation",
                     hidden = true,
                 },
@@ -3920,7 +3988,7 @@ elseif Internal.IsTheWarWithinSeason1 then
         {
             id = "btwtodo:default",
             name = L["Default"],
-            version = 11,
+            version = 15,
             todos = {
                 {
                     id = "btwtodo:itemlevel",
@@ -4039,49 +4107,53 @@ elseif Internal.IsTheWarWithinSeason1 then
                     id = "btwtodo:dragonflightworldboss",
                     category = "btwtodo:weekly",
                     hidden = true,
-                    version = 11,
+                    version = 15,
                 },
+                -- {
+                --     id = "btwtodo:thewarwithinworldboss",
+                --     category = "btwtodo:weekly",
+                -- },
                 {
                     id = "btwtodo:aidingtheaccord",
                     category = "btwtodo:weekly",
                     hidden = true,
-                    version = 11,
+                    version = 15,
                 },
                 {
                     id = "btwtodo:dragonbanekeep",
                     category = "btwtodo:weekly",
                     hidden = true,
-                    version = 11,
+                    version = 15,
                 },
                 {
                     id = "btwtodo:grandhunts",
                     category = "btwtodo:weekly",
                     hidden = true,
-                    version = 11,
+                    version = 15,
                 },
                 {
                     id = "btwtodo:communityfeast",
                     category = "btwtodo:weekly",
                     hidden = true,
-                    version = 11,
+                    version = 15,
                 },
                 {
                     id = "btwtodo:trialoflements",
                     category = "btwtodo:weekly",
                     hidden = true,
-                    version = 11,
+                    version = 15,
                 },
                 {
                     id = "btwtodo:trialoftides",
                     category = "btwtodo:weekly",
                     hidden = true,
-                    version = 11,
+                    version = 15,
                 },
                 {
                     id = "btwtodo:primalstorms",
                     category = "btwtodo:weekly",
                     hidden = true,
-                    version = 11,
+                    version = 15,
                 },
                 {
                     id = "btwtodo:torghast",
@@ -4154,11 +4226,38 @@ elseif Internal.IsTheWarWithinSeason1 then
                     id = "btwtodo:dragonislessupplies",
                     category = "btwtodo:currency",
                     hidden = true,
-                    version = 11,
+                    version = 15,
+                },
+                {
+                    id = "btwtodo:weatheredharbingercrest",
+                    category = "btwtodo:currency",
+                    version = 15,
+                },
+                {
+                    id = "btwtodo:carvedharbingercrest",
+                    category = "btwtodo:currency",
+                    version = 15,
+                },
+                {
+                    id = "btwtodo:runedharbingercrest",
+                    category = "btwtodo:currency",
+                    version = 15,
+                },
+                {
+                    id = "btwtodo:gildedharbingercrest",
+                    category = "btwtodo:currency",
+                    version = 15,
+                },
+                {
+                    id = "btwtodo:valorstones",
+                    category = "btwtodo:currency",
+                    version = 15,
                 },
                 {
                     id = "btwtodo:valor",
                     category = "btwtodo:currency",
+                    hidden = true,
+                    version = 15,
                 },
                 {
                     id = "btwtodo:conquest",
@@ -4241,13 +4340,31 @@ elseif Internal.IsTheWarWithinSeason1 then
                     id = "btwtodo:elementaloverflow",
                     category = "btwtodo:currency",
                     hidden = true,
-                    version = 11,
+                    version = 15,
                 },
                 {
                     id = "btwtodo:stormsigil",
                     category = "btwtodo:currency",
                     hidden = true,
-                    version = 11,
+                    version = 15,
+                },
+                {
+                    id = "btwtodo:kej",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 15,
+                },
+                {
+                    id = "btwtodo:resonancecrystals",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 15,
+                },
+                {
+                    id = "btwtodo:undercoin",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 15,
                 },
 
                 -- Reputation
@@ -4273,25 +4390,25 @@ elseif Internal.IsTheWarWithinSeason1 then
                     id = "btwtodo:dragonscaleexpedition",
                     category = "btwtodo:reputation",
                     hidden = true,
-                    version = 11,
+                    version = 15,
                 },
                 {
                     id = "btwtodo:iskaaratuskarr",
                     category = "btwtodo:reputation",
                     hidden = true,
-                    version = 11,
+                    version = 15,
                 },
                 {
                     id = "btwtodo:maruukcentaur",
                     category = "btwtodo:reputation",
                     hidden = true,
-                    version = 11,
+                    version = 15,
                 },
                 {
                     id = "btwtodo:valdrakkenaccord",
                     category = "btwtodo:reputation",
                     hidden = true,
-                    version = 11,
+                    version = 15,
                 },
                 {
                     id = "btwtodo:artisansconsortium",
@@ -4322,7 +4439,33 @@ elseif Internal.IsTheWarWithinSeason1 then
                     category = "btwtodo:reputation",
                     hidden = true,
                     version = 8,
-                }
+                },
+                {
+                    id = "btwtodo:councilofdornogal",
+                    category = "btwtodo:reputation",
+                    version = 15,
+                },
+                {
+                    id = "btwtodo:theassemblyofthedeeps",
+                    category = "btwtodo:reputation",
+                    version = 15,
+                },
+                {
+                    id = "btwtodo:hallowfallarathi",
+                    category = "btwtodo:reputation",
+                    version = 15,
+                },
+                {
+                    id = "btwtodo:theseveredthreads",
+                    category = "btwtodo:reputation",
+                    version = 15,
+                },
+                {
+                    id = "btwtodo:brannbronzebeard",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                    version = 15,
+                },
             },
         },
     });

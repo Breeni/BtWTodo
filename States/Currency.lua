@@ -161,7 +161,9 @@ Internal.RegisterEvent("PLAYER_ENTERING_WORLD", function()
     -- Update the currency map store
     for id in pairs(BtWTodoCache.currencies) do
         local info = C_CurrencyInfo.GetCurrencyInfo(id)
-        currencyMapNameToID[info.name] = id
+        if info then
+            currencyMapNameToID[info.name] = id
+        end
     end
 end, -2)
 
