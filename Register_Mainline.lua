@@ -1583,28 +1583,7 @@ end
 
 -- M+ Ratings
 local function MythicPlusRating(tbl)
-    if Internal.IsDragonflightExpansion() then
-        tbl.version = 2
-        tbl.changeLog = {
-            L["Updated for Eternity's End"],
-            L["Updated for Dragonflight"],
-        }
-        tbl.states = {
-            { type = "mythicplusrating", id = 0, },
-
-            { type = "mythicplusrating", id = 399, },
-            { type = "mythicplusrating", id = 400, },
-            
-            { type = "mythicplusrating", id = 401, },
-            { type = "mythicplusrating", id = 402, },
-            
-            { type = "mythicplusrating", id = 2, },
-            { type = "mythicplusrating", id = 210, },
-            
-            { type = "mythicplusrating", id = 200, },
-            { type = "mythicplusrating", id = 165, },
-        }
-    elseif Internal.IsEternitysEnd() then
+    if Internal.IsShadowlandsSeason3 then
         tbl.version = 1
         tbl.changeLog = {
             L["Updated for Eternity's End"],
@@ -1624,7 +1603,13 @@ local function MythicPlusRating(tbl)
             { type = "mythicplusrating", id = 169, },
             { type = "mythicplusrating", id = 166, },
         }
-    else
+    elseif Internal.IsShadowlandsSeason4 then
+        tbl.version = 2
+        tbl.changeLog = {
+            L["Updated for Eternity's End"],
+            L["Updated for Shadowlands Season 4"],
+            L["Updated for Dragonflight Season 1"],
+        }
         tbl.states = {
             { type = "mythicplusrating", id = 0, },
 
@@ -1639,6 +1624,51 @@ local function MythicPlusRating(tbl)
             
             { type = "mythicplusrating", id = 169, },
             { type = "mythicplusrating", id = 166, },
+        }
+    elseif Internal.IsDragonflightSeason1 then
+        tbl.version = 3
+        tbl.changeLog = {
+            L["Updated for Eternity's End"],
+            L["Updated for Shadowlands Season 4"],
+            L["Updated for Dragonflight Season 1"],
+        }
+        tbl.states = {
+            { type = "mythicplusrating", id = 0, },
+
+            { type = "mythicplusrating", id = 399, },
+            { type = "mythicplusrating", id = 400, },
+            
+            { type = "mythicplusrating", id = 401, },
+            { type = "mythicplusrating", id = 402, },
+            
+            { type = "mythicplusrating", id = 2, },
+            { type = "mythicplusrating", id = 210, },
+            
+            { type = "mythicplusrating", id = 200, },
+            { type = "mythicplusrating", id = 165, },
+        }
+    else -- if Internal.IsTheWarWithinSeason1 then
+        tbl.version = 7
+        tbl.changeLog = {
+            L["Updated for Eternity's End"],
+            L["Updated for Shadowlands Season 4"],
+            L["Updated for Dragonflight Season 1"],
+            L["Updated for The War Within Season 1"],
+        }
+        tbl.states = {
+            { type = "mythicplusrating", id = 0, },
+
+            { type = "mythicplusrating", id = 503, },
+            { type = "mythicplusrating", id = 502, },
+            
+            { type = "mythicplusrating", id = 501, },
+            { type = "mythicplusrating", id = 505, },
+            
+            { type = "mythicplusrating", id = 375, }, -- Mists of Tirna Scithe
+            { type = "mythicplusrating", id = 376, }, -- Nacrotic Wake
+            
+            { type = "mythicplusrating", id = 353, }, -- Seige of Boralus
+            { type = "mythicplusrating", id = 507, }, -- Grim Batol
         }
     end
 
@@ -1659,115 +1689,6 @@ for _,state in ipairs(states) do
 end]]
     }),
 })
-
-if Internal.IsEternitysEnd() then --@TODO hard code change when 9.2 is released
-    External.RegisterTodos({
-        {
-            id = "btwtodo:92campaign",
-            name = L["9.2 Campaign"],
-            states = {
-                { type = "campaign", id = 158, },
-            },
-            completed = "return states[1]:IsCompleted()",
-            text = [=[
-local text = format("%s / %s", states[1]:GetChaptersCompleted(), states[1]:GetChaptersTotal())
-if states[1]:IsStalled() then
-    return Colors.STALLED:WrapTextInColorCode(text)
-else
-    return text
-end
-]=],
-            tooltip = [[
-tooltip:AddLine(self:GetName())
-for i=1,states[1]:GetChaptersTotal() do
-    local name = states[1]:GetChapterName(i)
-    if self:IsCompleted() or states[1]:IsChapterCompleted(i) then
-        tooltip:AddLine(name, 0, 1, 0)
-    elseif states[1]:IsChapterInProgress(i) then
-        tooltip:AddLine(name, 1, 1, 1)
-    else
-        tooltip:AddLine(name, 0.5, 0.5, 0.5)
-    end
-end
-]],
-        },
-        {
-            id = "btwtodo:automa",
-            name = L["Automa"],
-            states = {
-                { type = "faction", id = 2480, },
-            },
-            completed = "return states[1]:HasParagonAvailable()",
-            text = [[return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())]],
-        },
-        {
-            id = "btwtodo:theenlightened",
-            name = L["The Enlightened"],
-            states = {
-                { type = "faction", id = 2478, },
-            },
-            completed = "return states[1]:HasParagonAvailable()",
-            text = [[return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())]],
-        },
-        {
-            id = "btwtodo:zerethmortisworldboss",
-            name = L["Antros"],
-            states = {
-                { type = "quest", id = 65143, }, -- This is the world quest id, not the tracking id
-            },
-            completed = "return states[1]:IsCompleted()",
-            text = DEFAULT_TEXT_FUNCTION,
-        },
-        {
-            id = "btwtodo:patternswithinpatterns",
-            name = L["Patterns Within Patterns"],
-            states = {
-                { type = "quest", id = 66042, },
-            },
-            completed = "return states[1]:IsCompleted()",
-            text = DEFAULT_TEXT_FUNCTION,
-        },
-        {
-            id = "btwtodo:cosmicflux",
-            name = L["Cosmic Flux"],
-            states = {
-                { type = "currency", id = 2009, },
-            },
-            completed = "return false",
-            text = [[return states[1]:GetQuantity()]],
-        },
-        {
-            id = "btwtodo:cyphersofthefirstones",
-            name = L["Cyphers of the First Ones"],
-            version = 1,
-            changeLog = {
-                L["Added displaying Cypher Equipment upgrade progress"],
-            },
-            states = {
-                { type = "currency", id = 1979, },
-                { type = "character", id = 11, },
-                { type = "character", id = 12, },
-                { type = "character", id = 13, },
-            },
-            completed = "return false",
-            text = [[
-                return format("%d (%d/%d)", states[1]:GetQuantity(), states[2]:GetValue(), states[3]:GetValue())
-            ]],
-            tooltip = [[
-tooltip:AddLine(self:GetName())
-tooltip:AddLine(format(L["CYPHER_EQUIPMENT_LEVEL_FORMAT"], states[2]:GetValue(), states[3]:GetValue()))
-local toNextLevel = states[4]:GetValue()
-if toNextLevel == nil then
-    tooltip:AddLine(L["CYPHER_EQUIPMENT_MAX_LEVEL_TOOLTIP"], 1, 0.82, 0, true)
-elseif toNextLevel <= states[1]:GetQuantity() then
-    tooltip:AddLine(L["CYPHER_EQUIPMENT_LEVEL_TOOLTIP_GREEN"]:format(toNextLevel), 1, 0.82, 0, true);
-else
-    tooltip:AddLine(L["CYPHER_EQUIPMENT_LEVEL_TOOLTIP_MATH"]:format(states[1]:GetQuantity(), (toNextLevel - states[1]:GetQuantity())), 1, 0.82, 0, true);
-end
-]],
-        },
-    })
-end
 
 External.RegisterLists({
     {
@@ -1911,7 +1832,114 @@ External.RegisterLists({
     }
 })
 
-if Internal.IsEternitysEnd() then
+if Internal.Is90200OrBeyond then
+    External.RegisterTodos({
+        {
+            id = "btwtodo:92campaign",
+            name = L["9.2 Campaign"],
+            states = {
+                { type = "campaign", id = 158, },
+            },
+            completed = "return states[1]:IsCompleted()",
+            text = [=[
+local text = format("%s / %s", states[1]:GetChaptersCompleted(), states[1]:GetChaptersTotal())
+if states[1]:IsStalled() then
+    return Colors.STALLED:WrapTextInColorCode(text)
+else
+    return text
+end
+]=],
+            tooltip = [[
+tooltip:AddLine(self:GetName())
+for i=1,states[1]:GetChaptersTotal() do
+    local name = states[1]:GetChapterName(i)
+    if self:IsCompleted() or states[1]:IsChapterCompleted(i) then
+        tooltip:AddLine(name, 0, 1, 0)
+    elseif states[1]:IsChapterInProgress(i) then
+        tooltip:AddLine(name, 1, 1, 1)
+    else
+        tooltip:AddLine(name, 0.5, 0.5, 0.5)
+    end
+end
+]],
+        },
+        {
+            id = "btwtodo:automa",
+            name = L["Automa"],
+            states = {
+                { type = "faction", id = 2480, },
+            },
+            completed = "return states[1]:HasParagonAvailable()",
+            text = [[return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())]],
+        },
+        {
+            id = "btwtodo:theenlightened",
+            name = L["The Enlightened"],
+            states = {
+                { type = "faction", id = 2478, },
+            },
+            completed = "return states[1]:HasParagonAvailable()",
+            text = [[return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())]],
+        },
+        {
+            id = "btwtodo:zerethmortisworldboss",
+            name = L["Antros"],
+            states = {
+                { type = "quest", id = 65143, }, -- This is the world quest id, not the tracking id
+            },
+            completed = "return states[1]:IsCompleted()",
+            text = DEFAULT_TEXT_FUNCTION,
+        },
+        {
+            id = "btwtodo:patternswithinpatterns",
+            name = L["Patterns Within Patterns"],
+            states = {
+                { type = "quest", id = 66042, },
+            },
+            completed = "return states[1]:IsCompleted()",
+            text = DEFAULT_TEXT_FUNCTION,
+        },
+        {
+            id = "btwtodo:cosmicflux",
+            name = L["Cosmic Flux"],
+            states = {
+                { type = "currency", id = 2009, },
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:cyphersofthefirstones",
+            name = L["Cyphers of the First Ones"],
+            version = 1,
+            changeLog = {
+                L["Added displaying Cypher Equipment upgrade progress"],
+            },
+            states = {
+                { type = "currency", id = 1979, },
+                { type = "character", id = 11, },
+                { type = "character", id = 12, },
+                { type = "character", id = 13, },
+            },
+            completed = "return false",
+            text = [[
+                return format("%d (%d/%d)", states[1]:GetQuantity(), states[2]:GetValue(), states[3]:GetValue())
+            ]],
+            tooltip = [[
+tooltip:AddLine(self:GetName())
+tooltip:AddLine(format(L["CYPHER_EQUIPMENT_LEVEL_FORMAT"], states[2]:GetValue(), states[3]:GetValue()))
+local toNextLevel = states[4]:GetValue()
+if toNextLevel == nil then
+    tooltip:AddLine(L["CYPHER_EQUIPMENT_MAX_LEVEL_TOOLTIP"], 1, 0.82, 0, true)
+elseif toNextLevel <= states[1]:GetQuantity() then
+    tooltip:AddLine(L["CYPHER_EQUIPMENT_LEVEL_TOOLTIP_GREEN"]:format(toNextLevel), 1, 0.82, 0, true);
+else
+    tooltip:AddLine(L["CYPHER_EQUIPMENT_LEVEL_TOOLTIP_MATH"]:format(states[1]:GetQuantity(), (toNextLevel - states[1]:GetQuantity())), 1, 0.82, 0, true);
+end
+]],
+        },
+    })
+
     External.RegisterLists({
         {
             id = "btwtodo:92",
@@ -2004,8 +2032,7 @@ if Internal.IsEternitysEnd() then
         }
     })
 end
-
-if Internal.IsDragonflight() then
+if Internal.Is100000OrBeyond then
     External.RegisterTodos({
         {
             id = "btwtodo:dragonflyingglyphs",
@@ -2797,9 +2824,710 @@ end
         return skillLineToKnowledgeCurrency[skillLineID];
     end)
 end
+if Internal.Is110000OrBeyond then
+    External.RegisterTodos({
+        {
+            id = "btwtodo:dragonislessupplies",
+            name = L["Dragon Isle Supplies"],
+            states = {
+                { type = "currency", id = 2003, },
+            },
+            completed = "return false",
+            text = [[return states[1]:GetQuantity()]],
+        },
+        {
+            id = "btwtodo:dragonscaleexpedition",
+            name = L["Dragonscale Expedition"],
+            states = {
+                { type = "faction", id = 2507, },
+                { type = "currency", id = 2021, },
+            },
+            completed = "return states[2]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    return format("%s / %s (%d / %d)", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity(), states[2]:GetQuantity(), states[2]:GetMaxQuantity())
+end
+]],
+        },
+        {
+            id = "btwtodo:winterpeltfurbolg",
+            name = L["Winterpelt Furbolg"],
+            states = {
+                { type = "faction", id = 2526, },
+            },
+            completed = "return states[1]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    return format("%s / %s", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity())
+end
+]],
+        },
+        {
+            id = "btwtodo:artisansconsortium",
+            name = L["Artisan's Consortium"],
+            version = 1,
+            changeLog = {
+                L["Updated to show faction rank"],
+            },
+            states = {
+                { type = "faction", id = 2544, },
+            },
+            completed = [[
+local ranks = {0, 500, 2500, 5500, 12500}
+return Custom.GetFactionRank(states[1]:GetQuantity(), ranks) > 5
+]],
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    local ranks = {0, 500, 2500, 5500, 12500}
+    local rank = Custom.GetFactionRank(states[1]:GetQuantity(), ranks)
+    return format("%d / %d (%d / %d)", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity(), rank, #ranks)
+end
+]],
+        },
+        {
+            id = "btwtodo:cobaltassembly",
+            name = L["Cobalt Assembly"],
+            version = 1,
+            changeLog = {
+                L["Updated to show faction rank"],
+            },
+            states = {
+                { type = "faction", id = 2550, },
+            },
+            completed = "return states[1]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    local ranks = {0, 300, 1200, 1360, 10000}
+    local rank = Custom.GetFactionRank(states[1]:GetQuantity(), ranks)
+    return format("%d / %d (%d / %d)", states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity(), rank, #ranks)
+end
+]],
+        },
+        {
+            id = "btwtodo:sabellian",
+            name = L["Sabellian"],
+            version = 1,
+            changeLog = {
+                L["Updated to show faction rank"],
+            },
+            states = {
+                { type = "faction", id = 2518, },
+            },
+            completed = "return states[1]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    local quantity, max = states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity()
+    return format("%d / %d (%d / %d)", quantity, max, math.ceil(states[1]:GetQuantity() / 8400), math.ceil(states[1]:GetMaxQuantity() / 8400) + 1)
+end
+]],
+        },
+        {
+            id = "btwtodo:wrathion",
+            name = L["Wrathion"],
+            version = 1,
+            changeLog = {
+                L["Updated to show faction rank"],
+            },
+            states = {
+                { type = "faction", id = 2517, },
+            },
+            completed = "return states[1]:IsCapped()",
+            text = [[
+if self:IsCompleted() then
+    return Images.COMPLETE
+else
+    local quantity, max = states[1]:GetStandingQuantity(), states[1]:GetStandingMaxQuantity()
+    return format("%d / %d (%d / %d)", quantity, max, math.ceil(states[1]:GetQuantity() / 8400), math.ceil(states[1]:GetMaxQuantity() / 8400) + 1)
+end
+]],
+        },
+        {
+            id = "btwtodo:dragonflightworldboss",
+            name = L["World Boss"],
+            version = 1,
+            changeLog = {
+                L["Added support for Basrikron"],
+            },
+            states = {
+                { type = "quest", id = 69929, }, -- World Quest for Strunraan
+                { type = "quest", id = 72055, }, -- Possible tracking quest for Strunraan
+                
+                { type = "quest", id = 69930, }, -- World Quest for Basrikron
+                { type = "quest", id = 72056, }, -- Possible tracking quest for Basrikron
+                
+                { type = "quest", id = 69927, }, -- World Quest for Bazual
+                { type = "quest", id = 72054, }, -- Possible tracking quest for Bazual
+                
+                { type = "quest", id = 69928, }, -- World Quest for Liskanoth
+                { type = "quest", id = 72053, }, -- Possible tracking quest for Liskanoth
+                { type = "quest", id = 72057, }, -- Possible tracking quest for Liskanoth
+            },
+            completed = [[return tCount(states, "IsCompleted") > 0]],
+            text = DEFAULT_TEXT_FUNCTION,
+        },
+        {
+            id = "btwtodo:aidingtheaccord",
+            name = L["Aiding the Accord"],
+            states = {
+                { type = "quest", id = 70750, },
+                { type = "quest", id = 72068, },
+                { type = "quest", id = 72373, },
+                { type = "quest", id = 72374, },
+                { type = "quest", id = 72375, },
+                { type = "quest", id = 75259, },
+            },
+            completed = [[return tCount(states, "IsCompleted") > 0]],
+            text = DEFAULT_TEXT_FUNCTION,
+        },
+    })
+
+    External.RegisterLists({
+        {
+            id = "btwtodo:110",
+            name = L["Dragonflight"],
+            version = 1,
+            todos = {
+                {
+                    id = "btwtodo:itemlevel",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:mythicplusrating",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:gold",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:dragonflyingglyphs",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:raidvault",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:dungeonvault",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:keystone",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:dragonflightworldboss",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:aidingtheaccord",
+                    category = "btwtodo:weekly",
+                    version = 2,
+                },
+                {
+                    id = "btwtodo:dragonbanekeep",
+                    category = "btwtodo:weekly",
+                    version = 2,
+                },
+                {
+                    id = "btwtodo:grandhunts",
+                    category = "btwtodo:weekly",
+                    version = 2,
+                },
+                {
+                    id = "btwtodo:communityfeast",
+                    category = "btwtodo:weekly",
+                    version = 2,
+                },
+                {
+                    id = "btwtodo:trialoflements",
+                    category = "btwtodo:weekly",
+                    version = 2,
+                },
+                {
+                    id = "btwtodo:trialoftides",
+                    category = "btwtodo:weekly",
+                    version = 2,
+                },
+                {
+                    id = "btwtodo:primalstorms",
+                    category = "btwtodo:weekly",
+                    version = 3,
+                },
+                {
+                    id = "btwtodo:dragonislessupplies",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:valor",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:conquest",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:blacksmithingprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:leatherworkingprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:alchemyprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:herbalismprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:miningprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:tailoringprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:engineeringprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:enchantingprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:skinningprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:jewelcraftingprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:inscriptionprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:elementaloverflow",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:stormsigil",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:dragonscaleexpedition",
+                    category = "btwtodo:reputation",
+                },
+                {
+                    id = "btwtodo:iskaaratuskarr",
+                    category = "btwtodo:reputation",
+                },
+                {
+                    id = "btwtodo:maruukcentaur",
+                    category = "btwtodo:reputation",
+                },
+                {
+                    id = "btwtodo:valdrakkenaccord",
+                    category = "btwtodo:reputation",
+                },
+                {
+                    id = "btwtodo:artisansconsortium",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:cobaltassembly",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:sabellian",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:wrathion",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:winterpeltfurbolg",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                },
+            },
+        }
+    })
+end
 
 -- Update default list based on patch/season
-if Internal.IsDragonflightExpansion() then
+if Internal.IsShadowlandsSeason2 then
+    External.RegisterLists({
+        {
+            id = "btwtodo:default",
+            name = L["Default"],
+            version = 5,
+            todos = {
+                {
+                    id = "btwtodo:itemlevel",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:mythicplusrating",
+                    category = "btwtodo:character",
+                    version = 3,
+                },
+                {
+                    id = "btwtodo:gold",
+                    category = "btwtodo:character",
+                    version = 2,
+                },
+                {
+                    id = "btwtodo:renown",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:91campaign",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:callings",
+                    category = "btwtodo:daily",
+                },
+                {
+                    id = "btwtodo:korthiadailies",
+                    category = "btwtodo:daily",
+                },
+                {
+                    id = "btwtodo:mawsworncache",
+                    category = "btwtodo:daily",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:invasivemawshroom",
+                    category = "btwtodo:daily",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:nestofunusualmaterials",
+                    category = "btwtodo:daily",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:reliccache",
+                    category = "btwtodo:daily",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:spectralboundchest",
+                    category = "btwtodo:daily",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:riftboundcache",
+                    category = "btwtodo:daily",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:renownquests",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:raidvault",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:dungeonvault",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:keystone",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:mawworldboss",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:torghast",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:mawassault",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:tormentors",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:mawsoulsquest",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:deathboundshard",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:anima",
+                    category = "btwtodo:currency",
+                    version = 4,
+                },
+                {
+                    id = "btwtodo:soulcinders",
+                    category = "btwtodo:currency",
+                    version = 5,
+                },
+                {
+                    id = "btwtodo:valor",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:conquest",
+                    category = "btwtodo:currency",
+                    version = 2,
+                },
+                {
+                    id = "btwtodo:towerknowledge",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:deathsadvance",
+                    category = "btwtodo:reputation",
+                },
+                {
+                    id = "btwtodo:thearchivistscodex",
+                    category = "btwtodo:reputation",
+                },
+            },
+        },
+    })
+elseif Internal.IsShadowlandsSeason3 then
+    External.RegisterLists({
+        {
+            id = "btwtodo:default",
+            name = L["Default"],
+            version = 7,
+            todos = {
+                {
+                    id = "btwtodo:itemlevel",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:mythicplusrating",
+                    category = "btwtodo:character",
+                    version = 3,
+                },
+                {
+                    id = "btwtodo:gold",
+                    category = "btwtodo:character",
+                    version = 2,
+                },
+                {
+                    id = "btwtodo:renown",
+                    category = "btwtodo:character",
+                },
+                {
+                    id = "btwtodo:91campaign",
+                    category = "btwtodo:character",
+                    hidden = true,
+                    version = 6,
+                },
+                {
+                    id = "btwtodo:92campaign",
+                    category = "btwtodo:character",
+                    version = 6,
+                },
+                {
+                    id = "btwtodo:callings",
+                    category = "btwtodo:daily",
+                },
+                {
+                    id = "btwtodo:korthiadailies",
+                    category = "btwtodo:daily",
+                    hidden = true,
+                    version = 6,
+                },
+                {
+                    id = "btwtodo:mawsworncache",
+                    category = "btwtodo:daily",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:invasivemawshroom",
+                    category = "btwtodo:daily",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:nestofunusualmaterials",
+                    category = "btwtodo:daily",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:reliccache",
+                    category = "btwtodo:daily",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:spectralboundchest",
+                    category = "btwtodo:daily",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:riftboundcache",
+                    category = "btwtodo:daily",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:renownquests",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                    version = 6,
+                },
+                {
+                    id = "btwtodo:raidvault",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:dungeonvault",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:keystone",
+                    category = "btwtodo:weekly",
+                },
+                {
+                    id = "btwtodo:mawworldboss",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                    version = 6,
+                },
+                {
+                    id = "btwtodo:zerethmortisworldboss",
+                    category = "btwtodo:weekly",
+                    version = 6,
+                },
+                {
+                    id = "btwtodo:torghast",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                    version = 6,
+                },
+                {
+                    id = "btwtodo:mawassault",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                    version = 6,
+                },
+                {
+                    id = "btwtodo:tormentors",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                    version = 6,
+                },
+                {
+                    id = "btwtodo:mawsoulsquest",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                    version = 6,
+                },
+                {
+                    id = "btwtodo:deathboundshard",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                },
+                {
+                    id = "btwtodo:patternswithinpatterns",
+                    category = "btwtodo:weekly",
+                    version = 6,
+                },
+                {
+                    id = "btwtodo:bonusevents",
+                    category = "btwtodo:weekly",
+                    version = 7,
+                },
+                {
+                    id = "btwtodo:cosmicflux",
+                    category = "btwtodo:currency",
+                    version = 6,
+                },
+                {
+                    id = "btwtodo:cyphersofthefirstones",
+                    category = "btwtodo:currency",
+                    version = 6,
+                },
+                {
+                    id = "btwtodo:anima",
+                    category = "btwtodo:currency",
+                    version = 4,
+                },
+                {
+                    id = "btwtodo:soulcinders",
+                    category = "btwtodo:currency",
+                    version = 5,
+                },
+                {
+                    id = "btwtodo:valor",
+                    category = "btwtodo:currency",
+                },
+                {
+                    id = "btwtodo:conquest",
+                    category = "btwtodo:currency",
+                    version = 2,
+                },
+                {
+                    id = "btwtodo:towerknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 6,
+                },
+                {
+                    id = "btwtodo:deathsadvance",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                    version = 6,
+                },
+                {
+                    id = "btwtodo:thearchivistscodex",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                    version = 6,
+                },
+                {
+                    id = "btwtodo:theenlightened",
+                    category = "btwtodo:reputation",
+                    version = 6,
+                },
+            },
+        },
+    });
+elseif Internal.IsDragonflightSeason1 or Internal.IsDragonflightSeason2 or Internal.IsDragonflightSeason3 or Internal.IsDragonflightSeason4 then
     External.RegisterLists({
         {
             id = "btwtodo:default",
@@ -3187,12 +3915,12 @@ if Internal.IsDragonflightExpansion() then
             },
         },
     });
-elseif Internal.IsEternitysEnd() then
+elseif Internal.IsTheWarWithinSeason1 then
     External.RegisterLists({
         {
             id = "btwtodo:default",
             name = L["Default"],
-            version = 7,
+            version = 11,
             todos = {
                 {
                     id = "btwtodo:itemlevel",
@@ -3211,6 +3939,8 @@ elseif Internal.IsEternitysEnd() then
                 {
                     id = "btwtodo:renown",
                     category = "btwtodo:character",
+                    hidden = true,
+                    version = 8,
                 },
                 {
                     id = "btwtodo:91campaign",
@@ -3221,11 +3951,21 @@ elseif Internal.IsEternitysEnd() then
                 {
                     id = "btwtodo:92campaign",
                     category = "btwtodo:character",
-                    version = 6,
+                    hidden = true,
+                    version = 8,
                 },
+                {
+                    id = "btwtodo:dragonflyingglyphs",
+                    category = "btwtodo:character",
+                    version = 8,
+                },
+
+                -- Daily
                 {
                     id = "btwtodo:callings",
                     category = "btwtodo:daily",
+                    hidden = true,
+                    version = 8,
                 },
                 {
                     id = "btwtodo:korthiadailies",
@@ -3263,6 +4003,8 @@ elseif Internal.IsEternitysEnd() then
                     category = "btwtodo:daily",
                     hidden = true,
                 },
+
+                -- Weekly
                 {
                     id = "btwtodo:renownquests",
                     category = "btwtodo:weekly",
@@ -3290,7 +4032,56 @@ elseif Internal.IsEternitysEnd() then
                 {
                     id = "btwtodo:zerethmortisworldboss",
                     category = "btwtodo:weekly",
-                    version = 6,
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:dragonflightworldboss",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                    version = 11,
+                },
+                {
+                    id = "btwtodo:aidingtheaccord",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                    version = 11,
+                },
+                {
+                    id = "btwtodo:dragonbanekeep",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                    version = 11,
+                },
+                {
+                    id = "btwtodo:grandhunts",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                    version = 11,
+                },
+                {
+                    id = "btwtodo:communityfeast",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                    version = 11,
+                },
+                {
+                    id = "btwtodo:trialoflements",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                    version = 11,
+                },
+                {
+                    id = "btwtodo:trialoftides",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                    version = 11,
+                },
+                {
+                    id = "btwtodo:primalstorms",
+                    category = "btwtodo:weekly",
+                    hidden = true,
+                    version = 11,
                 },
                 {
                     id = "btwtodo:torghast",
@@ -3324,32 +4115,46 @@ elseif Internal.IsEternitysEnd() then
                 {
                     id = "btwtodo:patternswithinpatterns",
                     category = "btwtodo:weekly",
-                    version = 6,
+                    hidden = true,
+                    version = 8,
                 },
                 {
                     id = "btwtodo:bonusevents",
                     category = "btwtodo:weekly",
-                    version = 7,
+                    hidden = true,
+                    version = 8,
                 },
+
+                -- Currency
                 {
                     id = "btwtodo:cosmicflux",
                     category = "btwtodo:currency",
-                    version = 6,
+                    hidden = true,
+                    version = 8,
                 },
                 {
                     id = "btwtodo:cyphersofthefirstones",
                     category = "btwtodo:currency",
-                    version = 6,
+                    hidden = true,
+                    version = 8,
                 },
                 {
                     id = "btwtodo:anima",
                     category = "btwtodo:currency",
-                    version = 4,
+                    hidden = true,
+                    version = 8,
                 },
                 {
                     id = "btwtodo:soulcinders",
                     category = "btwtodo:currency",
-                    version = 5,
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:dragonislessupplies",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 11,
                 },
                 {
                     id = "btwtodo:valor",
@@ -3366,6 +4171,86 @@ elseif Internal.IsEternitysEnd() then
                     hidden = true,
                     version = 6,
                 },
+                {
+                    id = "btwtodo:blacksmithingprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:leatherworkingprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:alchemyprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:herbalismprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:miningprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:tailoringprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:engineeringprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:enchantingprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:skinningprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:jewelcraftingprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:inscriptionprofessionknowledge",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:elementaloverflow",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 11,
+                },
+                {
+                    id = "btwtodo:stormsigil",
+                    category = "btwtodo:currency",
+                    hidden = true,
+                    version = 11,
+                },
+
+                -- Reputation
                 {
                     id = "btwtodo:deathsadvance",
                     category = "btwtodo:reputation",
@@ -3381,151 +4266,64 @@ elseif Internal.IsEternitysEnd() then
                 {
                     id = "btwtodo:theenlightened",
                     category = "btwtodo:reputation",
-                    version = 6,
+                    hidden = true,
+                    version = 8,
                 },
+                {
+                    id = "btwtodo:dragonscaleexpedition",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                    version = 11,
+                },
+                {
+                    id = "btwtodo:iskaaratuskarr",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                    version = 11,
+                },
+                {
+                    id = "btwtodo:maruukcentaur",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                    version = 11,
+                },
+                {
+                    id = "btwtodo:valdrakkenaccord",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                    version = 11,
+                },
+                {
+                    id = "btwtodo:artisansconsortium",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:cobaltassembly",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:sabellian",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:wrathion",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                    version = 8,
+                },
+                {
+                    id = "btwtodo:winterpeltfurbolg",
+                    category = "btwtodo:reputation",
+                    hidden = true,
+                    version = 8,
+                }
             },
         },
     });
-else
-    External.RegisterLists({
-        {
-            id = "btwtodo:default",
-            name = L["Default"],
-            version = 5,
-            todos = {
-                {
-                    id = "btwtodo:itemlevel",
-                    category = "btwtodo:character",
-                },
-                {
-                    id = "btwtodo:mythicplusrating",
-                    category = "btwtodo:character",
-                    version = 3,
-                },
-                {
-                    id = "btwtodo:gold",
-                    category = "btwtodo:character",
-                    version = 2,
-                },
-                {
-                    id = "btwtodo:renown",
-                    category = "btwtodo:character",
-                },
-                {
-                    id = "btwtodo:91campaign",
-                    category = "btwtodo:character",
-                },
-                {
-                    id = "btwtodo:callings",
-                    category = "btwtodo:daily",
-                },
-                {
-                    id = "btwtodo:korthiadailies",
-                    category = "btwtodo:daily",
-                },
-                {
-                    id = "btwtodo:mawsworncache",
-                    category = "btwtodo:daily",
-                    hidden = true,
-                },
-                {
-                    id = "btwtodo:invasivemawshroom",
-                    category = "btwtodo:daily",
-                    hidden = true,
-                },
-                {
-                    id = "btwtodo:nestofunusualmaterials",
-                    category = "btwtodo:daily",
-                    hidden = true,
-                },
-                {
-                    id = "btwtodo:reliccache",
-                    category = "btwtodo:daily",
-                    hidden = true,
-                },
-                {
-                    id = "btwtodo:spectralboundchest",
-                    category = "btwtodo:daily",
-                    hidden = true,
-                },
-                {
-                    id = "btwtodo:riftboundcache",
-                    category = "btwtodo:daily",
-                    hidden = true,
-                },
-                {
-                    id = "btwtodo:renownquests",
-                    category = "btwtodo:weekly",
-                },
-                {
-                    id = "btwtodo:raidvault",
-                    category = "btwtodo:weekly",
-                },
-                {
-                    id = "btwtodo:dungeonvault",
-                    category = "btwtodo:weekly",
-                },
-                {
-                    id = "btwtodo:keystone",
-                    category = "btwtodo:weekly",
-                },
-                {
-                    id = "btwtodo:mawworldboss",
-                    category = "btwtodo:weekly",
-                },
-                {
-                    id = "btwtodo:torghast",
-                    category = "btwtodo:weekly",
-                },
-                {
-                    id = "btwtodo:mawassault",
-                    category = "btwtodo:weekly",
-                },
-                {
-                    id = "btwtodo:tormentors",
-                    category = "btwtodo:weekly",
-                },
-                {
-                    id = "btwtodo:mawsoulsquest",
-                    category = "btwtodo:weekly",
-                },
-                {
-                    id = "btwtodo:deathboundshard",
-                    category = "btwtodo:weekly",
-                    hidden = true,
-                },
-                {
-                    id = "btwtodo:anima",
-                    category = "btwtodo:currency",
-                    version = 4,
-                },
-                {
-                    id = "btwtodo:soulcinders",
-                    category = "btwtodo:currency",
-                    version = 5,
-                },
-                {
-                    id = "btwtodo:valor",
-                    category = "btwtodo:currency",
-                },
-                {
-                    id = "btwtodo:conquest",
-                    category = "btwtodo:currency",
-                    version = 2,
-                },
-                {
-                    id = "btwtodo:towerknowledge",
-                    category = "btwtodo:currency",
-                },
-                {
-                    id = "btwtodo:deathsadvance",
-                    category = "btwtodo:reputation",
-                },
-                {
-                    id = "btwtodo:thearchivistscodex",
-                    category = "btwtodo:reputation",
-                },
-            },
-        },
-    })
 end

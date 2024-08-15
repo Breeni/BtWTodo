@@ -1,6 +1,6 @@
 local ADDON_NAME, Internal = ...
 
-if not Internal.IsDragonflight() then
+if not Internal.Is100000OrBeyond then
     return
 end
 

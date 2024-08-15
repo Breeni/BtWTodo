@@ -237,7 +237,7 @@ BtWTodoViewMixin = {}
 function BtWTodoViewMixin:OnLoad()
 	local view = CreateScrollBoxListLinearView();
 	view:SetElementExtent(self:GetItemHeight())
-	if Internal.IsDragonflight() then
+	if Internal.Is100000OrBeyond then
 		view:SetElementInitializer(self.rowTemplate or "BtWTodoScrollRowTemplate", function(list, elementData)
 			list:Init(elementData, self:GetItemWidth(), self:GetItemHeight());
 		end);

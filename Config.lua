@@ -1694,7 +1694,7 @@ function BtWTodoConfigTodoPanelMixin:OnLoad()
     subcategory.ID = "BTWTODO_TODOS";
 
     do
-        self.FunctionTabPool = CreateFramePool("Button", self.Edit.FunctionTabHeader, Internal.IsDragonflight() and "PanelTopTabButtonTemplate" or "TabButtonTemplate");
+        self.FunctionTabPool = CreateFramePool("Button", self.Edit.FunctionTabHeader, Internal.Is100000OrBeyond and "PanelTopTabButtonTemplate" or "TabButtonTemplate");
         self.Edit.FunctionTabHeader.Tabs = {};
         local FunctionTabs = {BTWTODO_COMPLETED, BTWTODO_TEXT, BTWTODO_CLICK, BTWTODO_TOOLTIP};
         local previous
@@ -1720,7 +1720,7 @@ function BtWTodoConfigTodoPanelMixin:OnLoad()
     end
 
     do
-        self.ModeTabPool = CreateFramePool("Button", self.Edit.ModeTabHeader, Internal.IsDragonflight() and "PanelTopTabButtonTemplate" or "TabButtonTemplate");
+        self.ModeTabPool = CreateFramePool("Button", self.Edit.ModeTabHeader, Internal.Is100000OrBeyond and "PanelTopTabButtonTemplate" or "TabButtonTemplate");
         self.Edit.ModeTabHeader.Tabs = {};
         local ModeTabs = {BTWTODO_ADVANCED, BTWTODO_BASIC};
         local previous
@@ -2438,7 +2438,7 @@ function BtWTodoConfigListsPanelMixin:OnLoad()
     do -- Todos
         local view = CreateScrollBoxListLinearView();
         view:SetElementExtent(30);
-        if Internal.IsDragonflight() then
+        if Internal.Is100000OrBeyond then
             view:SetElementInitializer("BtWTodoConfigTodoItemTemplate", function(button, elementData)
                 button:Init(elementData);
                 local startIndex, endIndex = self.TodoScrollBox:GetDragRange()
@@ -2741,7 +2741,7 @@ function BtWTodoConfigWindowsPanelMixin:OnLoad()
     do -- Characters
         local view = CreateScrollBoxListLinearView();
         view:SetElementExtent(30);
-        if Internal.IsDragonflight() then
+        if Internal.Is100000OrBeyond then
             view:SetElementInitializer("BtWTodoConfigCharacterItemTemplate", function(button, elementData)
                 button:Init(elementData);
                 local startIndex, endIndex = self.CharacterScrollBox:GetDragRange()
