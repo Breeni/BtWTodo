@@ -284,7 +284,7 @@ Internal.RegisterStateProvider(CreateFromMixins(FactionProviderMixin))
 Internal.RegisterEvent("PLAYER_LOGIN", function()
     for index=1,GetNumFactions() do
         local factionData = GetFactionDataByIndex(index)
-        if not factionData.isHeader then
+        if factionData and not factionData.isHeader then
             local data = BtWTodoCache.factions[factionData.factionID] or {}
             data.name = factionData.name
             BtWTodoCache.factions[factionData.factionID] = data
