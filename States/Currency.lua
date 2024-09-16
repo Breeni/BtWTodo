@@ -42,21 +42,24 @@ function CurrencyMixin:GetName()
 end
 function CurrencyMixin:GetQuantity()
 	if self:GetCharacter():IsPlayer() then
-		return C_CurrencyInfo.GetCurrencyInfo(self:GetID()).quantity;
+        local info = C_CurrencyInfo.GetCurrencyInfo(self:GetID());
+		return info and info.quantity or 0;
 	else
 		return self:GetCharacter():GetData("currencyQuantity", self:GetID()) or 0
 	end
 end
 function CurrencyMixin:GetQuantityEarnedThisWeek()
 	if self:GetCharacter():IsPlayer() then
-		return C_CurrencyInfo.GetCurrencyInfo(self:GetID()).quantityEarnedThisWeek;
+        local info = C_CurrencyInfo.GetCurrencyInfo(self:GetID());
+		return info and info.quantityEarnedThisWeek or 0;
 	else
 		return self:GetCharacter():GetData("currencyEarnedThisWeek", self:GetID()) or 0
 	end
 end
 function CurrencyMixin:GetTotalEarned()
 	if self:GetCharacter():IsPlayer() then
-		return C_CurrencyInfo.GetCurrencyInfo(self:GetID()).totalEarned;
+        local info = C_CurrencyInfo.GetCurrencyInfo(self:GetID());
+		return info and info.totalEarned or 0;
 	else
 		return self:GetCharacter():GetData("currencyTotalEarned", self:GetID()) or 0
 	end
