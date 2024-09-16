@@ -1291,8 +1291,10 @@ local function PLAYER_LOGOUT()
             local _, _, instanceID, difficultyID = strsplit(":", string.match(GetSavedInstanceChatLink(i), "instancelock:[^|]+"))
             instanceID, difficultyID = tonumber(instanceID), tonumber(difficultyID)
 
-            for _, encounterID in ipairs(dungeonInstanceData[instanceID]) do
-                encounterKill[encounterID .. ":" .. difficultyID] = C_RaidLocks.IsEncounterComplete(instanceID, encounterID, difficultyID) and true or nil
+            if dungeonInstanceData[instanceID] then
+                for _, encounterID in ipairs(dungeonInstanceData[instanceID]) do
+                    encounterKill[encounterID .. ":" .. difficultyID] = C_RaidLocks.IsEncounterComplete(instanceID, encounterID, difficultyID) and true or nil
+                end
             end
         end
     end
