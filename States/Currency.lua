@@ -156,8 +156,10 @@ Internal.RegisterEvent("PLAYER_ENTERING_WORLD", function()
             local _, id = strsplit(":", string.match(link, "currency:[:%d]+"))
             id = tonumber(id)
 
-            local data = BtWTodoCache.currencies[id] or {}
-            BtWTodoCache.currencies[id] = data
+            if id then
+                local data = BtWTodoCache.currencies[id] or {}
+                BtWTodoCache.currencies[id] = data
+            end
         end
     end
 
