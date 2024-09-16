@@ -65,13 +65,13 @@ function CurrencyMixin:GetTotalEarned()
 	end
 end
 function CurrencyMixin:GetMaxQuantity()
-	return self.maxQuantity
+	return self.maxQuantity or 0
 end
 function CurrencyMixin:GetMaxWeeklyQuantity()
-	return self.maxWeeklyQuantity
+	return self.maxWeeklyQuantity or 0
 end
 function CurrencyMixin:UseTotalEarnedForMaxQty()
-	return self.useTotalEarnedForMaxQty
+	return self.useTotalEarnedForMaxQty or 0
 end
 function CurrencyMixin:IsCapped()
     if self:UseTotalEarnedForMaxQty() then
