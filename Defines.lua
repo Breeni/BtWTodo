@@ -71,45 +71,50 @@ local function IsExpansion(expansion)
 end
 
 local seasons = {
-    [1] = {
+    [1] = { -- US
         [9] = 1670943600,
         [10] = 1683644400,
         [11] = 1699974000,
         [12] = 1713884400,
         [13] = 1725980400,
         [14] = 1741100400,
+        [15] = 1755010800,
     },
-    [2] = {
+    [2] = { -- KR
         [9] = 1671058800,
         [10] = 1683759600,
         [11] = 1700089200,
         [12] = 1713999600,
         [13] = 1726095600,
         [14] = 1741215600,
+        [15] = 1755126000,
     },
-    [3] = {
+    [3] = { -- EU
         [9] = 1670990400,
         [10] = 1683691200,
         [11] = 1700020800,
         [12] = 1713931200,
         [13] = 1726027200,
         [14] = 1741147200,
+        [15] = 1755057600,
     },
-    [4] = {
+    [4] = { -- TW
         [9] = 1671058800,
         [10] = 1683759600,
         [11] = 1700089200,
         [12] = 1713999600,
         [13] = 1726095600,
         [14] = 1741215600,
+        [15] = 1755126000,
     },
-    [5] = {
+    [5] = { -- CN
         [9] = 1671058800,
         [10] = 1683759600,
         [11] = 1700089200,
         [12] = 1713999600,
         [13] = 1726095600,
         [14] = 1741215600,
+        [15] = 1755126000,
     },
     [72] = {
         [9] = 0,
@@ -118,6 +123,7 @@ local seasons = {
         [12] = 0,
         [13] = 0,
         [14] = 0,
+        [15] = 0,
     },
     [90] = {
         [9] = 0,
@@ -126,6 +132,7 @@ local seasons = {
         [12] = 0,
         [13] = 0,
         [14] = 0,
+        [15] = 0,
     },
 };
 local GetCurrentSeason = C_MythicPlus and C_MythicPlus.GetCurrentSeason or function ()
@@ -167,6 +174,7 @@ Internal.Is90200OrBeyond = IsAtleastInterface(90200)
 Internal.Is100000OrBeyond = IsAtleastInterface(100000)
 Internal.Is110000OrBeyond = IsAtleastInterface(110000)
 Internal.Is110100OrBeyond = IsAtleastInterface(110100)
+Internal.Is110200OrBeyond = IsAtleastInterface(110200)
 
 Internal.IsBattleForAzeroth = IsExpansion(LE_EXPANSION_BATTLE_FOR_AZEROTH or 7)
 Internal.IsShadowlands = IsExpansion(LE_EXPANSION_SHADOWLANDS or 8)
@@ -183,4 +191,5 @@ Internal.IsDragonflightSeason2 = Internal.IsDragonflight and IsSeason(10)
 Internal.IsDragonflightSeason3 = Internal.IsDragonflight and IsSeason(11)
 Internal.IsDragonflightSeason4 = Internal.IsDragonflight and IsSeason(12)
 Internal.IsTheWarWithinSeason1 = Internal.IsTheWarWithin and IsSeason(13)
-Internal.IsTheWarWithinSeason2 = Internal.IsTheWarWithin -- and IsSeason(14)
+Internal.IsTheWarWithinSeason2 = Internal.IsTheWarWithin and IsSeason(14)
+Internal.IsTheWarWithinSeason3 = Internal.IsTheWarWithin -- and IsSeason(15)
