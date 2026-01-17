@@ -607,7 +607,7 @@ end
 BtWTodoConfigPanelMixin = {}
 function BtWTodoConfigPanelMixin:OnLoad()
     local category, layout = Settings.RegisterCanvasLayoutCategory(self, "BtWTodo");
-    category.ID = "BTWTODO";
+    self.category = category;
     Settings.RegisterAddOnCategory(category);
 
     UIDropDownMenu_SetWidth(self.MinimapLeftClickDropDown, 175);
@@ -1689,9 +1689,9 @@ function BtWTodoConfigTodoPanelMixin:OnLoad()
         self.AddItem:Hide()
     end)
 
-    local category = Settings.GetCategory("BTWTODO");
+    local category = BtWTodoConfigPanel.category;
     local subcategory, layout = Settings.RegisterCanvasLayoutSubcategory(category, self, L["Todos"]);
-    subcategory.ID = "BTWTODO_TODOS";
+    self.category = subcategory;
 
     do
         self.FunctionTabPool = CreateFramePool("Button", self.Edit.FunctionTabHeader, Internal.Is100000OrBeyond and "PanelTopTabButtonTemplate" or "TabButtonTemplate");
@@ -2367,7 +2367,7 @@ function BtWTodoConfigTodoItemMixin:ToggleVisibility()
 end
 function BtWTodoConfigTodoItemMixin:Edit()
     if self.data.type == "todo" then
-        Settings.OpenToCategory("BTWTODO_TODOS");
+        Settings.OpenToCategory(BtWTodoConfigTodoPanel.category:GetID());
         BtWTodoConfigTodoPanel:SetTodo(self.data.todo)
     elseif self.data.type == "category" then
         local source = self.data.source
@@ -2459,9 +2459,8 @@ function BtWTodoConfigListsPanelMixin:OnLoad()
         self.AddItem:Hide()
     end)
 
-    local category = Settings.GetCategory("BTWTODO");
+    local category = BtWTodoConfigPanel.category;
     local subcategory, layout = Settings.RegisterCanvasLayoutSubcategory(category, self, L["Lists"]);
-    subcategory.ID = "BTWTODO_LISTS";
 end
 function BtWTodoConfigListsPanelMixin:GetList()
     return self.list
@@ -2762,9 +2761,8 @@ function BtWTodoConfigWindowsPanelMixin:OnLoad()
         self.AddItem:Hide()
     end)
 
-    local category = Settings.GetCategory("BTWTODO");
+    local category = BtWTodoConfigPanel.category;
     local subcategory, layout = Settings.RegisterCanvasLayoutSubcategory(category, self, L["Windows"]);
-    subcategory.ID = "BTWTODO_WINDOWS";
 end
 function BtWTodoConfigWindowsPanelMixin:GetFrame()
     return self.frame
@@ -2897,5 +2895,6 @@ function BtWTodoConfigWindowsPanelMixin:OnRefresh()
 end
 
 function External.OpenConfiguration()
-    Settings.OpenToCategory("BTWTODO");
+    local category = BtWTodoConfigPanel.category;
+    Settings.OpenToCategory(category:GetID());
 end

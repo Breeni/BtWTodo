@@ -5576,7 +5576,7 @@ elseif Internal.IsTheWarWithinSeason2 then
             },
         },
     });
-elseif Internal.IsTheWarWithinSeason3 then
+else -- if Internal.IsTheWarWithinSeason3 then
     External.RegisterLists({
         {
             id = "btwtodo:default",
