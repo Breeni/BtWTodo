@@ -1,4 +1,4 @@
-## Interface: 120007
+## Interface: 120007, 120100
 ## Title: BtWTodo
 ## Version: @project-version@
 ## Notes: Highly customizable to-do list
